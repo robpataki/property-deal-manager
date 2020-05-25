@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1>Properties</h1>
+      <ul *ngIf="!!properties.length" class="list-group mt-5">
+        <li *ngFor="let property of properties" class="list-group-item">
+          <a [routerLink]="['/properties', property.uid]">
+            <div class="property-details">
+              <div class="property-details__left">
+                <div class="property-details__photo">
+                  <img src="{{ property.thumbnailUrl }}" alt="Photo of the {{ property.addressLine1 }} property">
+                </div>
+              </div>
+              <div class="property-details__right">
+                <dl class="dl dl--fitted">
+                  <div class="dl-row clearfix">
+                    <dt>Address:</dt>
+                    <dd>{{property.addressLine1}},{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}} {{property.town}}, {{property.postcode}}</dd>
+                  </div>
+                  <div class="dl-row clearfix">
+                    <dt>Property type:</dt>
+                    <dd class="text-capitalize">{{property.type}}</dd>
+                  </div>
+                  <div class="dl-row clearfix">
+                    <dt>Deal type:</dt>
+                    <dd class="text-capitalize">{{property.dealType}}</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

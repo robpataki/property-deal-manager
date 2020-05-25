@@ -1,0 +1,81 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Property details for <br>{{ fullAddress }}</h1>
+    </div>
+  </div>
+
+  <hr>
+
+  <img [src]="property.thumbnailUrl" alt="Photo of the Property">
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Metadata</h3>
+      <dl class="dl dl--fitted">
+        <div class="dl-row">
+          <dt>Full address:</dt>
+          <dd>{{property.addressLine1}},{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}} {{property.town}}, {{property.postcode}}</dd>
+        </div>
+        <div class="dl-row">
+          <dt>Property size:</dt>
+          <dd>{{ property.size }} m<sup>2</sup></dd>
+        </div>
+        <div class="dl-row">
+          <dt>EPC rating:</dt>
+          <dd>{{ property.epc }}</dd>
+        </div>
+        <div class="dl-row">
+          <dt>Property type:</dt>
+          <dd class="text-capitalize">{{ property.type }}</dd>
+        </div>
+        <div class="dl-row">
+          <dt>Deal type:</dt>
+          <dd class="text-capitalize">{{ property.dealType }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Number crunch</h3>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Photos</h3>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Offers</h3>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Comparables</h3>
+    </div>
+  </div>
+
+  <hr>
+  
+  <div class="row">
+    <div class="col-6">
+      <h3>Notes</h3>
+    </div>
+  </div>
+</div>

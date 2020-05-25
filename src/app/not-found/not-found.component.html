@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h1>Page not found</h1>
+      <p class="lead" >{{ errorMessage }}</p>
+      
+      <a
+        *ngIf="!isUserAuthenticated"
+        routerLink="/"
+        class="btn btn-primary mt-2">Go back to the Home page</a>
+      <a
+        *ngIf="isUserAuthenticated"
+        routerLink="/properties"
+        class="btn btn-primary mt-2">Go to your Properties</a>
+    </div>
+  </div>
+</div>

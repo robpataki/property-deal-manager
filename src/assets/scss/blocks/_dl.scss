@@ -1,0 +1,24 @@
+.dl {
+  &-row {
+    @include clearfix;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  dt,
+  dd {
+    float: left;
+  }
+
+  dd {
+    margin-left: 10px;
+  }
+
+  &--fitted {
+    dt {
+      width: 120px;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.skip-link {
+  display: inline-block;
+  position: absolute;
+  left: -9999rem;
+  margin: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+  color: #000000;
+  background-color: #ffdd00;
+
+  &:focus {
+    left: 0;
+    z-index: 10000;
+    outline: 3px solid #000000;
+    background-color: #ffdd00;
+    color: #000000;
+  }
+}

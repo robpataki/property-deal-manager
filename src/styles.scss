@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom styling
+@import "./assets/scss/variables";
+@import "./assets/scss/mixins";
+
+@import "./assets/scss/base";
+@import "./assets/scss/skip-link";
+@import "./assets/scss/blocks/dl";
+@import "./assets/scss/blocks/property-details";
+@import "./assets/scss/blocks/user-details";
+

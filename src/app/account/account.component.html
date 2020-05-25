@@ -1,0 +1,156 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="visually-hidden">This is your account</h1>
+    </div>
+  </div>
+  
+  <div *ngIf="!isLoading">
+    <div class="row">
+      <div class="col-12">
+        <h2>Your account details</h2>
+      </div>
+    </div>
+    
+    <div class="row  mt-3">
+      <div class="col-12">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" #form>
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="form-group text-center">
+                <label for="profilePhoto" class="visually-hidden">Profile photo</label>
+                <div class="photo-preview">
+                  <a href="{{ user.public_profile.photoUrl }}" target="_blank" *ngIf="!!user.public_profile.photoUrl">
+                    <img src="{{ user.public_profile.photoUrl }}" alt="Your profile photo" />
+                  </a>
+                </div>
+                <button
+                  class="btn btn-primary btn-sm"
+                  type="button"
+                  (click)="onSelectPhoto()">
+                  {{ !!!user.public_profile.photoUrl ? 'Upload photo' : 'Update photo' }}</button>
+                  <input
+                  type="file"
+                  id="profilePhoto"
+                  formControlName="profilePhoto"
+                  #profilePhoto
+                  (change)="onPhotoChanged($event)"
+                  accept="image/*">
+              </div>
+            </div>
+            
+            <div class="col-12 col-md-4">
+              <div class="form-group">
+                <label for="firstName">First name *</label>
+                <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="form-control"
+                #firstName>
+              </div>
+              
+              <div class="form-group">
+                <label for="lastName">Last name *</label>
+                <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="form-control"
+                #lastName>
+              </div>
+              
+              <div class="form-group">
+                <label for="displayName">Display name *</label>
+                <input
+                type="text"
+                id="displayName"
+                formControlName="displayName"
+                class="form-control"
+                #displayName>
+              </div>
+              
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                #email>
+              </div>
+
+              <div class="form-group mt-5 mb-5">
+                <span>UID: {{ uid }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-12 col-md-7 text-right">
+              <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="!userForm.valid">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <hr>
+  
+  <div class="row mt-5 mb-5">
+    <div class="col-12">
+      <h2>Your organisation details</h2>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <h3>{{ organisation.name }}</h3>
+      
+      <h4>Organisation members</h4>
+      <ul class="list-group">
+        <li *ngFor="let member of organisation.members" class="list-group-item">
+          <div class="user-details clearfix">
+            <div class="user-details__left">
+              <dl class="dl">
+                <div class="dl-row clearfix">
+                  <dt>Full name:</dt>
+                  <dd><span>{{ member.firstName }}</span>&nbsp;<span>{{ member.lastName }}</span></dd>
+                </div>
+                <div class="dl-row clearfix">
+                  <dt>UID:</dt>
+                  <dd><span>{{ member.uid }}}</span></dd>
+                </div>
+                <div class="dl-row clearfix">
+                  <dt>Display name:</dt>
+                  <dd><span>{{ member.displayName }}</span></dd>
+                </div>
+                <div class="dl-row clearfix">
+                  <dt>Email:</dt>
+                  <dd><span>{{ member.email }}</span></dd>
+                </div>
+              </dl>
+            </div>
+            <div class="user-details__right">
+              <div class="user-details__photo">
+                <img src="{{ member.photoUrl }}" alt="{{ member.firstName }}'s profile photo'">
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading">
+    <div class="row justify-content-center">
+      <div class="col-5">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+    </div>
+  </div>
+</div>
