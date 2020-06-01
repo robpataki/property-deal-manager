@@ -6,8 +6,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss']
+  templateUrl: './auth.component.html'
 })
 export class AuthComponent implements OnInit, OnDestroy {
   error: String;
@@ -44,7 +43,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     
     this.authSubscription = this.authService.signIn(email, password).subscribe((dataRes) => {
       this.error = null;
-      this.isLoading = false;
       this.form.reset();
       this.router.navigate(['/properties']);
     }, errorMessage => {

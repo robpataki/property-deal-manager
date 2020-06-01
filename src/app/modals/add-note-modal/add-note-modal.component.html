@@ -1,0 +1,59 @@
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNodeModalTitle">Add new note</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          [disabled]="isLoading"
+          #addNoteModalCloseButton
+          (click)="onClose()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addNoteForm" *ngIf="!isLoading && !isComplete" class="mb-3">
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <div class="form-group">
+                <label for="note" class="form-label">Note*</label>
+                <textarea 
+                  class="form-control"
+                  id="note"
+                  rows="6"
+                  formControlName="note"
+                  ></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="isLoading || isComplete">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+              <div *ngIf="isComplete" class="text-center">
+                <p><img src="assets/icons/icon--octa-check-green.svg" alt="Tick icon" aria-hidden="true"> Your new note has been added.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="modal-footer pr-0">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!addNoteForm.valid || isLoading || isComplete"
+          (click)="onSubmit($event)">Save</button>
+          <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          [disabled]="isLoading || isComplete"
+          (click)="onClose()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

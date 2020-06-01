@@ -5,22 +5,22 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class AccountService {
-  account: Account;
+  private _account: Account;
   accountChanged: Subject<Account> = new Subject<Account>();
 
   constructor() {}
 
   getAccount(): Account {
-    return this.account;
+    return this._account;
   }
 
   setAccount(account: Account): void {
-    this.account = account;
+    this._account = account;
     this.emitAccountChanged();
   }
 
   emitAccountChanged(): void {
-    this.accountChanged.next(this.account);
+    this.accountChanged.next(this._account);
   }
 
   reset(): void {

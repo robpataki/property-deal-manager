@@ -1,0 +1,180 @@
+html {
+  font-size: 16px; /* 1 */
+}
+
+body {
+  background: $c-white;
+  color: $c-deep-blue;
+}
+
+a {
+  cursor: pointer;
+}
+
+h1 {
+  @include media-breakpoint-down(sm) {
+    font-size: 1.8rem;
+    line-height: 1.5;
+  }
+}
+
+h2 {
+  @include media-breakpoint-down(sm) {
+    font-size: 1.44rem;
+    line-height: 1.2;
+  }
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.content-wrapper {
+  padding-top: 3rem;
+  padding-bottom: 6rem;
+  min-height: 84vh;
+}
+
+.card {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0 , 0.2) !important;
+}
+
+.bg-deep-blue {
+  background: $c-deep-blue;
+}
+
+.bg-salmon {
+  background: $c-salmon;
+}
+
+.img-fitted {
+  width: 100%;
+}
+
+.section {
+  &:not(:first-child) {
+    margin-top: 3rem;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 4rem;
+  }
+  
+  &-heading {
+    margin-bottom: 1rem;
+  }
+}
+
+.float-container {
+  @include clearfix;
+}
+
+.btn-deep-blue {
+  @extend .bg-deep-blue;
+  
+  color: $c-white;
+
+  &:hover,
+  &:focus {
+    color: $c-white;
+    background: $c-dark-grey;
+  }
+}
+
+.note-icon {
+  width: 32px;
+
+  @include media-breakpoint-down(sm) {
+    width: 24px;
+  }
+}
+
+table {
+  &.align-middle {
+    th, td {
+      vertical-align: middle;
+    }
+  }
+
+  caption {
+    color: $c-deep-blue;
+    caption-side: top;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.btn-primary {
+  background-color: $c-a11y-blue;
+
+  &:hover,
+  &:focus {
+    background: $c-deep-blue;
+  }
+}
+
+.text-primary {
+  color: $c-a11y-blue;
+}
+
+.btn-outline-primary {
+  border-color: $c-a11y-blue;
+  color: $c-a11y-blue;
+
+  &:hover,
+  &:focus {
+    background: $c-a11y-blue;
+    color: $c-white;
+  }
+
+  &:active {
+    background: $c-a11y-blue;
+  }
+
+  &:visited {
+    background: none;
+  }
+}
+
+.btn-link {
+  &:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
+// Horizontally filled flexbox container
+.flex-fh {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+
+  .flex-fh__box {
+    flex: 0 0 auto;
+
+    .flex-fh__box--expanded {
+      flex: 1 0 auto;
+    }
+  }
+}

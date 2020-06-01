@@ -3,12 +3,12 @@ import {
   Resolve,
 } from '@angular/router';
 
-import { DataStorageService } from '../shared/data-storage.service';
+import { DataStorageService } from '../shared/services/data-storage.service';
 import { PropertyService } from './property.service';
-import { Property } from '../shared/property.model';
+import { Property } from '../shared/models/property.model';
 
 @Injectable()
-export class PropertiesResolverService implements Resolve<Property[]> {
+export class PropertiesResolverService implements Resolve<any> {
   constructor(
     private dataStorageService: DataStorageService,
     private propertyService: PropertyService
@@ -20,7 +20,9 @@ export class PropertiesResolverService implements Resolve<Property[]> {
     if (!properties.length) {
       return this.dataStorageService.fetchProperties();
     } else {
-      return properties;
+      return new Promise((resolve) => {
+        resolve(properties);
+      });
     }
   }
 }

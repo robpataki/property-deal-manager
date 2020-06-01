@@ -2,19 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 import { NotFoundComponent } from './not-found/not-found.component';
-import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { AuthGuard } from './auth/auth.guard';
-import { AccountResolverService } from './account/account-resolver.service';
-import { PropertiesResolverService } from './properties/properties-resolver.service';
 import { AuthResolverService } from './auth/auth-resolver.service';
+import { AccountResolverService } from './account/account-resolver.service';
+import { AccountAndPropertiesResolverService } from './shared/services/account-and-properties-resolver.service';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-
-  { path: 'home',
-    component:  HomeComponent },
+  { path: '', redirectTo: '/properties', pathMatch: 'full' },
   
   { path: 'auth',
     resolve: [AuthResolverService],
@@ -28,7 +24,7 @@ const routes: Routes = [
 
   { path: 'properties',
     canActivate: [AuthGuard],
-    resolve: [PropertiesResolverService],
+    resolve: [AccountAndPropertiesResolverService],
     loadChildren: () => import('./properties/properties.module').then(m => m.PropertiesModule) },
   
   { path: 'not-found', 
@@ -44,6 +40,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, { 
     preloadingStrategy: PreloadAllModules,
+    onSameUrlNavigation: 'reload',
     anchorScrolling: 'enabled',
     scrollPositionRestoration: 'enabled'
   })],

@@ -1,4 +1,24 @@
-@import "../../assets/scss/variables";
+@import "../../scss/variables";
+
+.loading-spinner {
+  display: block;
+  position: fixed;
+  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  background: rgba(255, 255, 255, 0.9);
+  
+  &__anim {
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50% -50% 0);
+  }
+}
 
 .sk-folding-cube {
   margin: 20px auto;

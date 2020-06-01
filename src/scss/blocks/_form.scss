@@ -1,0 +1,73 @@
+.form {
+  &-section {
+    &:not(:first-child) {
+      margin-top: 4rem;
+    }
+
+    fieldset {
+      position: relative;
+    }
+    
+    legend {
+      margin-bottom: 0;
+    }
+
+    &__heading {
+      margin-bottom: 1rem;
+    }
+
+    legend,
+    &__heading {
+      display: inline-block;
+      width: auto;
+    }
+
+    .fieldset-head-btn {
+      position: absolute;
+      top: 4px;
+      right: 0;
+      z-index: 10;
+    }
+  }
+
+  &-label {
+    font-weight: 700;
+  }
+
+  &-inline {
+    flex-direction: row;
+    justify-content: left;
+    align-items: stretch;
+    margin-bottom: 0.8rem;
+
+    .form-label {
+      font-weight: 700;
+      min-width: 140px;
+      text-align: left;
+      justify-content: left;
+    }
+
+    input + button {
+      margin-left: 0.4rem;
+    }
+  }
+}
+
+.flex-1 {
+  flex: 1;
+
+  input {
+    width: 100%;
+  }
+}
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 1px solid $c-red;
+}
+
+.time-delimeter {
+  padding-top: 2.3rem;
+  margin: 0 0.2rem;
+  
+}

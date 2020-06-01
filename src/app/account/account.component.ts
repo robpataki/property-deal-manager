@@ -5,8 +5,8 @@ import { AuthService } from '../auth/auth.service';
 import { Account } from './account.model';
 import { AccountService } from './account.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { User } from '../shared/user.model';
-import { Organisation } from '../shared/organisation.model';
+import { User } from '../shared/models/user.model';
+import { Organisation } from '../shared/models/organisation.model';
 
 @Component({
   selector: 'app-account',
@@ -26,7 +26,6 @@ export class AccountComponent implements OnInit, OnDestroy {
               private accountService: AccountService) {}
 
   ngOnInit(): void {
-    console.log('[Account Component] - ngOnInit()');
     this.uid = this.authService.uid;
 
     this.account = this.accountService.getAccount();
@@ -34,9 +33,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.organisation = this.account.organisation;
 
     this.accountChangeSub = this.accountService.accountChanged.subscribe(account => {
-      this.account = account;
-      this.user = this.account.user;
-      this.organisation = this.account.organisation;
+      if (account) {
+        this.account = account;
+        this.user = account.user;
+        this.organisation = account.organisation;
+      }
     });
 
     this.initForm();

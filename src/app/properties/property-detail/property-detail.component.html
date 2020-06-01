@@ -1,0 +1,42 @@
+<article class="card">
+  <a [routerLink]="['/properties', property.uid]">
+    <div class="card-img-container">
+      <img src="{{ property.thumbnailUrl }}" alt="Photo of the property at {{ property.addressLine1 }}, {{ property.town }}, {{ property.postcode }}">
+    </div>
+  </a>
+  <div class="card-body">
+    <h1 class="card-title">{{property.addressLine1}}{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}}, {{ property.town }}<br>{{ property.postcode }}</h1>
+    <dl class="dl dl--small dl--justified">
+      <div class="dl-row">
+        <dt>Type:</dt>
+        <dd>{{ property.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ propertyTypes[property.type].value }}</span></dd>
+      </div>
+      <div class="dl-row">
+        <dt>Asking price: </dt>
+        <dd>{{ property.askingPrice | appCurrency }}</dd>
+      </div>
+      <div class="dl-row">
+        <dt>Deal type: </dt>
+        <dd>{{ dealTypes[property.dealType].value }}</dd>
+      </div>
+      <div class="dl-row">
+        <dt>Last activity: </dt>
+        <dd>{{ property.notes[property.notes.length-1].timestamp | timeFromNow }}</dd>
+      </div>
+      <div class="dl-row">
+        <dt>Last offer: </dt>
+        <dd
+          *ngIf="!!property.offers && !!property.offers.length">
+          {{ property.offers[property.offers.length-1].price | appCurrency }} ({{ property.offers[property.offers.length-1].timestamp | timeFromNow }})
+        </dd>
+        <dd
+          *ngIf="!property.offers || !property.offers.length">
+          No offers yet
+        </dd>
+      </div>
+    </dl>
+    <div class="text-right">
+      <a [routerLink]="['/properties', property.uid]" class="btn btn-primary btn-sm">View property sheet</a>
+    </div>
+  </div>
+</article>

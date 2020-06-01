@@ -1,0 +1,17 @@
+.picture-frame {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 210px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px;
+
+  img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

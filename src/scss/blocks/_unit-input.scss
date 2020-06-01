@@ -1,0 +1,36 @@
+.unit-input {
+  position: relative;
+
+  &__input {
+    position: relative;
+    padding: 0 0.5rem 0 1.8rem;
+  }
+
+  &__unit {
+    display: block;
+    position: absolute;
+    top: 0.5625rem;
+    left: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 1;
+    user-select: none;
+  }
+
+  &--right {
+    .unit-input__input {
+      padding: 0 1.8rem 0 0.5rem;
+    }
+
+    .unit-input__unit {
+      left: auto;
+      right: 0.75rem;
+    }
+  }
+
+  &--sm {
+    .unit-input__input {
+      width: 5.4rem;
+    }
+  }
+}

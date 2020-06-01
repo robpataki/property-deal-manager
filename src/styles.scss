@@ -1,10 +1,25 @@
+// Bootstrap - include these to have access to breakpoints 
+// and other useful mixins
+@import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/grid";
+@import "node_modules/bootstrap/scss/utilities/align";
+
 // Custom styling
-@import "./assets/scss/variables";
-@import "./assets/scss/mixins";
+@import "./scss/variables";
+@import "./scss/mixins";
 
-@import "./assets/scss/base";
-@import "./assets/scss/skip-link";
-@import "./assets/scss/blocks/dl";
-@import "./assets/scss/blocks/property-details";
-@import "./assets/scss/blocks/user-details";
+@import "./scss/base";
 
+@import "./scss/skip-link";
+@import "./scss/blocks/dl";
+@import "./scss/blocks/card-grid";
+@import "./scss/blocks/picture-frame";
+@import "./scss/blocks/btn-nav";
+@import "./scss/blocks/form";
+@import "./scss/blocks/unit-input";
+@import "./scss/blocks/br";
+@import "./scss/blocks/icon-btn";
+@import "./scss/blocks/property-details";
+@import "./scss/blocks/user-details";

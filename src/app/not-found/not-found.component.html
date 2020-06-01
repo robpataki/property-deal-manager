@@ -6,12 +6,12 @@
       
       <a
         *ngIf="!isUserAuthenticated"
-        routerLink="/"
-        class="btn btn-primary mt-2">Go back to the Home page</a>
+        routerLink="/auth"
+        class="btn btn-primary mt-2">Try signing in</a>
       <a
         *ngIf="isUserAuthenticated"
         routerLink="/properties"
-        class="btn btn-primary mt-2">Go to your Properties</a>
+        class="btn btn-primary mt-2">Go to your properties</a>
     </div>
   </div>
 </div>

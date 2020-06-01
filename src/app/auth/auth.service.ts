@@ -14,6 +14,7 @@ const AUTH_API_REFRESH_TOKEN_URL: string = firebaseConfig.authRefreshTokenUrl;
 const AUTH_API_RESET_PASSWORD_URL: string = firebaseConfig.authResetPasswordUrl;
 const API_KEY: string = firebaseConfig.apiKey;
 const SESSION_STORAGE_ID: string = 'authSession';
+const DEFAULT_TOKEN_RENEWAL_INTERVAL: number = 3300000; // 55 minutes
 
 export interface AuthResponseData {
   kind: string;
@@ -39,6 +40,7 @@ export interface TokenResponseData {
 export class AuthService {
   authSession: BehaviorSubject<AuthSession> = new BehaviorSubject<AuthSession>(null);
   autoSignOutTimer: any;
+  autoRenewTimer: any;
   hasActiveSession: boolean;
   _uid: string;
   _email: string;
@@ -135,9 +137,9 @@ export class AuthService {
       this._email = restoredAuthSession.email;
       this._refreshToken = restoredAuthSession.refreshToken;
       
-      this.authSession.next(restoredAuthSession);
-      const expirationDuration = restoredAuthSession.expirationTimestamp - new Date().getTime();
-      this.startAutoSignOutTimer(expirationDuration);
+      this.authSession.next(restoredAuthSession);      
+      console.log('[Auth Service] - autoSignIn()');
+      this.startAutoRenewTimer();      
     }
   }
 
@@ -152,22 +154,43 @@ export class AuthService {
   private handleAuthentication(email: string, localId: string, idToken: string, expiresIn: number, refreshToken: string) {
     this.hasActiveSession = true;
 
-    const expirationTimestamp = new Date().getTime() + (+expiresIn * 1000);
+    const expirationTimestamp = Date.now() + (+expiresIn * 1000);
     const authSession = new AuthSession(email, localId, idToken, refreshToken, expirationTimestamp);
     
     this._uid = localId;
     this._email = email;
     this._refreshToken = refreshToken;
 
-    this.authSession.next(authSession);
-    this.startAutoSignOutTimer(expiresIn * 1000);
-
     // Save auth data in persistent storage
     this.storeAuthSession(authSession);
+
+    this.authSession.next(authSession);
+    this.startAutoRenewTimer();
+  }
+
+  startAutoRenewTimer(): void {
+    const expirationTimestamp: number = this.authSession.value.expirationTimestamp;
+    const timeLeft: number = expirationTimestamp - Date.now();
+    // We want to renew a minute before the token expires
+    const delay = timeLeft > 60000 ? timeLeft - 60000 : timeLeft * 0.75;
+
+    console.log('[Auth Service] - startAutoRenewTimer() - delay: ', delay);
+    console.log('[Auth Service] - startAutoRenewTimer() - Token expires: ', new Date(expirationTimestamp));
+    console.log('[Auth Service] - startAutoRenewTimer() - Request new token: ', new Date(Date.now() + delay));
+    
+    this.autoRenewTimer = setTimeout(() => {
+      this.renewIdToken();
+    }, delay);
   }
 
   renewIdToken(): void {
     console.log('renewIdToken()');
+
+    // Kill the auto timer
+    if (this.autoRenewTimer) {
+      clearTimeout(this.autoRenewTimer);
+    }
+    this.autoRenewTimer = null;
 
     const requestData = {
       grant_type: 'refresh_token',
@@ -202,7 +225,7 @@ export class AuthService {
       restoredAuthSession.id,
       restoredAuthSession._token,
       restoredAuthSession.refreshToken,
-      restoredAuthSession.expirationTimestamp);
+      +restoredAuthSession.expirationTimestamp);
   }
 
   destroyAuthSession(): void {

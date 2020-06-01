@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import {
   Resolve,
 } from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { DataStorageService } from '../shared/data-storage.service';
+import { DataStorageService } from '../shared/services/data-storage.service';
 import { AccountService } from './account.service';
-import { Account } from './account.model';
 
 @Injectable()
-export class AccountResolverService implements Resolve<Account> {
+export class AccountResolverService implements Resolve<any> {
   constructor(
     private dataStorageService: DataStorageService,
     private accountService: AccountService
@@ -20,7 +20,9 @@ export class AccountResolverService implements Resolve<Account> {
     if (!account) {
       return this.dataStorageService.fetchAccount();
     } else {
-      return account;
+      return new Promise((resolve) => {
+        resolve(account);
+      });
     }
   }
 }

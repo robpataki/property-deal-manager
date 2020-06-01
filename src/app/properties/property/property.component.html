@@ -1,81 +1,378 @@
-<div class="container">
+<app-book-viewing-modal
+  *ngIf="!!bookViewingMode"
+  (viewingBooked)="onViewingBooked($event)"
+  (modalClosed)="onBookViewingModalClosed()">
+</app-book-viewing-modal>
+
+<app-add-note-modal
+  *ngIf="!!addNoteMode"
+  (noteAdded)="onNoteAdded($event)"
+  (modalClosed)="onAddNoteModalClosed()">
+</app-add-note-modal>
+
+<app-make-offer-modal
+  *ngIf="!!makeOfferMode"
+  (offerMade)="onOfferMade($event)"
+  (modalClosed)="onMakeOfferModalClosed()">
+</app-make-offer-modal>
+
+<div class="container mb-4">
   <div class="row">
     <div class="col-12">
-      <h1>Property details for <br>{{ fullAddress }}</h1>
+      <div 
+      *ngIf="hasUpcomingViewing"
+      class="alert alert-danger" 
+      role="alert">You have an upcoming viewing. <a [routerLink]="" fragment="s-viewings" class="alert-link">Click for details</a>.</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row section mb-2">
+    <div class="col-12">
+      <h1>
+        <span *ngIf="!!property.addressLine1" [innerHTML]="property.addressLine1"></span>
+        <span *ngIf="!!property.addressLine2" [innerHTML]="', ' + property.addressLine2"></span>
+        <span class="br-sm"></span>
+        <span *ngIf="!!property.town" [innerHTML]="', ' + property.town"></span>
+        <span *ngIf="!!property.postcode" [innerHTML]="', ' + property.postcode"></span>
+      </h1>
     </div>
   </div>
 
-  <hr>
-
-  <img [src]="property.thumbnailUrl" alt="Photo of the Property">
-
-  <hr>
-
-  <div class="row">
-    <div class="col-6">
-      <h3>Metadata</h3>
-      <dl class="dl dl--fitted">
-        <div class="dl-row">
-          <dt>Full address:</dt>
-          <dd>{{property.addressLine1}},{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}} {{property.town}}, {{property.postcode}}</dd>
+  <div class="row section mt-0 mt-md-5">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-xs-12 col-lg-4">
+          <div class="picture-frame">
+            <img [src]="property.thumbnailUrl" alt="Photo of the {{ !!property.addressLine1 ? property.addressLine1 : 'property' }}">
+          </div>
         </div>
-        <div class="dl-row">
-          <dt>Property size:</dt>
-          <dd>{{ property.size }} m<sup>2</sup></dd>
+        
+        <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
+          <h2 class="mb-3">Property details</h2>
+          <dl class="dl dl--fitted dl--spaced">
+            <div class="dl-row">
+              <dt>Bedrooms:</dt>
+              <dd>{{ property.bedrooms }}</dd>
+            </div>
+            <div class="dl-row">
+              <dt>Property type:</dt>
+              <dd>{{ propertyTypes[property.type].value }}</dd>
+            </div>
+            <div class="dl-row">
+              <dt>Property size:</dt>
+              <dd>{{ property.size }}m<sup>2</sup></dd>
+            </div>
+            <div class="dl-row">
+              <dt>EPC rating:</dt>
+              <dd>{{ property.epc }}</dd>
+            </div>
+            <div class="dl-row">
+              <dt>Deal type:</dt>
+              <dd>{{ dealTypes[property.dealType].value }}</dd>
+            </div>
+            <div class="dl-row">
+              <dt>Asking price:</dt>
+              <dd>{{ property.askingPrice | appCurrency }}</dd>
+            </div>
+            <div class="dl-row">
+              <dt>Market date:</dt>
+              <dd>{{ marketDate }} ({{ marketedFor }})</dd> 
+            </div>
+            <div class="dl-row" *ngIf="!!property.links && !!property.links.length">
+              <dt>Market links:</dt>
+              <dd>
+                <a
+                  *ngFor="let link of property.links; index as i;"  
+                  [href]="link"
+                  target="_blank"
+                  class="btn btn-sm btn-outline-primary btn--stacked">{{ link | trimLink | trim:24:true }}</a>
+              </dd>
+            </div>
+          </dl>
         </div>
-        <div class="dl-row">
-          <dt>EPC rating:</dt>
-          <dd>{{ property.epc }}</dd>
+        
+        <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
+          <div class="btn-nav btn-nav--floating">
+            <button
+              type="button"
+              class="btn btn-deep-blue"
+              data-toggle="modal"
+              data-target="#addNoteModal"
+              (click)="onAddNote()">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-comment.svg" alt="Speech bubble icon" aria-hidden="true"></span>
+              <span class="btn__label">Add new note</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-deep-blue"
+              data-toggle="modal"
+              data-target="#makeOfferModal"
+              (click)="onMakeOffer()">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-zap.svg" alt="Zap icon" aria-hidden="true"></span>
+              <span class="btn__label">Make an offer</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-deep-blue"
+              data-toggle="modal"
+              data-target="#bookViewingModal"
+              (click)="onBookViewing()">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-calendar.svg" alt="Calendar icon" aria-hidden="true"></span>
+              <span class="btn__label">Book a viewing</span>
+            </button>
+            <a 
+              [routerLink]="'edit'"
+              class="btn btn-deep-blue mt-3">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-pencil.svg" alt="Pencil icon" aria-hidden="true"></span>
+              <span class="btn__label">Edit property</span>
+            </a>
+          </div>
         </div>
-        <div class="dl-row">
-          <dt>Property type:</dt>
-          <dd class="text-capitalize">{{ property.type }}</dd>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <hr>
+    <div class="row section">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="section-heading">Offers</h2>
+            <div *ngIf="!sortedOffers || !sortedOffers.length">
+              <p>You haven't made an offer yet. GO FOR NO!</p>
+            </div>
+
+            <div *ngIf="!!sortedOffers && !!sortedOffers.length">
+              <!-- <p>You have made {{ sortedOffers.length }} offer{{ sortedOffers.length > 2 ? 's' : '' }} so far. Make sure you <b>follow up!</b> 🔥</p> -->
+              <div class="row">
+                <div class="col-12">
+                  <table class="table table-bordered table-responsive-sm table-striped table-hover align-middle">
+                    <caption>You have made {{ sortedOffers.length }} offer{{ sortedOffers.length > 2 ? 's' : '' }} so far. Make sure you <b>follow up!</b> 🔥</caption>
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Price</th>
+                        <th scope="col" class="text-center">Partner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let offer of sortedOffers; index as i;">
+                        <th class="text-center" scope="row">{{ sortedOffers.length-i }}</th>
+                        <td>{{ offer.timestamp | toDateTime }}</td>
+                        <!-- <td>{{ offer.price | currency:'GBP':true:'1.0' }}</td> -->
+                        <td>{{ offer.price | appCurrency }}</td>
+                        <td class="text-center">{{ offer.userName }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#makeOfferModal"
+                (click)="onMakeOffer()">Make an offer!</button>
+          </div>
+          
+          <div class="col-lg-5 offset-lg-1 mt-5 mt-lg-0">
+            <h2 class="section-heading">Number crunch</h2>
+            <!-- <p>Your maximum offer is <b>{{ 55000 | appCurrency}}</b>. Stick to it!</p> -->
+            <table class="table table-bordered table-striped table-hover align-middle">
+              <caption>Your maximum offer is <b>{{ 55000 | appCurrency}}</b>. Stick to it!</caption>
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Done up value</th>
+                  <td>{{ 99000 | appCurrency}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Rent pcm</th>
+                  <td>{{ 600 | appCurrency}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cost of refurb</th>
+                  <td>{{ 20000 | appCurrency}}</td>
+                </tr>
+              </tbody>
+            </table>
+      
+            <div class="row mt-2">
+              <div class="col-12">
+                <button type="button" class="btn btn-primary">Crunch the numbers</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="dl-row">
-          <dt>Deal type:</dt>
-          <dd class="text-capitalize">{{ property.dealType }}</dd>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <hr>
+    <div class="row section" id="s-viewings">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 col-6-md">
+            <h2 class="section-heading">Viewings</h2>
+            <p *ngIf="!hasUpcomingViewing && !doneViewing">You haven't seen this property yet.</p>
+
+            <table
+              *ngIf="!!sortedViewings && !!sortedViewings.length"  
+              class="table table-bordered table-striped table-hover table-responsive-sm align-middle">
+              <caption *ngIf="doneViewing">You have viewed this property. 👍</caption>
+              <caption *ngIf="hasUpcomingViewing">You have an upcoming viewing.</caption>
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-center">#</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let viewing of sortedViewings; index as i;">
+                  <th scope="row" class="text-center">{{ sortedViewings.length-i }}</th>
+                  <td><span [innerHTML]="viewing.timestamp | toDateTime:true"></span></td>
+                  <td>{{ viewing.cancelled ? 'Cancelled' : (isUpcomingTime(viewing.timestamp) ? 'Upcoming' : 'Done') }}</td>
+                  <td class="text-center">
+                    <button
+                      *ngIf="isUpcomingTime(viewing.timestamp) && !viewing.cancelled"
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      (click)="onCancelViewing(viewing.index)">Cancel</button>
+                      <span *ngIf="!isUpcomingTime(viewing.timestamp) || viewing.cancelled">
+                        <span aria-hidden="true">-</span>
+                        <span class="visually-hidden">Not actionable</span>
+                      </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <button
+              *ngIf="!sortedViewings || !sortedViewings.length || (!hasUpcomingViewing && !doneViewing)"
+              type="button"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#bookViewingModal"
+              (click)="onBookViewing()">Book a viewing</button>
+          </div>
         </div>
-      </dl>
+      </div>
     </div>
   </div>
 
-  <hr>
+  <div class="section">
+    <hr>
+    <div class="row section">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <div class="float-container">
+              <div class="float-left">
+                <h2 class="section-heading">Activity log{{ !!sortedNotes && sortedNotes.length > 3 ? ' ('+sortedNotes.length+')' : '' }}</h2>
+              </div>
+              <div class="float-left" *ngIf="!!sortedNotes && sortedNotes.length>3">
+                <a
+                  class="icon-btn mt-0 mt-sm-1 mt-md-2 ml-0 ml-2 ml-sm-3 ml-md-4"
+                  data-toggle="collapse"
+                  href="#activityLog"
+                  role="button"
+                  aria-expanded="false"
+                  aria-controls="activityLog">
+                  <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--expanded">
+                    <path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"></path>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--collapsed">
+                    <path fill-rule="evenodd" d="M10 10l-1.5 1.5L5 7.75 1.5 11.5 0 10l5-5 5 5z"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <div class="row">
-    <div class="col-6">
-      <h3>Number crunch</h3>
+        <div class="row" *ngIf="!!sortedNotes && !!sortedNotes.length">
+          <div class="col-12">
+            <div
+              [class]="sortedNotes.length > 3 ? 'collapse' : ''"
+              id="activityLog"
+              >
+              <table class="table table-bordered table-striped table-hover table-responsive-sm align-middle">
+                <caption>Activity log shows a timeline of all the <b>notes</b>, booked <b>viewings</b>, and  <b>offers</b> you've made on this property.</caption>
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" class="text-center">Type</th>
+                    <th scope="col">Note</th>
+                    <th scope="col" class="text-center">Partner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let note of sortedNotes; index as i;">
+                    <th scope="row" class="text-center">{{ sortedNotes.length-i }}</th>
+                    <td><span [innerHTML]="note.date | breakUp"></span></td>
+                    <td class="text-center">
+                      <span *ngIf="note.rawType === noteTypes.NOT.key">
+                        <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true" 
+                        class="note-icon">
+                        <span class="visually-hidden">{{ noteTypes.NOT.value }}</span>
+                      </span>
+                      <span *ngIf="note.rawType === noteTypes.OFF.key">
+                        <img src="assets/icons/icon--offer.svg" alt="Offer icon" aria-hidden="true"
+                        class="note-icon">
+                        <span class="visually-hidden">{{ noteTypes.OFF.value }}</span>
+                      </span>
+                      <span *ngIf="note.rawType === noteTypes.VIE.key">
+                        <img src="assets/icons/icon--viewing.svg" alt="Viewing icon" aria-hidden="true"
+                        class="note-icon">
+                        <span class="visually-hidden">{{ noteTypes.VIE.value }}</span>
+                      </span>
+                    </td>
+                    <td><span [innerHTML]="note.text"></span></td>
+                    <td class="text-center">{{ note.userName }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <hr>
-
-  <div class="row">
-    <div class="col-6">
-      <h3>Photos</h3>
+  <div class="section">
+    <hr>
+    <div class="row section">
+      <div class="col-12">
+        <h2 class="section-heading">Photos</h2>
+        <p>You haven't added any photos yet</p>
+        <button type="button" class="btn btn-primary">Add some photos</button>
+      </div>
     </div>
   </div>
 
-  <hr>
-
-  <div class="row">
-    <div class="col-6">
-      <h3>Offers</h3>
+  <div class="section">
+    <hr>
+    <div class="row section">
+      <div class="col-12">
+        <h2 class="section-heading">Comparables</h2>
+        <p>You haven't added a comparable yet</p>
+        <button type="button" class="btn btn-primary">Add a new comparable</button>
+      </div>
     </div>
   </div>
 
-  <hr>
-
-  <div class="row">
-    <div class="col-6">
-      <h3>Comparables</h3>
-    </div>
-  </div>
-
-  <hr>
-  
-  <div class="row">
-    <div class="col-6">
-      <h3>Notes</h3>
-    </div>
-  </div>
 </div>

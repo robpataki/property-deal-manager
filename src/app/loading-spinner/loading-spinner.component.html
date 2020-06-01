@@ -1,4 +1,17 @@
-<div class="sk-folding-cube">
+<div *ngIf="fullScreenMode" class="loading-spinner">
+  <div class="loading-spinner__anim">
+    <div class="sk-folding-cube">
+      <div class="sk-cube1 sk-cube"></div>
+      <div class="sk-cube2 sk-cube"></div>
+      <div class="sk-cube4 sk-cube"></div>
+      <div class="sk-cube3 sk-cube"></div>
+    </div>
+  </div>
+</div>
+
+<div 
+  *ngIf="!fullScreenMode" 
+  class="sk-folding-cube">
   <div class="sk-cube1 sk-cube"></div>
   <div class="sk-cube2 sk-cube"></div>
   <div class="sk-cube4 sk-cube"></div>

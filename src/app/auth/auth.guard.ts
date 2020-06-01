@@ -21,7 +21,13 @@ export class AuthGuard implements CanActivate {
         const isAuthenticated = !!authSession;
 
         if (isAuthenticated) {
-          return true;
+          if (authSession.expirationTimestamp > Date.now()) {
+            // If the session token hasn't expired yet, carry on
+            return true;
+          } else {
+            // If the session token expired, sign user out
+            this.authService.signOut();
+          }
         }
 
         return this.router.createUrlTree(['/auth']);

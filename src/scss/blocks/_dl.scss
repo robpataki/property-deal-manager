@@ -1,0 +1,72 @@
+.dl {
+  margin-bottom: 2rem;
+
+  &-row {
+    position: relative;
+    @include clearfix;
+
+    .btn {
+      position: relative;
+      top: -4px;
+
+      &:not(:last-child) {
+        margin-right: 0.4rem;
+      }
+
+      &--stacked {
+        display: block;
+        text-align: left;
+
+        &:not(:last-child) {
+          margin-right: 0;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  dt,
+  dd {
+    display: inline-block;
+    float: left;
+  }
+
+  dd {
+    margin-left: 10px;
+  }
+
+  &--justified {
+    .dl-row {
+      @include clearfix;
+
+      margin-bottom: 0.2rem;
+    }
+
+    dd {
+      float: right;
+      margin-bottom: 0;
+    }
+  }
+
+  &--fitted {
+    dt {
+      width: 120px;
+    }
+  }
+
+  
+
+  &--small {
+    font-size: 0.85rem;
+  }
+
+  &--spaced {
+    .dl-row:not(:last-child) {
+      margin-bottom: 0.8rem;
+    }
+  }
+}

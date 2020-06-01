@@ -1,0 +1,103 @@
+<div class="modal fade" id="bookViewingModal" tabindex="-1" role="dialog" aria-labelledby="bookViewingModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookViewingModalTitle">Book a viewing</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          [disabled]="isLoading"
+          #bookViewingModalCloseButton
+          (click)="onClose()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="bookViewingForm" *ngIf="!isLoading && !isComplete" class="mb-3">
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label" [for]="dpInputId">Date</label>
+                    <app-datepicker (update)="onDateInputChange($event)" [id]="dpInputId"></app-datepicker>
+                  </div>
+                </div>
+                <div class="col-5 offset-1">
+                  <div class="row">
+                    <div class="col-12 flex-fh">
+                      <div class="form-group flex-fh__box--filled">
+                        <label for="hours" class="form-label">Hours</label>
+                        <input
+                          placeholder="HH"  
+                          inputmode="numeric"
+                          pattern="[0-9]*"
+                          minlength="1"
+                          maxlength="2"
+                          class="form-control"
+                          type="text"
+                          id="hours"
+                          formControlName="hours"
+                          autocomplete="off"
+                          appNumberInput>
+                      </div>
+                      <div class="flex-fh__box time-delimeter">:</div>
+                      <div class="form-group flex-fh__box--filled">
+                        <label for="minutes" class="form-label">Mins</label>
+                        <input
+                        placeholder="MM"
+                        inputmode="numeric"
+                          pattern="[0-9]*"
+                          maxlength="2"
+                          minlength="1"
+                          class="form-control"
+                          type="text"
+                          id="minutes"
+                          formControlName="minutes"
+                          autocomplete="off"
+                          appNumberInput>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="note" class="form-label">Note (optional)</label>
+                <textarea 
+                  class="form-control"
+                  id="note"
+                  rows="2"
+                  formControlName="note"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="isLoading || isComplete">
+          <div class="row justify-content-center">
+            <div class="col-12">
+                <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+              <div *ngIf="isComplete" class="text-center">
+                <p><img src="assets/icons/icon--octa-check-green.svg" alt="Tick icon" aria-hidden="true"> Your viewing has been recorded.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="modal-footer pr-0">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!bookViewingForm.valid || isLoading || isComplete"
+          (click)="onSubmit($event)">Save</button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          [disabled]="isLoading || isComplete"
+          (click)="onClose()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+.icon-btn {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  width: 2rem;
+  height: 1.7rem;
+  border-radius: 4px;
+  border: 2px solid $c-salmon;
+  background: transparent;
+
+  &__icon {
+    display: block;
+    position: relative;
+    width: 50%;
+    height: auto;
+    margin: 0 auto;
+    fill: $c-salmon;
+
+    &--expanded {
+      display: block;
+      top: 1px;
+    }
+   
+    &--collapsed {
+      display: none;
+      top: -1px;
+    }
+  }
+
+  &[aria-expanded="true"] {
+    .icon-btn__icon--collapsed {
+      display: block;
+    }
+   
+    .icon-btn__icon--expanded {
+      display: none;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    background: $c-salmon;
+
+    .icon-btn__icon {
+      fill: $c-white;
+    }
+  }
+
+  &--danger {
+    border: 2px solid $c-red;
+
+    .icon-btn__icon {
+      fill: $c-bs-red;
+    }
+
+    &:hover,
+    &:focus {
+      background: $c-bs-red;
+    }
+  }
+
+  &--md {
+    width: 2.4rem;
+    height: calc(1.5em + 0.75rem + 2px);
+
+    .icon-btn__icon {
+      width: 60%;
+    }
+  }
+}

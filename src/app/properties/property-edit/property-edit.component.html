@@ -1,0 +1,228 @@
+<app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
+
+<div class="container mb-4"></div>
+
+<div class="container">
+  <div class="row section mb-2">
+    <div class="col-12">
+      <h1>
+        <span *ngIf="!!form.controls.addressLine1.value" [innerHTML]="form.controls.addressLine1.value"></span>
+        <span *ngIf="!!form.controls.addressLine2.value" [innerHTML]="', ' + form.controls.addressLine2.value"></span>
+        <span class="br-sm"></span>
+        <span *ngIf="!!form.controls.town.value" [innerHTML]="', ' + form.controls.town.value"></span>
+        <span *ngIf="!!form.controls.postcode.value" [innerHTML]="', ' + form.controls.postcode.value"></span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="row section mt-0 mt-md-5">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-xs-12 col-lg-4">
+          <div class="picture-frame">
+            <img *ngIf="!!form.controls.thumbnailUrl.value" [src]="form.controls.thumbnailUrl.value" alt="Photo of {{form.controls.addressLine1.value}}">
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
+          <form [formGroup]="form" class="form form-compact">
+            <div class="form-section">
+              <h2 class="form-section__heading">Basic details</h2>
+              <div>
+                <div class="form-group form-inline">
+                  <label for="bedrooms" class="form-label">Bedrooms:</label>
+                  <select
+                    class="form-control form-control-sm flex-1"
+                    id="bedrooms"
+                    formControlName="bedrooms">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="type" class="form-label">Property type:</label>
+                  <select
+                    class="form-control form-control-sm flex-1"
+                    id="type"
+                    formControlName="type">
+                    <option *ngFor="let propertyType of propertyTypesArray" value="{{ propertyType.key }}">{{ propertyType.value }}</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="size" class="form-label">Property size:</label>
+                  <div class="unit-input unit-input--right unit-input--sm">
+                    <span class="unit-input__unit">m<sup>2</sup></span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="4"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="size"
+                      formControlName="size"
+                      appNumberInput>
+                  </div>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="epc" class="form-label">EPC rating:</label>
+                  <select
+                    class="form-control form-control-sm flex-1"
+                    id="epc"
+                    formControlName="epc">
+                    <option *ngFor="let epc of epcRatingsArray" value="{{ epc.key }}">{{ epc.value }}</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="dealType" class="form-label">Deal type:</label>
+                  <select
+                    class="form-control form-control-sm flex-1"
+                    id="dealType"
+                    formControlName="dealType">
+                    <option *ngFor="let dealType of dealTypesArray" value="{{ dealType.key }}">{{ dealType.value }}</option>
+                  </select>
+                </div>
+          
+                <div class="form-group form-inline">
+                  <label for="askingPrice" class="form-label">Asking price:</label>
+                  <div class="unit-input unit-input flex-1">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="7"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="askingPrice"
+                      formControlName="askingPrice"
+                      appNumberInput>
+                  </div>
+                </div>
+          
+                <div class="form-group form-inline">
+                    <label class="form-label" [for]="dpInputId">Market date</label>
+                    <app-datepicker (update)="onDateInputChange($event)" [id]="dpInputId" [date]="form.controls['marketDate'].value"></app-datepicker>
+                </div>
+          
+                <div class="form-group form-inline">
+                  <label for="thumbnailUrl" class="form-label">Thumbnail URL:</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    id="thumbnailUrl"
+                    formControlName="thumbnailUrl">
+                </div>
+              </div>
+            </div>
+            <div class="form-section">
+              <fieldset>
+                <legend><h2 class="form-section__heading">Address</h2></legend>
+                <div class="form-group form-inline">
+                  <label for="addressLine1" class="form-label">1st line:</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    id="addressLine1"
+                    formControlName="addressLine1">
+                </div>
+                <div class="form-group form-inline">
+                  <label for="addressLine2" class="form-label">2nd line:</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    id="addressLine2"
+                    formControlName="addressLine2">
+                </div>
+                <div class="form-group form-inline">
+                  <label for="town" class="form-label">Town:</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    id="town"
+                    formControlName="town">
+                </div>
+                <div class="form-group form-inline">
+                  <label for="postcode" class="form-label">Postode:</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    id="postcode"
+                    formControlName="postcode">
+                </div>
+              </fieldset>
+            </div>
+            <div class="form-section">
+              <fieldset>
+                <legend><h2 class="form-section__heading">Links</h2></legend>
+                <button
+                  *ngIf="getLinkControls().length < MAX_LINKS"
+                  class="btn btn-primary btn-sm fieldset-head-btn"
+                  (click)="onAddNewLink()">Add new link</button>
+                <div 
+                  *ngFor="let linkControl of getLinkControls(); index as i;"
+                  class="form-group form-inline">
+                  <label for="link" class="form-label">Link #{{i+1}}</label>
+                  <input
+                    class="form-control flex-1"
+                    type="text"
+                    [formControl]="linkControl">
+                  <button
+                    type="button"
+                    class="icon-btn icon-btn--danger icon-btn--md"
+                    (click)="onRemoveLink(i)">
+                    <svg class="icon-btn__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
+                    <span class="visually-hidden">Remove link #{{i+1}}</span>
+                  </button>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
+          <div class="btn-nav btn-nav--floating">
+            <button
+              type="button"
+              class="btn btn-deep-blue"
+              (click)="onSubmit()"
+              [disabled]="!form.valid"
+              >
+                <span class="btn__icon"><img src="assets/icons/icon--octa-check.svg" alt="Tick icon" aria-hidden="true"></span>
+                <span class="btn__label">Save changes</span>
+            </button>
+            <a 
+              [routerLink]="['../']"
+              class="btn btn-secondary">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
+              <span class="btn__label">Drop changes</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="editMode"
+        class="row mt-5">
+        <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0 offset-0 offset-lg-4">
+          <hr>
+          <h2 class="section-heading mt-5 text-danger">Danger zone</h2>
+          <div class="btn-nav mt-4 text-center">
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="onDelete()">
+                <span class="btn__icon"><img src="assets/icons/icon--octa-trashcan.svg" alt="Trashcan icon" aria-hidden="true"></span>
+                <span class="btn__label">Delete property sheet</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+            

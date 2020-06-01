@@ -1,5 +1,5 @@
-import { User } from '../shared/user.model';
-import { Organisation } from '../shared/organisation.model';
+import { User } from '../shared/models/user.model';
+import { Organisation } from '../shared/models/organisation.model';
 
 export class Account {
   constructor(

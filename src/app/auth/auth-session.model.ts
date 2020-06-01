@@ -9,7 +9,7 @@ export class AuthSession {
 
   // Immutable annotation to retrieve a private property
   get token(): string {
-    if (!this.expirationTimestamp || new Date().getTime() > this.expirationTimestamp) {
+    if (!this.expirationTimestamp || Date.now() > this.expirationTimestamp) {
       return null;
     }
 
