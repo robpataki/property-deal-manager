@@ -1,0 +1,41 @@
+.float-container {
+  @include clearfix;
+
+  &--br-md {
+    @include media-breakpoint-down(md) {
+      .float-left:not(.float-left--strict),
+      .float-right:not(.float-right--strict) {
+        float: none !important;
+        display: block;
+        clear: both;
+      }
+
+      .float-right {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  &--br-sm {
+    @include media-breakpoint-down(sm) {
+      .float-left:not(.float-left--strict),
+      .float-right:not(.float-right--strict) {
+        float: none !important;
+        display: block;
+        clear: both;
+      }
+
+      .float-right {
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}

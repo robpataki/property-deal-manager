@@ -6,14 +6,14 @@
   padding: 0.5rem;
   font-size: 1rem;
   text-align: center;
-  color: #000000;
-  background-color: #ffdd00;
+  color: $c-black;
+  background-color: $c-yellow;
 
   &:focus {
     left: 0;
     z-index: 10000;
-    outline: 3px solid #000000;
-    background-color: #ffdd00;
-    color: #000000;
+    outline: 3px solid $c-black;
+    background-color: $c-yellow;
+    color: $c-black;
   }
 }

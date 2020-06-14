@@ -1,6 +1,13 @@
 <app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
 
-<div class="container mb-4"></div>
+<app-back-button [label]="'Back to the property sheet'" [url]="'/properties' + (!!this.id ?  '/this.id' : '')"></app-back-button>
+
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-12">
+    </div>
+  </div>
+</div>
 
 <div class="container">
   <div class="row section mb-2">
@@ -84,7 +91,8 @@
                   <select
                     class="form-control form-control-sm flex-1"
                     id="dealType"
-                    formControlName="dealType">
+                    formControlName="dealType"
+                    (change)="onDealTypeChange()">
                     <option *ngFor="let dealType of dealTypesArray" value="{{ dealType.key }}">{{ dealType.value }}</option>
                   </select>
                 </div>
@@ -106,7 +114,7 @@
                 </div>
           
                 <div class="form-group form-inline">
-                    <label class="form-label" [for]="dpInputId">Market date</label>
+                  <label class="form-label" [for]="dpInputId">{{ dealType === dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</label>
                     <app-datepicker (update)="onDateInputChange($event)" [id]="dpInputId" [date]="form.controls['marketDate'].value"></app-datepicker>
                 </div>
           
@@ -189,7 +197,7 @@
           <div class="btn-nav btn-nav--floating">
             <button
               type="button"
-              class="btn btn-deep-blue"
+              class="btn btn-primary"
               (click)="onSubmit()"
               [disabled]="!form.valid"
               >
@@ -198,7 +206,7 @@
             </button>
             <a 
               [routerLink]="['../']"
-              class="btn btn-secondary">
+              class="btn btn-primary">
               <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
               <span class="btn__label">Drop changes</span>
             </a>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Property } from 'src/app/shared/models/property.model';
-import { PROPERTY_TYPES, DEAL_TYPES } from '../../shared/services/app-constants.service';
+import { PROPERTY_TYPES, DEAL_TYPES, STRATEGIES } from '../../shared/services/app-constants.service';
 
 @Component({
   selector: 'app-property-detail',
@@ -11,6 +11,7 @@ export class PropertyDetailComponent implements OnInit {
   @Input() property: Property;
   propertyTypes: any = PROPERTY_TYPES;
   dealTypes: any = DEAL_TYPES;
+  strategies: any = STRATEGIES;
 
   constructor() { }
 

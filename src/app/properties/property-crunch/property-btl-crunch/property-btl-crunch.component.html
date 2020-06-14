@@ -1,0 +1,518 @@
+<div class="row section">
+  <div class="col-12">
+    <h2 class="section-heading">Buy-to-let offers<span *ngIf="selectedOfferIndex >= 0"> - <span class="bg-yellow"> maximum offer: {{ selectedMaxOffer  | appCurrency }}</span></span><span class="text-salmon"> *</span></h2>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-bordered table-striped table-hover align-middle table--fixed-layout">
+          <caption>Offers based on annual cashflow and ROI</caption>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Offer</th>
+              <th scope="col">Money left in</th>
+              <th scope="col">ROI</th>
+              <th scope="col">Stamp duty</th>
+            </tr>
+              </thead>
+          <tbody>
+            <tr
+              *ngFor="let offer of offers; index as i"
+              class="{{selectedOfferIndex === i ? 'tr-selected' : ''}}"
+              (click)="onSelectOffer(i)">
+              <td>{{ offer.price | appCurrency }}</td>
+              <td>{{ offer.mli | appCurrency }}</td>
+              <td>{{ offer.roi }}</td>
+              <td>{{ offer.std | appCurrency }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <span class="text-salmon">*</span>
+          <span> Offers cater for</span>
+          <span *ngIf="!!numberOfVoidMonths"><b> {{ numberOfVoidMonths }} month{{ numberOfVoidMonths > 1 ? 's' : ''}}</b> worth of holding cost, totalling <b>{{ (monthlyHoldingCost * numberOfVoidMonths) | appCurrency }}</b>.</span>
+          <span *ngIf="!numberOfVoidMonths"><b> no holding cost</b>.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row section mb-2">
+  <div class="col-12">
+    <form [formGroup]="crunchForm" class="form form-compact" (change)="onChange($event)" (input)="onInput($event)">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-section">
+            <h2 class="form-section__heading">Back end</h2>
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="duv" class="form-label">Done up value</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="10"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="duv"
+                      formControlName="duv"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2 class="form-section__heading form-section__heading--block float-container float-container--br-md">
+              <div class="float-left"><span>Cost of the deal: </span><span class="bg-yellow">{{ costOfTheDeal | appCurrency }}</span><span class="text-salmon"> *</span></div>
+              <div class="float-right"><span>All money in: </span><span class="bg-yellow">{{ totalCostOfTheDeal | appCurrency }}</span><span class="text-salmon"> **</span></div>
+            </h2>
+
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="ref" class="form-label">Refurb</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="ref"
+                      formControlName="ref"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="src" class="form-label">Sourcing</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="src"
+                      formControlName="src"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="pm" class="form-label">Project man.</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="pm"
+                      formControlName="pm"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="mcob" class="form-label">Cost of borrowing</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="10"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="mcob"
+                      formControlName="mcob"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="srv" class="form-label">Survey</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="srv"
+                      formControlName="srv"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="auc" class="form-label">Auction fee</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="auc"
+                      formControlName="auc"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="sol" class="form-label">Solicitor</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="sol"
+                      formControlName="sol"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="bro" class="form-label">Broker</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="bro"
+                      formControlName="bro"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <p>
+                  <span class="text-salmon">*</span><span> Cost of the deal includes stamp duty. </span>
+                  <span class="text-salmon"> **</span><span> All money in includes cost of the deal, purchase price and </span>
+                  <span *ngIf="!!numberOfVoidMonths"><b>{{ numberOfVoidMonths }} month{{ numberOfVoidMonths > 1 ? 's' : ''}}</b> worth of holding cost.</span>
+                  <span *ngIf="!numberOfVoidMonths"><b> no holding cost</b>.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2 class="form-section__heading form-section__heading--block float-container float-container--br-md">
+              <div class="float-left">Monthly cashflow: <span class="bg-yellow">{{ cashflow | appCurrency }}</span></div>
+              <div class="float-right">Rental yield: <span class="bg-yellow">{{ yield }}%</span></div>
+            </h2>
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="rent" class="form-label">Rent</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="rent"
+                      formControlName="rent"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="ltv" class="form-label">LTV</label>
+                  <div class="unit-input unit-input--right">
+                    <span class="unit-input__unit">%</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9.]*"
+                      maxlength="5"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="ltv"
+                      formControlName="ltv"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="mir" class="form-label">Mortgage interest</label>
+                  <div class="unit-input unit-input--right">
+                    <span class="unit-input__unit">%</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9.]*"
+                      maxlength="5"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="mir"
+                      formControlName="mir">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="mip" class="form-label">Mortgage payment</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="mip"
+                      formControlName="mip"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mt-2">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="ins" class="form-label">Building insurance</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="ins"
+                      formControlName="ins"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="man" class="form-label">Management</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="man"
+                      formControlName="man"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="moe" class="form-label">MOE</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="moe"
+                      formControlName="moe"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2 class="form-section__heading">
+              Monthly holding cost: <span class="bg-yellow">{{ monthlyHoldingCost | appCurrency }}</span>
+            </h2>
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="ct" class="form-label">Council tax</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="ct"
+                      formControlName="ct"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="nrg" class="form-label">Energy</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="nrg"
+                      formControlName="nrg"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="wat" class="form-label">Water</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="wat"
+                      formControlName="wat"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="grent" class="form-label">Ground rent</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="grent"
+                      formControlName="grent"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="serv" class="form-label">Service charge</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="serv"
+                      formControlName="serv"
+                      appNumberInput>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="insDup" class="form-label">Building insurance</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="6"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="insDup"
+                      formControlName="insDup">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="mcob" class="form-label">Cost of borrowing</label>
+                  <div class="unit-input">
+                    <span class="unit-input__unit">£</span>
+                    <input
+                      inputmode="numeric"
+                      pattern="[0-9.]*"
+                      maxlength="10"
+                      class="form-control unit-input__input"
+                      type="text"
+                      id="mcob"
+                      formControlName="mcob">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="voids" class="form-label">Void period<span class="text-salmon"> *</span></label>
+                  <select
+                    class="form-control flex-1"
+                    id="voids"
+                    formControlName="voids">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <p>
+                  <span class="text-salmon">*</span><span> Always cater for a few months of void period to make sure you're not out of pocket! 🦠😷</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

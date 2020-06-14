@@ -5,12 +5,12 @@ import { Pipe, PipeTransform, Injectable } from '@angular/core';
   name: 'appCurrency'
 })
 export class CurrencyPipe implements PipeTransform {
-  transform(money: number): string {
+  transform(money: number, showDigits?: boolean): string {
     return new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      minimumFractionDigits: showDigits ? 2 : 0,
+      maximumFractionDigits: showDigits ? 2 : 0
     }).format(money);
   }
 }

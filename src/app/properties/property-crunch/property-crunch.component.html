@@ -1,0 +1,94 @@
+<app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
+
+<app-back-button [label]="'Back to the property sheet'" [url]="'/properties/' + this.id"></app-back-button>
+
+<div class="container">
+  <div class="row section mt-4 mb-2">
+    <div class="col-12 col-md-8">
+      <h1>
+        <span class="text-salmon">Number crunch for </span>
+        <br>
+        <span *ngIf="!!property.addressLine1" [innerHTML]="property.addressLine1 + ', '"></span>
+        <span *ngIf="!!property.addressLine2" [innerHTML]="property.addressLine2 + ', '"></span>
+        <span class="br-sm"></span>
+        <span *ngIf="!!property.town" [innerHTML]="property.town + ', '"></span>
+        <span *ngIf="!!property.postcode" [innerHTML]="property.postcode"></span>
+      </h1>
+    </div>
+    <div class="col-12 col-md-4">
+      <ng-template [ngTemplateOutlet]="btnNav"></ng-template>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-4 mt-4">
+      <form [formGroup]="configForm" class="form form-inline">
+        <div class="form-group">
+          <label for="strg" class="form-label">Primary strategy:</label>
+          <select
+            class="form-control flex-1"
+            id="strg"
+            formControlName="strg"
+            (change)="onStrategyChange()">
+            <option *ngFor="let strategy of strategiesArray" value="{{ strategy.key }}">{{ strategy.value }}</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link {{ selectedStrategyTab === strategies.BTL.key ? 'active' : '' }}" href="#" (click)="onSwitchStrategyTab($event, strategies.BTL.key)">Buy-to-let crunch</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {{ selectedStrategyTab === strategies.FLP.key ? 'active' : '' }}" href="#" (click)="onSwitchStrategyTab($event, strategies.FLP.key)">Flip crunch</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <app-property-btl-crunch
+    class="{{selectedStrategyTab != strategies.BTL.key ? 'visually-hidden' : ''}}"
+    [property]="property"
+    #btlCrunchComponent></app-property-btl-crunch>
+
+  <app-property-flip-crunch
+    class="{{selectedStrategyTab != strategies.FLP.key ? 'visually-hidden' : ''}}"
+    [property]="property"
+    #flipCrunchComponent></app-property-flip-crunch>
+</div>
+
+<div class="container mt-5">
+  <div class="row mt-5">
+    <div class="col-12 col-md-4 offset-md-8">
+      <ng-template [ngTemplateOutlet]="btnNav"></ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-template #btnNav>
+  <div class="btn-nav btn-nav--floating">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="!configForm.valid"
+      >
+        <span class="btn__icon"><img src="assets/icons/icon--octa-check.svg" alt="Tick icon" aria-hidden="true"></span>
+        <span class="btn__label">Save changes</span>
+    </button>
+    <a 
+      [routerLink]="['../']"
+      fragment="s-crunch-and-offers"
+      class="btn btn-primary">
+      <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
+      <span class="btn__label">Drop changes</span>
+    </a>
+  </div>
+</ng-template>

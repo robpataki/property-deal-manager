@@ -75,3 +75,33 @@ export function generateUID(prefix?: string): string {
   let result = !!prefix && typeof prefix.indexOf != 'undefined' ? prefix + randomString : randomString;
   return result;
 }
+
+/*
+ * Calculate the Stamp Duty Land tax based on value and number properties owned
+*/
+export function calculateStampDuty(value: number): number {
+  let std = 0;
+  if (value < 40000) {
+    return std;
+  }
+  
+  const brackets: any[] = [
+    { min: 0, max: 125000, rate: 0, additionalRate: 0.03 },
+    { min: 125001, max: 250000, rate: 0.02, additionalRate: 0.05 },
+    { min: 250001, max: 925000, rate: 0.05, additionalRate: 0.08 },
+    { min: 925001, max: 1500000, rate: 0.1, additionalRate: 0.13 },
+    { min: 1500001, max: Number.POSITIVE_INFINITY, rate: 0.12, additionalRate: 0.15 }
+  ];
+
+  let index: number = brackets.findIndex((rate) => {
+    return (value >= rate.min && value <= rate.max);
+  });
+
+  std = (value - brackets[index].min) * brackets[index].additionalRate;
+  for (let i = index - 1; i >= 0; i--) {
+    const bracket = brackets[i];
+    std += ((bracket.max - bracket.min) * bracket.additionalRate);
+  }
+
+  return +std.toFixed(2);
+}

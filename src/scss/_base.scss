@@ -58,6 +58,18 @@ h2 {
   background: $c-salmon;
 }
 
+.bg-yellow {
+  background: $c-yellow;
+}
+
+.text-primary {
+  color: $c-a11y-blue;
+}
+
+.text-salmon {
+  color: $c-salmon;
+}
+
 .img-fitted {
   width: 100%;
 }
@@ -72,13 +84,22 @@ h2 {
   }
   
   &-heading {
+    // display: inline-block;s
     margin-bottom: 1rem;
   }
 }
 
-.float-container {
-  @include clearfix;
+.note-icon {
+  width: 32px;
+
+  @include media-breakpoint-down(sm) {
+    width: 24px;
+  }
 }
+
+
+
+
 
 .btn-deep-blue {
   @extend .bg-deep-blue;
@@ -92,37 +113,6 @@ h2 {
   }
 }
 
-.note-icon {
-  width: 32px;
-
-  @include media-breakpoint-down(sm) {
-    width: 24px;
-  }
-}
-
-table {
-  &.align-middle {
-    th, td {
-      vertical-align: middle;
-    }
-  }
-
-  caption {
-    color: $c-deep-blue;
-    caption-side: top;
-    padding: 0;
-    margin-bottom: 1rem;
-  }
-}
-
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
 .btn-primary {
   background-color: $c-a11y-blue;
 
@@ -132,8 +122,13 @@ table {
   }
 }
 
-.text-primary {
-  color: $c-a11y-blue;
+.btn-inline {
+  position: relative;
+  top: 4px;
+
+  @include media-breakpoint-down(sm) {
+    top: 0;
+  }
 }
 
 .btn-outline-primary {

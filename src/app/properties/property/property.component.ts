@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 import { Property } from 'src/app/shared/models/property.model';
 import { PropertyService } from '../property.service';
-import { PROPERTY_TYPES, DEAL_TYPES, NOTE_TYPES, EPC_RATINGS } from '../../shared/services/app-constants.service';
+import { PROPERTY_TYPES, DEAL_TYPES, NOTE_TYPES, EPC_RATINGS, STRATEGIES } from '../../shared/services/app-constants.service';
 import { AccountService } from 'src/app/account/account.service';
 
 import { format as formatDate } from 'date-fns';
@@ -49,6 +49,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
   propertyTypes: any = PROPERTY_TYPES;
   dealTypes: any = DEAL_TYPES;
   noteTypes: any = NOTE_TYPES;
+  strategies: any = STRATEGIES;
 
   MAX_LINKS: number = 4;
   

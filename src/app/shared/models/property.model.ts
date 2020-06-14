@@ -2,6 +2,10 @@ import { Note } from './note.model';
 import { Offer } from './offer.model';
 import { Viewing } from './viewing.model';
 
+export interface Crunch {
+  // ...
+}
+
 // PropertyDetails doesn't include the arrays other than the links
 export interface PropertyDetails {
   uid: string;
@@ -20,6 +24,7 @@ export interface PropertyDetails {
   marketTimestamp: string;
   
   links?: string[];
+  crunch?: any
 }
 
 export class Property implements PropertyDetails {
@@ -40,6 +45,7 @@ export class Property implements PropertyDetails {
     public marketTimestamp: string,
     
     public links?: string[],
+    public crunch?: any,
 
     public notes?: Note[],
     public offers?: Offer[],

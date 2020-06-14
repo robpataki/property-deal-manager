@@ -3,7 +3,8 @@ import {
   arrayToArrayTable,
   ukDateToUSDate,
   generateUID,
-  kvObjectToArray } from './utils';
+  kvObjectToArray,
+  calculateStampDuty } from './utils';
 
 describe('Utils / getCurrentTimestamp()', () => {
   it('should return the current timestamp as a string', () => {
@@ -113,6 +114,34 @@ describe('Utils / generateUID()', () => {
     expect(generatedUID1).not.toEqual(generatedUID2);
     expect(generatedUID1).not.toEqual(generatedUID3);
     expect(generatedUID2).not.toEqual(generatedUID3);
+  })
+})
+
+describe('Utils / calculateStampDuty()', () => {
+  it('returns 0 for purchase price lower than 40000', () => {
+    expect(calculateStampDuty(0)).toEqual(0);
+    expect(calculateStampDuty(10000)).toEqual(0);
+    expect(calculateStampDuty(39999)).toEqual(0);
+  })
+
+  it('returns the accurate amount based on the value bracket', () => {
+    // Bracket 1
+    expect(calculateStampDuty(40000)).toEqual(1200);
+    expect(calculateStampDuty(100000)).toEqual(3000);
+    expect(calculateStampDuty(125000)).toEqual(3750);
+    // Bracket 2
+    expect(calculateStampDuty(150000)).toEqual(4999.95);
+    expect(calculateStampDuty(210000)).toEqual(7999.95);
+    expect(calculateStampDuty(250000)).toEqual(9999.95);
+    // Bracket 3
+    expect(calculateStampDuty(260000)).toEqual(10799.87);
+    expect(calculateStampDuty(540000)).toEqual(33199.87);
+    expect(calculateStampDuty(925000)).toEqual(63999.87);
+    // Bracket 4
+    expect(calculateStampDuty(950000)).toEqual(67249.74);
+    expect(calculateStampDuty(1234567)).toEqual(104243.45);
+    expect(calculateStampDuty(1500000)).toEqual(138749.74);
+    expect(calculateStampDuty(2000000)).toEqual(213749.59);
   })
 })
 

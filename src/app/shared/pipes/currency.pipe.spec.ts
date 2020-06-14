@@ -17,4 +17,10 @@ describe('CurrencyPipe', () => {
     expect(currencyPipe.transform(null)).toEqual('£0');
   })
 
+  it('should display currency in the correct format - with 2 decimal digits', () => {
+    expect(currencyPipe.transform(0, true)).toEqual('£0.00');
+    expect(currencyPipe.transform(1000, true)).toEqual('£1,000.00');
+    expect(currencyPipe.transform(0.4321, true)).toEqual('£0.43');
+  })
+
 });

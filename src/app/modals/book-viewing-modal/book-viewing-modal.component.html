@@ -88,15 +88,15 @@
       <div class="modal-footer pr-0">
         <button
           type="button"
-          class="btn btn-primary"
-          [disabled]="!bookViewingForm.valid || isLoading || isComplete"
-          (click)="onSubmit($event)">Save</button>
-        <button
-          type="button"
           class="btn btn-danger"
           data-dismiss="modal"
           [disabled]="isLoading || isComplete"
           (click)="onClose()">Close</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!bookViewingForm.valid || isLoading || isComplete"
+          (click)="onSubmit($event)">Save</button>
       </div>
     </div>
   </div>

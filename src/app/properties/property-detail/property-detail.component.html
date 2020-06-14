@@ -6,7 +6,42 @@
   </a>
   <div class="card-body">
     <h1 class="card-title">{{property.addressLine1}}{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}}, {{ property.town }}<br>{{ property.postcode }}</h1>
+    
     <dl class="dl dl--small dl--justified">
+      <ng-template [ngIf]="!!property.crunch && !!property.crunch.strg">
+        <hr>
+        <div class="dl-row">
+          <dt>Strategy: </dt>
+          <dd>{{ strategies[property.crunch.strg].value }}</dd>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="!property.crunch || !property.crunch.BTL || !property.crunch.FLP">
+        <div class="dl-row"><b class="text-danger">No crunch!</b></div>
+      </ng-template>
+      <ng-template [ngIf]="property.crunch.strg === strategies.BTL.key && !!property.crunch.BTL">
+        <div class="dl-row">
+          <dt>Maximum offer: </dt>
+          <dd>{{ property.crunch.BTL.calc.mop | appCurrency }}</dd>
+        </div>
+        <div class="dl-row">
+          <dt>ROI: </dt>
+          <dd>{{ property.crunch.BTL.calc.roi }}</dd>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="property.crunch.strg === strategies.FLP.key && !!property.crunch.FLP">
+        <div class="dl-row">
+          <dt>Maximum offer: </dt>
+          <dd>{{ property.crunch.FLP.calc.mop | appCurrency }}</dd>
+        </div>
+        <div class="dl-row">
+          <dt>Profit: </dt>
+          <dd>{{ property.crunch.FLP.calc.prof | appCurrency }}</dd>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="!!property.crunch">
+        <hr>
+      </ng-template>
+
       <div class="dl-row">
         <dt>Type:</dt>
         <dd>{{ property.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ propertyTypes[property.type].value }}</span></dd>
@@ -20,21 +55,25 @@
         <dd>{{ dealTypes[property.dealType].value }}</dd>
       </div>
       <div class="dl-row">
+        <dt>{{ property.dealType === dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</dt>
+        <dd>{{ property.marketTimestamp | timeFromNow }}</dd>
+      </div>
+      <hr>
+      <div class="dl-row">
         <dt>Last activity: </dt>
         <dd>{{ property.notes[property.notes.length-1].timestamp | timeFromNow }}</dd>
       </div>
-      <div class="dl-row">
+      <div class="dl-row" *ngIf="!!property.offers && !!property.offers.length">
         <dt>Last offer: </dt>
-        <dd
-          *ngIf="!!property.offers && !!property.offers.length">
+        <dd>
           {{ property.offers[property.offers.length-1].price | appCurrency }} ({{ property.offers[property.offers.length-1].timestamp | timeFromNow }})
         </dd>
-        <dd
-          *ngIf="!property.offers || !property.offers.length">
-          No offers yet
-        </dd>
+      </div>
+      <div class="dl-row" *ngIf="!property.offers || !property.offers.length">
+        <b class="text-danger">No offers!</b>
       </div>
     </dl>
+    <hr>
     <div class="text-right">
       <a [routerLink]="['/properties', property.uid]" class="btn btn-primary btn-sm">View property sheet</a>
     </div>

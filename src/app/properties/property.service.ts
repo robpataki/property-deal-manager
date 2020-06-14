@@ -7,7 +7,7 @@ import { Note } from '../shared/models/note.model';
 import { Offer } from '../shared/models/offer.model';
 import { Viewing } from '../shared/models/viewing.model';
 import { getCurrentTimestamp } from '../shared/utils';
-import { NOTE_TYPES } from '../shared/services/app-constants.service';
+import { NOTE_TYPES, STRATEGIES } from '../shared/services/app-constants.service';
 import { AccountService } from '../account/account.service';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class PropertyService {
   }
 
   addNoteToProperty(propertyId: string, note: Note, keepSilent: boolean = false): void {
-    const property = this.getProperty(propertyId);
+    const property: Property = this.getProperty(propertyId);
     property.notes.push(note);
     
     if (!keepSilent) {
@@ -43,7 +43,7 @@ export class PropertyService {
   }
 
   makeOfferOnProperty(propertyId: string, offer: Offer, keepSilent: boolean = false): void {
-    const property = this.getProperty(propertyId);
+    const property: Property = this.getProperty(propertyId);
     property.offers.push(offer);
     
     if (!keepSilent) {
@@ -52,7 +52,7 @@ export class PropertyService {
   }
 
   bookViewingOfProperty(propertyId: string, viewing: Viewing, keepSilent: boolean = false): void {
-    const property = this.getProperty(propertyId);
+    const property: Property = this.getProperty(propertyId);
     property.viewings.push(viewing);
 
     if (!keepSilent) {
@@ -60,8 +60,15 @@ export class PropertyService {
     }
   }
 
+  updatePropertyCrunch(propertyId: string, crunch: any) {
+    const property: Property = this.getProperty(propertyId);
+    property.crunch = crunch;
+
+    this.emitPropertiesChanged();
+  }
+
   cancelViewingOfProperty(propertyId: string, viewingIndex: number): void {
-    const property = this.getProperty(propertyId);
+    const property: Property = this.getProperty(propertyId);
     property.viewings[viewingIndex].cancelled = true;
 
     const userName: string = this.getUserName();
@@ -77,7 +84,7 @@ export class PropertyService {
   }
 
   updatePropertyDetails(propertyDetails: PropertyDetails): void {
-    const property = this.getProperty(propertyDetails.uid);
+    const property: Property = this.getProperty(propertyDetails.uid);
     Object.keys(propertyDetails).map(key => {
       property[key] = propertyDetails[key];
     });
@@ -110,8 +117,9 @@ export class PropertyService {
       propertyDetails.askingPrice,
       propertyDetails.marketTimestamp,
       propertyDetails.links,
-      
-      [createNote],
+      { strg: STRATEGIES.BTL.key },
+
+      [ createNote ],
       [],
       []
     );

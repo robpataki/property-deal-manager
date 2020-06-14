@@ -11,10 +11,12 @@ import { BreakUpStringPipe } from '../pipes/break-up-string';
 import { TimeFromNowPipe } from '../pipes/time-from-now.pipe';
 import { TrimPipe } from '../pipes/trim.pipe';
 import { TrimLinkPipe } from '../pipes/trim-link.pipe';
+import { BackButtonComponent } from '../../back-button/back-button.component';
 
 @NgModule({
   declarations: [
     LoadingSpinnerComponent,
+    BackButtonComponent,
     NumberInputDirective,
     DateInputDirective,
     BreakUpStringPipe,
@@ -30,6 +32,7 @@ import { TrimLinkPipe } from '../pipes/trim-link.pipe';
   exports: [
     CommonModule,
     LoadingSpinnerComponent,
+    BackButtonComponent,
     NumberInputDirective,
     DateInputDirective,
     BreakUpStringPipe,

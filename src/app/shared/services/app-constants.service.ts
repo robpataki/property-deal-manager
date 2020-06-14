@@ -90,3 +90,50 @@ export const NOTE_TYPES: any = {
     value: 'Note'
   }
 }
+
+export const STRATEGIES: any = {
+  'FLP': {
+    key: 'FLP',
+    value: 'Flip'
+  },
+  'BTL': {
+    key: 'BTL',
+    value: 'Buy-to-Let'
+  }
+}
+
+export const CRUNCH_DEFAULTS: any = {
+  BTL: {
+    BROKER: 649,
+    SURVEY: 300,
+    SOURCER: 3000,
+    SOLICITOR: 1000,
+    INSURANCE: 25,
+    MOE: 0.1,
+    MANAGEMENT: 0.1,
+    LTV: 75,
+    HOLDING_COST: {
+      COUNCIL_TAX: 100,
+      ENERGY: 50,
+      WATER: 28,
+      GROUND_RENT: 0,
+      SERVICE_CHARGE: 0,
+      TIMES: 6
+    }
+  },
+  FLP: {
+    BROKER: 649,
+    SURVEY: 300,
+    SOURCER: 0,
+    SOLICITOR: 2000,
+    INSURANCE: 30,
+    HOLDING_COST: {
+      COUNCIL_TAX: 100,
+      ENERGY: 50,
+      WATER: 28,
+      GROUND_RENT: 0,
+      SERVICE_CHARGE: 0,
+      TIMES: 6
+    }
+  }
+}

@@ -18,12 +18,13 @@ import { AccountService } from 'src/app/account/account.service';
 export class PropertyEditComponent implements OnInit, OnDestroy {
   dpInputId: string = generateUID('dpi_');
 
-  private id: string;
+  id: string;
   propertiesChangedSub: Subscription;
   property: Property;
   form: FormGroup;
   propertyTypes: any = PROPERTY_TYPES;
   dealTypes: any = DEAL_TYPES;
+  dealType: string;
   MAX_LINKS: number = 4;
   isLoading: boolean;
   editMode: boolean;
@@ -175,5 +176,9 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
 
   onDateInputChange(dateString: string): void {
     this.form.controls['marketDate'].setValue(dateString);
+  }
+
+  onDealTypeChange(): void {
+    this.dealType = this.form.value.dealType;
   }
 }

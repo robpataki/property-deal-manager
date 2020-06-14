@@ -1,0 +1,102 @@
+<div class="float-container float-container--br-sm mb-3 mb-md-0">
+  <div class="float-left">
+    <h2 class="section-heading">Number crunch</h2>
+  </div>
+  <div class="float-right">
+    <a [routerLink]="['crunch']" class="btn btn-primary btn-sm btn-inline">Crunch the numbers</a>
+  </div>
+</div>
+
+<div class="row" *ngIf="!hasCrunch">
+  <div class="col-12">
+    <p class="text-danger">You haven't crunched the numbers yet.</p>
+  </div>
+</div>
+<div class="row" *ngIf="!!hasCrunch">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <p>Your primary <b>strategy</b> is <b>{{ strategies[primaryStrategy].value }}</b>.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link {{ selectedStrategyTab === strategies.BTL.key ? 'active' : '' }}" href="#" (click)="onSwitchStrategyTab($event, strategies.BTL.key)">BTL summary</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{ selectedStrategyTab === strategies.FLP.key ? 'active' : '' }}" href="#" (click)="onSwitchStrategyTab($event, strategies.FLP.key)">Flip summary</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mt-4" *ngIf="!!property.crunch.BTL && !!property.crunch.FLP">
+      <div class="col-12" *ngIf="!!hasBTLCrunch && selectedStrategyTab === strategies.BTL.key">
+        <table class="table table-bordered table-striped table-hover align-middle table--fixed-layout">
+          <caption>You're looking to buy a <b>cashflowing</b> asset.</caption>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tr-selected">
+              <th scope="row">Maximum offer</th>
+              <td>{{ property.crunch.BTL.calc.mop | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">ROI</th>
+              <td>{{ property.crunch.BTL.calc.roi }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Rent pcm</th>
+              <td>{{ property.crunch.BTL.calc.rent | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Done up value</th>
+              <td>{{ property.crunch.BTL.calc.duv | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Cost of refurb</th>
+              <td>{{ property.crunch.BTL.calc.ref | appCurrency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="col-12" *ngIf="!!hasFLPCrunch && selectedStrategyTab === strategies.FLP.key">
+        <table class="table table-bordered table-striped table-hover align-middle table--fixed-layout">
+          <caption>You're looking to flip for <b>profit</b>.</caption>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tr-selected">
+              <th scope="row">Maximum offer</th>
+              <td>{{ property.crunch.FLP.calc.mop | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Profit</th>
+              <td>{{ property.crunch.FLP.calc.prof | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Done up value</th>
+              <td>{{ property.crunch.FLP.calc.duv | appCurrency}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Cost of refurb</th>
+              <td>{{ property.crunch.FLP.calc.ref | appCurrency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

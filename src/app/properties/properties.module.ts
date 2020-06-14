@@ -12,6 +12,10 @@ import { PropertyDetailComponent } from './property-detail/property-detail.compo
 import { PropertyEditComponent } from './property-edit/property-edit.component';
 import { DatePickerModule } from '../datepicker/datepicker.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PropertyCrunchComponent } from './property-crunch/property-crunch.component';
+import { PropertyBTLCrunchComponent } from './property-crunch/property-btl-crunch/property-btl-crunch.component';
+import { PropertyFlipCrunchComponent } from './property-crunch/property-flip-crunch/property-flip-crunch.component';
+import { PropertyCrunchSummaryComponent } from './property/property-crunch-summary/property-crunch-summary.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PropertyEditComponent,
     AddNoteModalComponent,
     MakeOfferModalComponent,
-    BookViewingModalComponent
+    BookViewingModalComponent,
+    PropertyCrunchComponent,
+    PropertyBTLCrunchComponent,
+    PropertyFlipCrunchComponent,
+    PropertyCrunchSummaryComponent
   ],
   imports: [
     SharedModule,

@@ -11,6 +11,7 @@ import { Property } from '../models/property.model';
 import { PropertyService } from '../../properties/property.service';
 import { Organisation } from '../models/organisation.model';
 import { AuthService } from '../../auth/auth.service';
+import { STRATEGIES } from './app-constants.service';
 
 const API_URL: string = firebaseConfig.databaseUrl;
 
@@ -85,6 +86,9 @@ export class DataStorageService {
             +propertiesData[key].askingPrice,
             propertiesData[key].marketTimestamp ? propertiesData[key].marketTimestamp.toString() : '',
             (!propertiesData[key].links ? [] : propertiesData[key].links),
+            (!propertiesData[key].crunch ? {
+              strg: STRATEGIES.BTL.key
+            } : propertiesData[key].crunch),
 
             (!propertiesData[key].notes ? [] : propertiesData[key].notes),
             (!propertiesData[key].offers ? [] : propertiesData[key].offers),
