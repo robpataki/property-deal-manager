@@ -12,10 +12,12 @@ export class PropertyDetailComponent implements OnInit {
   propertyTypes: any = PROPERTY_TYPES;
   dealTypes: any = DEAL_TYPES;
   strategies: any = STRATEGIES;
+  lastActivityTimestamp: number;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
+    this.lastActivityTimestamp = +this.property.notes[this.property.notes.length-1].timestamp;
   }
 
 }

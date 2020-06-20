@@ -46,6 +46,19 @@
     }
   }
 
+  &--primary {
+    border: 2px solid $c-a11y-blue;
+
+    .icon-btn__icon {
+      fill: $c-a11y-blue;
+    }
+
+    &:hover,
+    &:focus {
+      background: $c-a11y-blue;
+    }
+  } 
+
   &--danger {
     border: 2px solid $c-red;
 

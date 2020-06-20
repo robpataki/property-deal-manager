@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
 
-<app-back-button [label]="'Back to the property sheet'" [url]="'/properties/' + this.id"></app-back-button>
+<app-back-button [label]="'Back to property card'" [url]="'/properties/' + id"></app-back-button>
 
 <div class="container">
   <div class="row section mt-4 mb-2">
@@ -8,11 +8,7 @@
       <h1>
         <span class="text-salmon">Number crunch for </span>
         <br>
-        <span *ngIf="!!property.addressLine1" [innerHTML]="property.addressLine1 + ', '"></span>
-        <span *ngIf="!!property.addressLine2" [innerHTML]="property.addressLine2 + ', '"></span>
-        <span class="br-sm"></span>
-        <span *ngIf="!!property.town" [innerHTML]="property.town + ', '"></span>
-        <span *ngIf="!!property.postcode" [innerHTML]="property.postcode"></span>
+        <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode:true"></span>
       </h1>
     </div>
     <div class="col-12 col-md-4">
@@ -85,7 +81,7 @@
     </button>
     <a 
       [routerLink]="['../']"
-      fragment="s-crunch-and-offers"
+      fragment="s-crunch"
       class="btn btn-primary">
       <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
       <span class="btn__label">Drop changes</span>

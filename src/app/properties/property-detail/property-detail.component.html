@@ -5,16 +5,27 @@
     </div>
   </a>
   <div class="card-body">
-    <h1 class="card-title">{{property.addressLine1}}{{ !!property.addressLine2 ? ', ' + property.addressLine2 : ''}}, {{ property.town }}<br>{{ property.postcode }}</h1>
+    <h1 class="card-title">
+      <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode:false:true"></span>
+    </h1>
     
     <dl class="dl dl--small dl--justified">
+      <hr>
       <ng-template [ngIf]="!!property.crunch && !!property.crunch.strg">
-        <hr>
         <div class="dl-row">
           <dt>Strategy: </dt>
           <dd>{{ strategies[property.crunch.strg].value }}</dd>
         </div>
       </ng-template>
+      
+      <ng-template [ngIf]="!property.comparables || !property.comparables.length">
+        <div class="dl-row"><b class="text-danger">No comparables!</b></div>
+      </ng-template>
+      <div class="dl-row" *ngIf="!!property.comparables && !!property.comparables.length">
+        <dt>Comparables: </dt>
+        <dd>{{ !!property.comparables && !!property.comparables.length ? property.comparables.length : 0 }}</dd>
+      </div>
+      
       <ng-template [ngIf]="!property.crunch || !property.crunch.BTL || !property.crunch.FLP">
         <div class="dl-row"><b class="text-danger">No crunch!</b></div>
       </ng-template>
@@ -61,7 +72,7 @@
       <hr>
       <div class="dl-row">
         <dt>Last activity: </dt>
-        <dd>{{ property.notes[property.notes.length-1].timestamp | timeFromNow }}</dd>
+        <dd>{{ lastActivityTimestamp | timeFromNow }}</dd>
       </div>
       <div class="dl-row" *ngIf="!!property.offers && !!property.offers.length">
         <dt>Last offer: </dt>
@@ -75,7 +86,7 @@
     </dl>
     <hr>
     <div class="text-right">
-      <a [routerLink]="['/properties', property.uid]" class="btn btn-primary btn-sm">View property sheet</a>
+      <a [routerLink]="['/properties', property.uid]" class="btn btn-primary btn-sm">View property card</a>
     </div>
   </div>
 </article>

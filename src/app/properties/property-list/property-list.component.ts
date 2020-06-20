@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Property } from 'src/app/shared/models/property.model';
 import { PropertyService } from '../property.service';
-import { arrayToArrayTable } from  '../../shared/utils';
+import { arrayToArrayTable, sortArrayByKey } from  '../../shared/utils';
 
 @Component({
   selector: 'app-property-list',
@@ -26,20 +26,7 @@ export class PropertyListComponent implements OnInit, OnDestroy {
 
   initProperties(properties: Property[]): void {
     this.properties = properties;
-    this.sortedProperties = this.sortPropertiesByKey('createTimestamp', true);
-  }
-
-  sortPropertiesByKey(key: string, desc?: boolean): Property[] {
-    let sortedProperties = this.properties.slice();
-    sortedProperties.sort((a, b) => {
-      if (desc) {
-        return (+a[key] <= +b[key]) ? 1 : -1;
-      } else {
-        return (+a[key] >= +b[key]) ? 1 : -1;
-      }
-    });
-    
-    return sortedProperties;
+    this.sortedProperties = sortArrayByKey('createTimestamp', this.properties).reverse();
   }
 
   ngOnDestroy(): void {

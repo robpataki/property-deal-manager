@@ -6,7 +6,7 @@ import { AccountComponent } from './account/account.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthResolverService } from './auth/auth-resolver.service';
 import { AccountResolverService } from './account/account-resolver.service';
-import { AccountAndPropertiesResolverService } from './shared/services/account-and-properties-resolver.service';
+import { AccountAndPropertiesAndComparablesResolverService } from './shared/services/account-and-properties-and-comparables-resolver.service';
 
 
 const routes: Routes = [
@@ -24,8 +24,13 @@ const routes: Routes = [
 
   { path: 'properties',
     canActivate: [AuthGuard],
-    resolve: [AccountAndPropertiesResolverService],
+    resolve: [AccountAndPropertiesAndComparablesResolverService],
     loadChildren: () => import('./properties/properties.module').then(m => m.PropertiesModule) },
+
+  { path: 'comparables',
+  canActivate: [AuthGuard],
+  resolve: [AccountAndPropertiesAndComparablesResolverService],
+    loadChildren: () => import('./comparables/comparables.module').then(m => m.ComparablesModule) },
   
   { path: 'not-found', 
     component: NotFoundComponent, 

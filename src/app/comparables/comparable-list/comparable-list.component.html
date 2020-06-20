@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="float-container float-container--br-md">
+        <h1 class="float-left text-salmon">Comparable cards ({{ sortedComparables.length }})</h1>
+        <div class="float-right">
+          <div class="btn-nav btn-nav--free">
+            <a
+            [routerLink]="'new'" 
+              class="btn btn-primary">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-plus.svg" alt="Plus icon" aria-hidden="true"></span>
+              <span class="btn__label">Create new comparable card</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3" *ngIf="!sortedComparables.length">
+        <p>You don't have any comparables yet.</p>
+      </div>
+
+      <div class="mt-5 card-grid" *ngIf="!!sortedComparables.length">
+        <div class="row">
+          <div
+            class="card-wrapper"
+            *ngFor="let comparable of sortedComparables; index as i;">
+            <app-comparable-detail [comparable]="comparable"></app-comparable-detail>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

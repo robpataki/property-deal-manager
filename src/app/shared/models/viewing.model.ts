@@ -1,6 +1,6 @@
 export class Viewing {
   constructor(
-    public timestamp: string,
-    public cancelled: boolean
+    public timestamp: number,
+    public cancelled?: boolean
   ) {}
 }

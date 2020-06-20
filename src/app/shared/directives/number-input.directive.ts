@@ -7,14 +7,11 @@ const REGEXP: RegExp = new RegExp('^[0-9]*$');
   host: {
     '(input)': 'onChange($event)',
     '(keypress)': 'onKeyPress($event)',
-    '(keydown)': 'onKeyDown($event)',
     'autocomplete': 'off'
   }
 })
 export class NumberInputDirective {
   cachedValue: string = '';
-
-  constructor() {}
 
   // Allow numerical values and reject anything else
   onKeyPress($event) {
@@ -22,18 +19,8 @@ export class NumberInputDirective {
     if (charCode >= 48 && charCode <= 57) {
       return true;
     }
+    
     return false;
-  }
-
-  onKeyDown($event) {
-    const keyCode = $event.keyCode;
-    const el = $event.target;
-    if (keyCode === 38) {
-      el.value = +el.value + 1;
-    } else if (keyCode === 40) {
-      el.value = +el.value > 0 ? +el.value - 1 : 0;
-    }
-    return true;
   }
 
   // Handle copy-paste and autofill values, and value deletion

@@ -49,6 +49,21 @@
     }
   }
 
+  &--free {
+    .btn {
+      width: auto;
+
+      .btn__icon {
+        margin: 0;
+      }
+
+      .btn__label {
+        margin: 0;
+        padding: 0 0.3rem;
+      }
+    }
+  }
+
   @include media-breakpoint-down(sm) {
     display: block;
     text-align: center;

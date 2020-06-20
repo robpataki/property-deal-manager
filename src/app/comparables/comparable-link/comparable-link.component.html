@@ -1,0 +1,118 @@
+<app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
+
+<app-back-button [label]="backButtonLabel" [url]="backButtonUrl"></app-back-button>
+
+<div class="container mt-5">
+  <div class="section">
+    <div class="row section">
+      <div class="col-12 col-lg-6">
+        <h1 class="text-salmon">Add a comparable to property</h1>
+        <p class="lead">You can either use an existing comparable, or create a new one to add to the property.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="row section mb-2">
+      <div class="col-12 col-lg-6">
+        <h2>Add an existing comparable</h2>
+        <p>Use the postode search below to find an existing comparable to add to this property.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-4">
+        <form [formGroup]="form" class="form">
+          <div class="form-group">
+            <label for="postcode" class="form-label">Postcode</label>
+            <input
+              class="form-control text-uppercase"
+              type="text"
+              id="postcode"
+              aria-describedby="postcodeHint"
+              formControlName="postcode"
+              (input)="onPostcodeInput()"
+              autocomplete="off">
+              <span id="postcodeHint" class="form-text text-muted">For example, M35 0JP</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <div
+      class="row mt-2 mt-md-4">
+      <div class="col-12">
+        <p
+          id="filterResultsTableCaption"
+          [class]="!comparables.length ? 'text-danger font-weight-bold' : 'font-weight-bold'">Found {{ comparables.length }} matching result{{ comparables.length > 1 || !comparables.length ? 's' : '' }}.</p>
+        <table
+          *ngIf="comparables.length"
+          class="table table-bordered align-middle table-responsive-md table-compact table-sm"
+          aria-describedby="filterResultsTableCaption">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Photo</th>
+              <th scope="col">Address</th>
+              <th scope="col">Type</th>
+              <th scope="col">Size</th>
+              <th scope="col">Sold Price</th>
+              <th scope="col">Sold date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let comparable of comparables; index as i;">
+              <td scope="col" class="text-center">
+                <a [routerLink]="['/comparables', comparable.uid]">
+                  <span class="table-thumbnail">
+                    <img src="{{ comparable.thumbnailUrl }}" alt="Photo of {{ comparable.addressLine1 }}">
+                    <app-comparable-badge [size]="'small'"></app-comparable-badge>
+                  </span>
+                </a>
+              </td>
+              <th scope="row">
+                <a [routerLink]="['/comparables', comparable.uid]">
+                  <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:true"></span>
+                </a>
+              </th>
+              <td scope="col">{{comparable.bedrooms}} bedroom<br><span class="text-lowercase">{{ propertyTypes[comparable.type].value }}</span></td>
+              <td scope="col">{{ comparable.size }}m<sup>2</sup></td>
+              <td scope="col">{{ comparable.soldPrice | appCurrency }}</td>
+              <td scope="col">{{ comparable.soldTimestamp | toDateTime }}<br>({{ comparable.soldTimestamp | timeFromNow }})</td>
+              <td scope="col" class="text-center">
+                <button
+                  type="button"
+                  (click)="onAddComparable(i)"
+                  class="btn btn-primary btn-sm btn-inline">Add this comparable</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <hr>
+    <div class="row section mb-2">
+      <div class="col-12 col-lg-6">
+        <h2 class="section-heading">Add a new comparable</h2>
+        <p>If you can't find a comparable you created earlier, or if you have a better one to add, you can create one here.</p>
+      </div>
+      <div class="col-12 col-lg-4 offset-lg-2">
+        <div class="float-container float-container--br-md">
+          <div class="float-right">
+            <div class="btn-nav btn-nav--free">
+              <a
+              [routerLink]="['/comparables', 'new']" [queryParams]="{propertyId: propertyId}"
+                class="btn btn-primary">
+                <span class="btn__icon"><img src="assets/icons/icon--octa-plus.svg" alt="Plus icon" aria-hidden="true"></span>
+                <span class="btn__label">Add new comparable</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

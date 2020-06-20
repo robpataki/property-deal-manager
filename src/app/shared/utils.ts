@@ -1,8 +1,11 @@
+import { Comparable } from './models/comparable.model';
+import { Property } from './models/property.model';
+
 /* 
  * Returns the current date's timestamp as string
 */
-export function getCurrentTimestamp(): string {
-  return (Date.now()).toString();
+export function getCurrentTimestamp(): number {
+  return Date.now();
 }
 
 /* 
@@ -104,4 +107,30 @@ export function calculateStampDuty(value: number): number {
   }
 
   return +std.toFixed(2);
+}
+
+/*
+    * Returns an copy of the passed in array, where the items are 
+    * sorted in ascending order by the passed in key, and each item contains the original index
+    * *
+    * Use this for Notes, Viewings, Offers and Comparables
+    * The returned array is an `indexed` array, because it comtains the original item index
+  */
+ export function sortArrayByKey(key: string, array: {[key: string]: any}[]): any[] {
+  if (!array || !array.length) {
+    return [];
+  }
+
+  return array.map((item, index) => {
+    return {
+      index: index,
+      ...item
+    }
+  }).sort((a, b) => {
+    if (!!a[key] && !!b[key]) {
+      return (a[key] >= b[key]) ? 1 : -1;
+    } else {
+      return 1;
+    }
+  });
 }

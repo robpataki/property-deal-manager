@@ -45,7 +45,7 @@ export class DatePickerComponent implements OnInit {
     config.markDisabled = (date: NgbDate) => calendar.getWeekday(date) >= 6;
 
     // setting datepicker popup to close only on click outside
-    config.autoClose = 'outside';
+    config.autoClose = true;
 
     // setting the positioning of the datepicker - relative to the input field
     config.placement = ['bottom-left'];

@@ -1,6 +1,11 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-deep-blue">
-    <a class="navbar-brand" routerLink="/">My Property DB</a>
+    <a class="navbar-brand" routerLink="/">
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 512 512" width="24" height="24" fill="#ffffff" style="position: relative; top: -2px;">
+        <path d="M255.3,11.7l-154,112.1V232v46.5v108.2l155.3,112.1l154-112.1V278.5V232V123.8L255.3,11.7z M364.2,363 l-107.6,78.3l-108.7-78.5v-84.4h216.3V363z M364.2,232H147.8v-84.5l107.6-78.3l108.7,78.5V232z"/>
+      </svg>
+      <span>Property Deal Manager</span>
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,9 +13,30 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" *ngIf="isUserAuthenticated" routerLinkActive="active">
-          <a class="nav-link" routerLink="/properties">Properties</a>
+          <a class="nav-link" routerLink="/properties">Property cards</a>
+        </li>
+        <li class="nav-item" *ngIf="isUserAuthenticated" routerLinkActive="active">
+          <a class="nav-link" routerLink="/comparables">Comparable cards</a>
+        </li>
+        <li class="nav-item" *ngIf="isUserAuthenticated" routerLinkActive="active">
+          <a class="nav-link" routerLink="/tools">Tools</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="isUserAuthenticated">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">Actions</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['/properties', 'new']">Create new property card</a>
+            <a class="dropdown-item" [routerLink]="['/comparables', 'new']">Create new comparable card</a>
+          </div>
         </li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="isUserAuthenticated" routerLinkActive="active">
           <a class="nav-link" routerLink="/account">Account</a>

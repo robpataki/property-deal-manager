@@ -138,7 +138,7 @@ export class AuthService {
       this._refreshToken = restoredAuthSession.refreshToken;
       
       this.authSession.next(restoredAuthSession);      
-      console.log('[Auth Service] - autoSignIn()');
+      // console.log('[Auth Service] - autoSignIn()');
       this.startAutoRenewTimer();      
     }
   }
@@ -174,9 +174,9 @@ export class AuthService {
     // We want to renew a minute before the token expires
     const delay = timeLeft > 60000 ? timeLeft - 60000 : timeLeft * 0.75;
 
-    console.log('[Auth Service] - startAutoRenewTimer() - delay: ', delay);
-    console.log('[Auth Service] - startAutoRenewTimer() - Token expires: ', new Date(expirationTimestamp));
-    console.log('[Auth Service] - startAutoRenewTimer() - Request new token: ', new Date(Date.now() + delay));
+    // console.log('[Auth Service] - startAutoRenewTimer() - delay: ', delay);
+    // console.log('[Auth Service] - startAutoRenewTimer() - Token expires: ', new Date(expirationTimestamp));
+    // console.log('[Auth Service] - startAutoRenewTimer() - Request new token: ', new Date(Date.now() + delay));
     
     this.autoRenewTimer = setTimeout(() => {
       this.renewIdToken();
@@ -184,7 +184,7 @@ export class AuthService {
   }
 
   renewIdToken(): void {
-    console.log('renewIdToken()');
+    // console.log('renewIdToken()');
 
     // Kill the auto timer
     if (this.autoRenewTimer) {

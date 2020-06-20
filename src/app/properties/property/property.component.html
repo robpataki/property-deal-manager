@@ -1,3 +1,7 @@
+<app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
+
+<ng-template appPlaceholder>Confirmation Modal placeholder</ng-template>
+
 <app-book-viewing-modal
   *ngIf="!!bookViewingMode"
   (viewingBooked)="onViewingBooked($event)"
@@ -16,370 +20,412 @@
   (modalClosed)="onMakeOfferModalClosed()">
 </app-make-offer-modal>
 
+<app-back-button [label]="'Back to property cards'" [url]="'/properties'"></app-back-button>
 
-<app-back-button [label]="'Back to the property cards'" [url]="'/properties'"></app-back-button>
-<div class="container mb-4">
-  <div class="row">
-    <div class="col-12">
-      <div 
-      *ngIf="hasUpcomingViewing"
-      class="alert alert-danger" 
-      role="alert">You have an upcoming viewing. <a [routerLink]="" fragment="s-viewings" class="alert-link">Click for details</a>.</div>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-  <div class="section">
-    <div class="row section mb-2">
-      <div class="col-12">
-        <h1>
-          <span *ngIf="!!property.addressLine1" [innerHTML]="property.addressLine1 + ', '"></span>
-          <span *ngIf="!!property.addressLine2" [innerHTML]="property.addressLine2 + ', '"></span>
-          <span class="br-sm"></span>
-          <span *ngIf="!!property.town" [innerHTML]="property.town + ', '"></span>
-          <span *ngIf="!!property.postcode" [innerHTML]="property.postcode"></span>
-        </h1>
-      </div>
-    </div>
-  
-    <div class="row section mt-0 mt-md-5">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-xs-12 col-lg-4">
-            <div class="picture-frame">
-              <img [src]="property.thumbnailUrl" alt="Photo of the {{ !!property.addressLine1 ? property.addressLine1 : 'property' }}">
-            </div>
-          </div>
-          
-          <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
-            <h2 class="mb-3">Property details</h2>
-            <dl class="dl dl--fitted dl--spaced">
-              <div class="dl-row">
-                <dt>Bedrooms:</dt>
-                <dd>{{ property.bedrooms }}</dd>
-              </div>
-              <div class="dl-row">
-                <dt>Property type:</dt>
-                <dd>{{ propertyTypes[property.type].value }}</dd>
-              </div>
-              <div class="dl-row">
-                <dt>Property size:</dt>
-                <dd>{{ property.size }}m<sup>2</sup></dd>
-              </div>
-              <div class="dl-row">
-                <dt>EPC rating:</dt>
-                <dd>{{ property.epc }}</dd>
-              </div>
-              <div class="dl-row">
-                <dt>Deal type:</dt>
-                <dd>{{ dealTypes[property.dealType].value }}</dd>
-              </div>
-              <div class="dl-row">
-                <dt>Asking price:</dt>
-                <dd>{{ property.askingPrice | appCurrency }}</dd>
-              </div>
-              <div class="dl-row">
-                <dt>{{ property.dealType == dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</dt>
-                <dd>{{ marketDate }} ({{ marketedFor }})</dd> 
-              </div>
-              <div class="dl-row" *ngIf="!!property.links && !!property.links.length">
-                <dt>Market links:</dt>
-                <dd>
-                  <a
-                    *ngFor="let link of property.links; index as i;"  
-                    [href]="link"
-                    target="_blank"
-                    class="btn btn-sm btn-outline-primary btn--stacked">{{ link | trimLink | trim:24:true }}</a>
-                </dd>
-              </div>
-            </dl>
-          </div>
-          
-          <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
-            <div class="btn-nav btn-nav--floating">
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#addNoteModal"
-                (click)="onAddNote()">
-                <span class="btn__icon"><img src="assets/icons/icon--octa-comment.svg" alt="Speech bubble icon" aria-hidden="true"></span>
-                <span class="btn__label">Add a note</span>
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#makeOfferModal"
-                (click)="onMakeOffer()">
-                <span class="btn__icon"><img src="assets/icons/icon--octa-zap.svg" alt="Zap icon" aria-hidden="true"></span>
-                <span class="btn__label">Make an offer</span>
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#bookViewingModal"
-                (click)="onBookViewing()">
-                <span class="btn__icon"><img src="assets/icons/icon--octa-calendar.svg" alt="Calendar icon" aria-hidden="true"></span>
-                <span class="btn__label">Book a viewing</span>
-              </button>
-              <a 
-                [routerLink]="'edit'"
-                class="btn btn-primary mt-3">
-                <span class="btn__icon"><img src="assets/icons/icon--octa-pencil.svg" alt="Pencil icon" aria-hidden="true"></span>
-                <span class="btn__label">Edit property</span>
-              </a>
-            </div>
-          </div>
+<div *ngIf="!!property">
+  <div class="container mt-5">
+    <div class="section">
+      <div class="row section mb-2">
+        <div class="col-12">
+          <h1>
+            <span class="text-salmon">Property card</span>
+            <br>
+            <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode:true"></span>
+          </h1>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="section" id="s-crunch-and-offers">
-    <hr>
-
-    <div class="row section">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-lg-5">
-            <app-property-crunch-summary [property]="property"></app-property-crunch-summary>
-          </div>
-
-          <div class="col-lg-5 offset-lg-2 mt-5 mt-lg-0">
-            <div class="float-container float-container--br-sm mb-3 mb-md-0">
-              <div class="float-left">
-                <h2 class="section-heading">Offers</h2>
-              </div>
-              <div class="float-right">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm btn-inline"
-                  data-toggle="modal"
-                  data-target="#makeOfferModal"
-                  (click)="onMakeOffer()">Make an offer</button>
+  
+      <div
+        *ngIf="hasUpcomingViewing"
+        class="row mt-md-5">
+        <div class="col-12">
+          <div 
+          class="alert alert-info" 
+          role="alert">You have an upcoming viewing. <a [routerLink]="" fragment="s-viewings-and-offers" class="alert-link">Click for details</a>.</div>
+        </div>
+      </div>
+    
+      <div class="row section mt-0 mt-md-5">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-xs-12 col-lg-4">
+              <div class="picture-frame">
+                <img [src]="property.thumbnailUrl" alt="Photo of the {{ !!property.addressLine1 ? property.addressLine1 : 'property' }}">
               </div>
             </div>
             
-            <p *ngIf="!sortedOffers || !sortedOffers.length" class="text-danger">You haven't made an offer yet.</p>
-
-            <div *ngIf="!!sortedOffers && !!sortedOffers.length">
-              <div class="row">
-                <div class="col-12">
-                  <table class="table table-bordered table-striped table-hover align-middle">
-                    <caption>You have made {{ sortedOffers.length }} offer{{ sortedOffers.length > 2 ? 's' : '' }} so far. Make sure you <b>follow up!</b> 🔥</caption>
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col" class="text-center">#</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Price</th>
-                        <th scope="col" class="text-center">Partner</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let offer of sortedOffers; index as i;">
-                        <th class="text-center" scope="row">{{ sortedOffers.length-i }}</th>
-                        <td>{{ offer.timestamp | toDateTime }}</td>
-                        <!-- <td>{{ offer.price | currency:'GBP':true:'1.0' }}</td> -->
-                        <td>{{ offer.price | appCurrency }}</td>
-                        <td class="text-center">{{ offer.userName }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
+              <h2 class="mb-3">Property details</h2>
+              <dl class="dl dl--fitted dl--spaced">
+                <div class="dl-row">
+                  <dt>Bedrooms:</dt>
+                  <dd>{{ property.bedrooms }}</dd>
                 </div>
-              </div>
+                <div class="dl-row">
+                  <dt>Property type:</dt>
+                  <dd>{{ propertyTypes[property.type].value }}</dd>
+                </div>
+                <div class="dl-row">
+                  <dt>Property size:</dt>
+                  <dd>{{ property.size }}m<sup>2</sup></dd>
+                </div>
+                <div class="dl-row">
+                  <dt>EPC rating:</dt>
+                  <dd>{{ property.epc }}</dd>
+                </div>
+                <div class="dl-row">
+                  <dt>Deal type:</dt>
+                  <dd>{{ dealTypes[property.dealType].value }}</dd>
+                </div>
+                <div class="dl-row">
+                  <dt>Asking price:</dt>
+                  <dd>{{ property.askingPrice | appCurrency }}</dd>
+                </div>
+                <div class="dl-row">
+                  <dt>{{ property.dealType == dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</dt>
+                  <dd>{{ marketDate }} ({{ marketedFor }})</dd> 
+                </div>
+                <div class="dl-row" *ngIf="!!property.links && !!property.links.length">
+                  <dt>Market links:</dt>
+                  <dd>
+                    <a
+                      *ngFor="let link of property.links; index as i;"  
+                      [href]="link"
+                      target="_blank"
+                      class="btn btn-sm btn-outline-primary btn--stacked">{{ link | trimLink | trim:24:true }}</a>
+                  </dd>
+                </div>
+              </dl>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" id="s-viewings">
-    <hr>
-    <div class="row section">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-12 col-6-md">
-            <div class="float-container float-container--br-sm mb-3 mb-md-0">
-              <div class="float-left">
-                <h2 class="section-heading">Viewings</h2>
-              </div>
-              <div class="float-right">
+            
+            <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
+              <div class="btn-nav btn-nav--floating">
                 <button
-                  *ngIf="!sortedViewings || !sortedViewings.length || !hasUpcomingViewing"
                   type="button"
-                  class="btn btn-primary btn-sm btn-inline"
-                  data-toggle="modal"
-                  data-target="#bookViewingModal"
-                  (click)="onBookViewing()">Book a viewing</button>
-              </div>
-            </div>
-
-            <p *ngIf="!hasUpcomingViewing && !doneViewing" class="text-danger">You haven't seen this property yet.</p>
-
-            <table
-              *ngIf="!!sortedViewings && !!sortedViewings.length"  
-              class="table table-bordered table-striped table-hover align-middle">
-              <caption *ngIf="doneViewing">You have viewed this property. 👍</caption>
-              <caption *ngIf="hasUpcomingViewing">You have an upcoming viewing.</caption>
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col" class="text-center">#</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Status</th>
-                  <th scope="col" class="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let viewing of sortedViewings; index as i;">
-                  <th scope="row" class="text-center">{{ sortedViewings.length-i }}</th>
-                  <td><span [innerHTML]="viewing.timestamp | toDateTime:true"></span></td>
-                  <td>{{ viewing.cancelled ? 'Cancelled' : (isUpcomingTime(viewing.timestamp) ? 'Upcoming' : 'Done') }}</td>
-                  <td class="text-center">
-                    <button
-                      *ngIf="isUpcomingTime(viewing.timestamp) && !viewing.cancelled"
-                      type="button"
-                      class="btn btn-danger btn-sm"
-                      (click)="onCancelViewing(viewing.index)">Cancel</button>
-                      <span *ngIf="!isUpcomingTime(viewing.timestamp) || viewing.cancelled">
-                        <span aria-hidden="true">-</span>
-                        <span class="visually-hidden">Not actionable</span>
-                      </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" id="s-activity-log">
-    <hr>
-    <div class="row section">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-12">
-            <div class="float-container float-container--br-sm mb-3 mb-md-0">
-              <div class="float-left float-left--strict">
-                <h2 class="section-heading">Activity log{{ !!sortedNotes && sortedNotes.length > 3 ? ' ('+sortedNotes.length+')' : '' }}</h2>
-              </div>
-              <div class="float-left float-left--strict" *ngIf="!!sortedNotes && sortedNotes.length>3">
-                <a
-                  class="icon-btn mt-0 mt-sm-1 mt-md-2 ml-0 ml-2 ml-sm-3 ml-md-4"
-                  data-toggle="collapse"
-                  href="#activityLog"
-                  role="button"
-                  aria-expanded="false"
-                  aria-controls="activityLog">
-                  <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--expanded">
-                    <path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"></path>
-                  </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--collapsed">
-                    <path fill-rule="evenodd" d="M10 10l-1.5 1.5L5 7.75 1.5 11.5 0 10l5-5 5 5z"></path>
-                  </svg>
-                </a>
-              </div>
-              <div class="float-right">
-                <a
-                  href="#"
+                  class="btn btn-primary"
                   data-toggle="modal"
                   data-target="#addNoteModal"
-                  (click)="onAddNote()"
-                  class="btn btn-primary btn-sm btn-inline">Add a note</a>
+                  (click)="onAddNote()">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-comment.svg" alt="Speech bubble icon" aria-hidden="true"></span>
+                  <span class="btn__label">Add a note</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#makeOfferModal"
+                  (click)="onMakeOffer()">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-zap.svg" alt="Zap icon" aria-hidden="true"></span>
+                  <span class="btn__label">Make an offer</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#bookViewingModal"
+                  (click)="onBookViewing()">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-calendar.svg" alt="Calendar icon" aria-hidden="true"></span>
+                  <span class="btn__label">Book a viewing</span>
+                </button>
+                <hr>
+                <a 
+                  [routerLink]="'edit'"
+                  class="btn btn-primary">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-pencil.svg" alt="Pencil icon" aria-hidden="true"></span>
+                  <span class="btn__label">Edit property</span>
+                </a>
               </div>
             </div>
-            <p id="activityLogCaption">Activity log shows a timeline of all the <b>notes</b>, booked <b>viewings</b>, and  <b>offers</b> you've made on this property.</p>
           </div>
         </div>
-
-        <div class="row" *ngIf="!!sortedNotes && !!sortedNotes.length">
-          <div class="col-12">
-            <div
-              [class]="sortedNotes.length > 3 ? 'collapse' : ''"
-              id="activityLog"
-              >
-              <table
-                class="table table-bordered table-striped table-hover align-middle"
-                aria-describedby="activityLogCaption">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col" class="text-center">#</th>
-                    <th scope="col">Date</th>
-                    <th scope="col" class="text-center">Type</th>
-                    <th scope="col">Note</th>
-                    <th scope="col" class="text-center">Partner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let note of sortedNotes; index as i;">
-                    <th scope="row" class="text-center">{{ sortedNotes.length-i }}</th>
-                    <td><span [innerHTML]="note.date | breakUp"></span></td>
-                    <td class="text-center">
-                      <span *ngIf="note.rawType === noteTypes.NOT.key">
-                        <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true" 
-                        class="note-icon">
-                        <span class="visually-hidden">{{ noteTypes.NOT.value }}</span>
-                      </span>
-                      <span *ngIf="note.rawType === noteTypes.OFF.key">
-                        <img src="assets/icons/icon--offer.svg" alt="Offer icon" aria-hidden="true"
-                        class="note-icon">
-                        <span class="visually-hidden">{{ noteTypes.OFF.value }}</span>
-                      </span>
-                      <span *ngIf="note.rawType === noteTypes.VIE.key">
-                        <img src="assets/icons/icon--viewing.svg" alt="Viewing icon" aria-hidden="true"
-                        class="note-icon">
-                        <span class="visually-hidden">{{ noteTypes.VIE.value }}</span>
-                      </span>
-                    </td>
-                    <td><span [innerHTML]="note.text"></span></td>
-                    <td class="text-center">{{ note.userName }}</td>
-                  </tr>
-                </tbody>
-              </table>
+      </div>
+    </div>
+  
+    <div class="section" id="s-crunch">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <app-property-crunch-summary [property]="property"></app-property-crunch-summary>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section" id="s-comparables">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="float-container float-container--br-sm mb-3 mb-lg-0">
+            <div class="float-left">
+              <h2 class="section-heading">Comparables</h2>
+            </div>
+            <div class="float-right">
+              <a [routerLink]="['/comparables', 'link']" [queryParams]="{propertyId: id}" class="btn btn-primary btn-sm btn-inline">Add a comparable</a>
+            </div>
+          </div>
+          <p
+            *ngIf="!sortedComparables || !sortedComparables.length"
+            class="text-danger">You haven't added a comparable yet.</p>
+          
+          <div *ngIf="!!sortedComparables && !!sortedComparables.length">
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-bordered align-middle table-sm table-responsive-md">
+                  <caption>This property has {{ sortedComparables.length }} comparable{{ sortedComparables.length > 1 ? 's' : '' }}.</caption>
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">Photo</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Size</th>
+                      <th scope="col">Sold Price</th>
+                      <th scope="col">Sold date</th>
+                      <th scope="col" class="text-center">Notes</th>
+                      <th scope="col" class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let comparable of sortedComparables; index as i;">
+                      <td scope="col" class="text-center">
+                        <a [routerLink]="['/comparables', comparable.uid]" [queryParams]="{propertyId: id}">
+                          <span class="table-thumbnail">
+                            <img src="{{ comparable.thumbnailUrl }}" alt="Photo of {{ comparable.addressLine1 }}">
+                            <app-comparable-badge [size]="'small'"></app-comparable-badge>
+                          </span>
+                        </a>
+                      </td>
+                      <th scope="row">
+                        <a [routerLink]="['/comparables', comparable.uid]" [queryParams]="{propertyId: id}">
+                          <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:true"></span>
+                        </a>
+                      </th>
+                      <td scope="col">{{ comparable.size }}m<sup>2</sup></td>
+                      <td scope="col">{{ comparable.soldPrice | appCurrency }}</td>
+                      <td scope="col">{{ comparable.soldTimestamp | toDateTime }}<br>({{ comparable.soldTimestamp | timeFromNow }})</td>
+                      <td scope="col" class="text-center">{{ comparable.notes.length }}</td>
+                      <td scope="col" class="text-center">
+                        <button
+                          type="button"
+                          class="icon-btn icon-btn--danger icon-btn--md"
+                          (click)="onRemoveComparable(comparable.index)">
+                          <svg class="icon-btn__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
+                          <span class="visually-hidden">Remove {{comparable.addressLine1}} as a comparable from this property</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section" id="s-viewings-and-offers">
+      <hr>
+      <div class="row section">
+        <div class="col-lg-6">
+          <div class="float-container float-container--br-sm mb-3 mb-lg-0">
+            <div class="float-left">
+              <h2 class="section-heading">Viewings</h2>
+            </div>
+            <div class="float-right">
+              <button
+                *ngIf="!sortedViewings || !sortedViewings.length || !hasUpcomingViewing"
+                type="button"
+                class="btn btn-primary btn-sm btn-inline"
+                data-toggle="modal"
+                data-target="#bookViewingModal"
+                (click)="onBookViewing()">Book a viewing</button>
+            </div>
+          </div>
+  
+          <p *ngIf="!hasUpcomingViewing && !doneViewing" class="text-danger">You haven't seen this property yet.</p>
+  
+          <table
+            *ngIf="!!sortedViewings && !!sortedViewings.length"  
+            class="table table-bordered table-striped table-hover align-middle">
+            <caption *ngIf="doneViewing">You have viewed this property. 👍</caption>
+            <caption *ngIf="hasUpcomingViewing">You have an upcoming viewing.</caption>
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let viewing of sortedViewings; index as i;">
+                <th scope="row" class="text-center">{{ sortedViewings.length-i }}</th>
+                <td><span [innerHTML]="viewing.timestamp | toDateTime:true"></span></td>
+                <td>{{ viewing.cancelled ? 'Cancelled' : (isUpcomingTime(viewing.timestamp) ? 'Upcoming' : 'Done') }}</td>
+                <td class="text-center">
+                  <button
+                    *ngIf="isUpcomingTime(viewing.timestamp) && !viewing.cancelled"
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="onCancelViewing(viewing.index)">Cancel</button>
+                    <span *ngIf="!isUpcomingTime(viewing.timestamp) || viewing.cancelled">
+                      <span aria-hidden="true">-</span>
+                      <span class="visually-hidden">Not actionable</span>
+                    </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="col-lg-5 offset-lg-1 mt-5 mt-lg-0">
+          <div class="float-container float-container--br-sm mb-3 mb-lg-0">
+            <div class="float-left">
+              <h2 class="section-heading">Offers</h2>
+            </div>
+            <div class="float-right">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm btn-inline"
+                data-toggle="modal"
+                data-target="#makeOfferModal"
+                (click)="onMakeOffer()">Make an offer</button>
+            </div>
+          </div>
+          
+          <p *ngIf="!sortedOffers || !sortedOffers.length" class="text-danger">You haven't made an offer yet.</p>
+  
+          <div *ngIf="!!sortedOffers && !!sortedOffers.length">
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-bordered table-striped table-hover align-middle">
+                  <caption>You have made {{ sortedOffers.length }} offer{{ sortedOffers.length > 1 ? 's' : '' }} so far. Make sure you <b>follow up!</b> 🔥</caption>
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="text-center">#</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Price</th>
+                      <th scope="col" class="text-center">Partner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let offer of sortedOffers; index as i;">
+                      <th class="text-center" scope="row">{{ sortedOffers.length-i }}</th>
+                      <td>{{ offer.timestamp | toDateTime }}</td>
+                      <td>{{ offer.price | appCurrency }}</td>
+                      <td class="text-center">{{ offer.userName }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section" id="s-photos">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="float-container float-container--br-sm mb-3 mb-md-0">
+            <div class="float-left">
+              <h2 class="section-heading">Photos</h2>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-primary btn-sm btn-inline">Add some photos</button>
+            </div>
+          </div>
+          <p class="text-danger">You haven't added any photos yet.</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section" id="s-activity-log">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <div class="float-container float-container--br-sm mb-3 mb-md-0">
+                <div class="float-left float-left--strict">
+                  <h2 class="section-heading">Activity log{{ !!sortedNotes && sortedNotes.length > 3 ? ' ('+sortedNotes.length+')' : '' }}</h2>
+                </div>
+                <div class="float-left float-left--strict" *ngIf="!!sortedNotes && sortedNotes.length>maxNotesToShow">
+                  <a
+                    class="icon-btn mt-0 mt-sm-1 mt-md-2 ml-0 ml-2 ml-sm-3 ml-md-4"
+                    data-toggle="collapse"
+                    href="#activityLog"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="activityLog">
+                    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--expanded">
+                      <path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--collapsed">
+                      <path fill-rule="evenodd" d="M10 10l-1.5 1.5L5 7.75 1.5 11.5 0 10l5-5 5 5z"></path>
+                    </svg>
+                  </a>
+                </div>
+                <div class="float-right">
+                  <a
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#addNoteModal"
+                    (click)="onAddNote()"
+                    class="btn btn-primary btn-sm btn-inline">Add a note</a>
+                </div>
+              </div>
+              <p id="activityLogCaption">Activity log shows a timeline of all the <b>notes</b>, booked <b>viewings</b>, and  <b>offers</b> you've made on this property.</p>
+            </div>
+          </div>
+  
+          <div class="row" *ngIf="!!sortedNotes && !!sortedNotes.length">
+            <div class="col-12">
+              <div
+                [class]="sortedNotes.length > maxNotesToShow ? 'collapse' : ''"
+                id="activityLog"
+                >
+                <table
+                  class="table table-bordered table-striped table-hover align-middle"
+                  aria-describedby="activityLogCaption">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="text-center">#</th>
+                      <th scope="col">Date</th>
+                      <th scope="col" class="text-center">Type</th>
+                      <th scope="col">Note</th>
+                      <th scope="col" class="text-center">Partner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let note of sortedNotes; index as i;">
+                      <th scope="row" class="text-center">{{ sortedNotes.length-i }}</th>
+                      <td><span [innerHTML]="note.date | breakUp"></span></td>
+                      <td class="text-center">
+                        <span *ngIf="note.rawType === noteTypes.NOT.key">
+                          <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true" 
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.NOT.value }}</span>
+                        </span>
+                        <span *ngIf="note.rawType === noteTypes.OFF.key">
+                          <img src="assets/icons/icon--offer.svg" alt="Offer icon" aria-hidden="true"
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.OFF.value }}</span>
+                        </span>
+                        <span *ngIf="note.rawType === noteTypes.VIE.key">
+                          <img src="assets/icons/icon--viewing.svg" alt="Viewing icon" aria-hidden="true"
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.VIE.value }}</span>
+                        </span>
+                      </td>
+                      <td><span [innerHTML]="note.text"></span></td>
+                      <td class="text-center">{{ note.userName }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="section" id="s-photos">
-    <hr>
-    <div class="row section">
-      <div class="col-12">
-        <div class="float-container float-container--br-sm mb-3 mb-md-0">
-          <div class="float-left">
-            <h2 class="section-heading">Photos</h2>
-          </div>
-          <div class="float-right">
-            <button type="button" class="btn btn-primary btn-sm btn-inline">Add some photos</button>
-          </div>
-        </div>
-        <p>You haven't added any photos yet.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" id="s-comparables">
-    <hr>
-    <div class="row section">
-      <div class="col-12">
-        <div class="float-container float-container--br-sm mb-3 mb-md-0">
-          <div class="float-left">
-            <h2 class="section-heading">Comparables</h2>
-          </div>
-          <div class="float-right">
-            <button type="button" class="btn btn-primary btn-sm btn-inline">Add a comparable</button>
-          </div>
-        </div>
-        <p>You haven't added a comparable yet.</p>
-      </div>
-    </div>
-  </div>
-
 </div>

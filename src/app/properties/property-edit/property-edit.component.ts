@@ -1,4 +1,4 @@
-import { OnInit, Component, OnDestroy } from '@angular/core';
+import { OnInit, Component, OnDestroy, ComponentFactoryResolver, ViewChild, ComponentRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { generateUID, kvObjectToArray, ukDateToUSDate } from '../../shared/utils';
@@ -10,6 +10,8 @@ import { ToDateTimePipe } from '../../shared/pipes/to-date-time.pipe';
 import { FormArray, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
+import { PlaceholderDirective } from 'src/app/shared/directives/placeholder.directive';
+import { ConfirmActionModalComponent } from 'src/app/modals/confirm-action-modal/confirm-action-modal.component';
 
 @Component({
   selector: 'app-property-edit',
@@ -29,50 +31,62 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
   isLoading: boolean;
   editMode: boolean;
   deleteMode: boolean;
+
+  backButtonLabel: string;
+  backButtonUrl: string;
   
   propertyTypesArray: any[] = kvObjectToArray(PROPERTY_TYPES);
   dealTypesArray: any[] = kvObjectToArray(DEAL_TYPES);
   epcRatingsArray: any[] = kvObjectToArray(EPC_RATINGS);
+
+  @ViewChild(PlaceholderDirective, {static: false}) confirmModalHost: PlaceholderDirective;
+  confirmationModalCancelSub: Subscription;
+  confirmationModalConfirmSub: Subscription;
+  actionConfirmModalComponentRef: ComponentRef<any>;
 
   constructor(private dataStorageService: DataStorageService,
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private toDateTimePipe: ToDateTimePipe,
     private router: Router,
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit(): void {
+    this.setUpBackButton();
+
     this.route.params
     .subscribe(
       (params: Params) => {
         this.id = params['id'];
         this.editMode = params['id'] != null;
         this.property = this.propertyService.getProperty(this.id);
+        this.setUpBackButton();
+        
+        if (!this.property && this.editMode) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+
         this.initForm();
       }
     );
 
     this.propertiesChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {
-      const organisationId: string = this.accountService.getAccount().organisationId;
-
       if(!this.deleteMode) {
-        this.dataStorageService.storeProperty(organisationId, this.id).then(() => {
+        this.dataStorageService.storeProperty(this.id).then(() => {
           this.router.navigate(['../'], { relativeTo: this.route });
         }, error => {
-          console.error('There was an error when trying to update the property - error message: ', error);
+          console.error('There was an error when trying to save the property - error message: ', error);
         });
       } else {
-        this.dataStorageService.deleteProperty(organisationId, this.id).then(() => {
+        this.dataStorageService.deleteProperty(this.id).then(() => {
           this.router.navigate(['/properties']);
         }, error => {
           console.error('There was an error when trying to delete the property - error message: ', error);
         });
-      }      
+      }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.propertiesChangedSub.unsubscribe();
   }
 
   initForm(): void {
@@ -100,7 +114,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
       type = PROPERTY_TYPES[this.property.type].key;
       askingPrice = this.property.askingPrice;
       thumbnailUrl = this.property.thumbnailUrl;
-      marketDate = this.toDateTimePipe.transform(this.property.marketTimestamp.toString());
+      marketDate = this.toDateTimePipe.transform(this.property.marketTimestamp);
 
       addressLine1 = this.property.addressLine1;
       addressLine2 = this.property.addressLine2;
@@ -169,16 +183,57 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDelete(): void {
-    this.deleteMode = true;
-    this.propertyService.deleteProperty(this.id);
-  }
-
   onDateInputChange(dateString: string): void {
     this.form.controls['marketDate'].setValue(dateString);
   }
 
   onDealTypeChange(): void {
     this.dealType = this.form.value.dealType;
+  }
+
+  onDelete(): void {
+    this.deleteMode = true;
+
+    this.showConfirmationModal('delete this property').then(() => {
+      this.propertyService.deleteProperty(this.id);
+    }, error => {});
+  }
+
+  showConfirmationModal(message: string): Promise<void> {
+    const confirmModalComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ConfirmActionModalComponent);
+    const hostViewContainerRef = this.confirmModalHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    this.actionConfirmModalComponentRef = hostViewContainerRef.createComponent(confirmModalComponentFactory);
+    this.actionConfirmModalComponentRef.instance.message = message;
+    this.actionConfirmModalComponentRef.instance.show();
+
+    return new Promise((resolve, reject) => {
+      this.confirmationModalConfirmSub = this.actionConfirmModalComponentRef.instance.confirm.subscribe(() => {
+        this.confirmationModalConfirmSub.unsubscribe();
+        hostViewContainerRef.clear();
+        resolve();
+      });
+      this.confirmationModalCancelSub = this.actionConfirmModalComponentRef.instance.cancel.subscribe(() => {
+        this.confirmationModalCancelSub.unsubscribe();
+        hostViewContainerRef.clear();
+        reject();
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.propertiesChangedSub.unsubscribe();
+
+    if (this.actionConfirmModalComponentRef) {
+      this.actionConfirmModalComponentRef.destroy(); 
+      this.confirmationModalConfirmSub.unsubscribe();
+      this.confirmationModalCancelSub.unsubscribe();
+    }
+  }
+
+  setUpBackButton(): void {
+    this.backButtonLabel = this.editMode && !!this.id ? 'Back to property card' : 'Back to properties';
+    this.backButtonUrl = this.editMode && !!this.id ? `/properties/${this.id}` : `/properties`;
   }
 }

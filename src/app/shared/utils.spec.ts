@@ -4,17 +4,18 @@ import {
   ukDateToUSDate,
   generateUID,
   kvObjectToArray,
-  calculateStampDuty } from './utils';
+  calculateStampDuty,
+  sortArrayByKey } from './utils';
 
-describe('Utils / getCurrentTimestamp()', () => {
+describe('Utils / #getCurrentTimestamp', () => {
   it('should return the current timestamp as a string', () => {
     const currentTimestamp: number = new Date(2020, 7, 15, 12, 30).getTime();
-    const timestampSpy = spyOn(Date, 'now').and.returnValue(currentTimestamp);
-    expect(getCurrentTimestamp()).toEqual('1597491000000');
+    spyOn(Date, 'now').and.returnValue(currentTimestamp);
+    expect(getCurrentTimestamp()).toEqual(1597491000000);
   })
 })
 
-describe('Utils / ukDateToUSDate()', () => {
+describe('Utils / #ukDateToUSDate', () => {
   it('should convert the UK date format into a US date format ', () => {
     expect(ukDateToUSDate('24/12/1983')).toEqual('12/24/1983');
   })
@@ -27,7 +28,7 @@ describe('Utils / ukDateToUSDate()', () => {
   })
 })
 
-describe('Utils / arrayToArrayTable()', () => {
+describe('Utils / #arrayToArrayTable', () => {
   it('should return the array with the items arranged into columns and rows ', () => {
     let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let arrayTable = arrayToArrayTable(array, 4);
@@ -47,7 +48,7 @@ describe('Utils / arrayToArrayTable()', () => {
   })
 })
 
-describe('Utils / kvObjectToArray()', () => {
+describe('Utils / #kvObjectToArray', () => {
   it('should convert the list of key/value objects into an array of key/value objects', () => {
     expect(kvObjectToArray({greeting: {key: 'hello', value: 'world'}})).toEqual([{key: 'hello', value: 'world'}]);
     
@@ -84,7 +85,7 @@ describe('Utils / kvObjectToArray()', () => {
   })
 })
 
-describe('Utils / generateUID()', () => {
+describe('Utils / #generateUID', () => {
   it('should return a random string with the passed in prefix', () => {
     const input: string = 'hello_';
     const generatedUID :string = generateUID(input);
@@ -117,14 +118,14 @@ describe('Utils / generateUID()', () => {
   })
 })
 
-describe('Utils / calculateStampDuty()', () => {
-  it('returns 0 for purchase price lower than 40000', () => {
+describe('Utils / #calculateStampDuty', () => {
+  it('should return 0 for purchase price lower than 40000', () => {
     expect(calculateStampDuty(0)).toEqual(0);
     expect(calculateStampDuty(10000)).toEqual(0);
     expect(calculateStampDuty(39999)).toEqual(0);
   })
 
-  it('returns the accurate amount based on the value bracket', () => {
+  it('should return the accurate amount based on the value bracket', () => {
     // Bracket 1
     expect(calculateStampDuty(40000)).toEqual(1200);
     expect(calculateStampDuty(100000)).toEqual(3000);
@@ -144,4 +145,46 @@ describe('Utils / calculateStampDuty()', () => {
     expect(calculateStampDuty(2000000)).toEqual(213749.59);
   })
 })
+
+describe('Utils / #sortArrayByKey', () => {
+  const fruits: any[] = [
+    { name: 'blueberries', water: 85.7, protein: 0.9 },
+    { name: 'grapes', water: 82.7, protein: 0.7 },
+    { name: 'oranges', water: 87, protein: 0.8 }
+  ];
+
+  const fruitsWithIndex: any[] = [
+    { name: 'blueberries', water: 85.7, protein: 0.9, index: 0},
+    { name: 'grapes', water: 82.7, protein: 0.7, index: 1 },
+    { name: 'oranges', water: 87, protein: 0.8, index: 2 }
+  ];
+
+  const fruitSortedByWater = [
+    { name: 'grapes', water: 82.7, protein: 0.7, index: 1 },
+    { name: 'blueberries', water: 85.7, protein: 0.9, index: 0 },
+    { name: 'oranges', water: 87, protein: 0.8, index: 2 }
+  ];
+
+  const fruitSortedByProtein = [
+    { name: 'grapes', water: 82.7, protein: 0.7, index: 1 },
+    { name: 'oranges', water: 87, protein: 0.8, index: 2  },
+    { name: 'blueberries', water: 85.7, protein: 0.9, index: 0 }
+  ];
+
+  it('should return an array sorted by the key, and original index with each item', () => {
+    expect(sortArrayByKey('water', fruits)).toEqual(fruitSortedByWater);
+    expect(sortArrayByKey('water', fruits)).not.toEqual(fruits);
+    expect(sortArrayByKey('protein', fruits)).toEqual(fruitSortedByProtein);
+  })
+
+  it('should always return an array', () => {
+    expect(sortArrayByKey('fooBar', null)).toEqual([]);
+    expect(sortArrayByKey(null, null)).toEqual([]);
+    expect(sortArrayByKey(null, undefined)).toEqual([]);
+  });
+
+  it('should return an indexed, but unsorted array if key doesn\'t exist', () => {
+    expect(sortArrayByKey('fooBar', fruits)).toEqual(fruitsWithIndex);
+  });
+});
 

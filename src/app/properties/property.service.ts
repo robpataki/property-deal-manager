@@ -14,7 +14,6 @@ import { AccountService } from '../account/account.service';
 export class PropertyService {
   properties: Property[] = [];
   propertiesChangedSub: Subject<Property[]> = new Subject<Property[]>();
-  propertyNotesChangedSub: Subject<Property> = new Subject<Property>();
 
   constructor(private accountService: AccountService) {};
 
@@ -24,7 +23,7 @@ export class PropertyService {
 
   setProperties(properties: Property[]): void {
     this.properties = properties;
-    this.emitPropertiesChanged();
+    this.emitChanges();
   }
 
   getProperty(uid: string): Property {
@@ -33,38 +32,79 @@ export class PropertyService {
     });
   }
 
-  addNoteToProperty(propertyId: string, note: Note, keepSilent: boolean = false): void {
+  addComparableToProperty(propertyId: string, comparableId: string, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+    
+    if (!property.comparables.includes(comparableId)) {
+      property.comparables.push(comparableId);
+    }
+
+    if (!keepSilent) {
+      this.emitChanges();
+    }
+  }
+
+  removeComparableFromProperty(propertyId: string, comparableId: string, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+    const index = property.comparables.indexOf(comparableId);
+
+    if (index >= 0) {
+      property.comparables.splice(index, 1);
+
+      if (!keepSilent) {
+        this.emitChanges();
+      }
+    }
+  }
+
+  deleteComparable(comparableId: string, keepSilent?: boolean): void {
+    let deletionPerformed: boolean = false;
+    this.properties.map(property => {
+      const index = property.comparables.indexOf(comparableId);
+      if (index >= 0) {
+        deletionPerformed = true;
+        property.comparables.splice(index, 1);
+      }
+    });
+
+    if (deletionPerformed && !keepSilent) {
+      this.emitChanges();
+    }
+  }
+
+  getPropertiesOfComparable(comparableId: string): Property[] {
+    return this.properties.filter((property) => {
+      if (property.comparables.includes(comparableId)) {
+        return property;
+      }
+    });
+  }
+
+  addNoteToProperty(propertyId: string, note: Note, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.notes.push(note);
     
     if (!keepSilent) {
-      this.emitPropertiesChanged();
+      this.emitChanges();
     }
   }
 
-  makeOfferOnProperty(propertyId: string, offer: Offer, keepSilent: boolean = false): void {
+  makeOfferOnProperty(propertyId: string, offer: Offer, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.offers.push(offer);
     
     if (!keepSilent) {
-      this.emitPropertiesChanged();
+      this.emitChanges();
     }
   }
 
-  bookViewingOfProperty(propertyId: string, viewing: Viewing, keepSilent: boolean = false): void {
+  bookViewingOfProperty(propertyId: string, viewing: Viewing, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.viewings.push(viewing);
 
     if (!keepSilent) {
-      this.emitPropertiesChanged();
+      this.emitChanges();
     }
-  }
-
-  updatePropertyCrunch(propertyId: string, crunch: any) {
-    const property: Property = this.getProperty(propertyId);
-    property.crunch = crunch;
-
-    this.emitPropertiesChanged();
   }
 
   cancelViewingOfProperty(propertyId: string, viewingIndex: number): void {
@@ -72,7 +112,7 @@ export class PropertyService {
     property.viewings[viewingIndex].cancelled = true;
 
     const userName: string = this.getUserName();
-    const currentTimestamp: string = getCurrentTimestamp();
+    const currentTimestamp: number = getCurrentTimestamp();
     const viewingTimestamp: number = +property.viewings[viewingIndex].timestamp;
     const formattedViewingDate: string = formatDate(new Date(viewingTimestamp), 'dd/MM/yyyy HH:mm');
 
@@ -83,19 +123,26 @@ export class PropertyService {
     this.addNoteToProperty(propertyId, cancellationNote);
   }
 
+  updatePropertyCrunch(propertyId: string, crunch: any) {
+    const property: Property = this.getProperty(propertyId);
+    property.crunch = crunch;
+
+    this.emitChanges();
+  }
+
   updatePropertyDetails(propertyDetails: PropertyDetails): void {
     const property: Property = this.getProperty(propertyDetails.uid);
     Object.keys(propertyDetails).map(key => {
       property[key] = propertyDetails[key];
     });
-    this.emitPropertiesChanged();
+    this.emitChanges();
   }
 
   addProperty(propertyDetails: PropertyDetails): void {
-    const createTimestamp: string = getCurrentTimestamp();
+    const createTimestamp: number = getCurrentTimestamp();
     const userName: string = this.getUserName();
     const createNote: Note = new Note(
-      'Property sheet created',
+      'Property card created',
       createTimestamp,
       NOTE_TYPES.NOT.key,
       userName
@@ -104,10 +151,12 @@ export class PropertyService {
     const property = new Property(
       propertyDetails.uid,
       createTimestamp,
+      
       propertyDetails.addressLine1,
       propertyDetails.addressLine2,
-      propertyDetails.postcode,
       propertyDetails.town,
+      propertyDetails.postcode,
+      
       propertyDetails.thumbnailUrl,
       propertyDetails.bedrooms,
       propertyDetails.size,
@@ -116,35 +165,43 @@ export class PropertyService {
       propertyDetails.dealType,
       propertyDetails.askingPrice,
       propertyDetails.marketTimestamp,
+      
       propertyDetails.links,
       { strg: STRATEGIES.BTL.key },
+      [],
 
       [ createNote ],
       [],
       []
     );
     this.properties.push(property);
-    this.emitPropertiesChanged();
+    this.emitChanges();
   }
 
   deleteProperty(propertyId: string): void {
-    let index: number = this.properties.findIndex((property, index) => {
+    let index: number = this.properties.findIndex((property) => {
       return property.uid == propertyId;
     });
     
-    console.log('[PropertyService] - deleteProperty() BEFORE - properties: ', this.properties);
     if (index >= 0) {
       this.properties.splice(index, 1);
-      console.log('[PropertyService] - deleteProperty() AFTER - properties: ', this.properties);
-      this.emitPropertiesChanged();
+      this.emitChanges();
     }
+  }
+
+  getPropertiesByPostcode(postcode: string): Property[] {
+    return this.properties.filter(property => {
+      if (property.postcode.substr(0, postcode.length) === postcode) {
+        return property;
+      }
+    })
   }
 
   reset(): void {
     this.setProperties([]);
   }
 
-  emitPropertiesChanged(): void {
+  emitChanges(): void {
     this.propertiesChangedSub.next(this.properties.slice());
   }
 

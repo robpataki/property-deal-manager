@@ -12,6 +12,8 @@ import { PropertyService } from '../../properties/property.service';
 import { Organisation } from '../models/organisation.model';
 import { AuthService } from '../../auth/auth.service';
 import { STRATEGIES } from './app-constants.service';
+import { Comparable } from '../models/comparable.model';
+import { ComparableService } from 'src/app/comparables/comparable.service';
 
 const API_URL: string = firebaseConfig.databaseUrl;
 
@@ -22,6 +24,7 @@ export class DataStorageService {
   constructor(private http: HttpClient,
               private accountService: AccountService,
               private propertyService: PropertyService,
+              private comparableService: ComparableService,
               private authService: AuthService) {}
 
   fetchAccount(): Promise<any> {
@@ -72,23 +75,26 @@ export class DataStorageService {
         if (!!propertiesData) {
           properties = Object.keys(propertiesData).map(key => new Property(
             key,
-            propertiesData[key].createTimestamp ? propertiesData[key].createTimestamp.toString() : '',
+            propertiesData[key].createTimestamp ? +propertiesData[key].createTimestamp : 0,
             propertiesData[key].addressLine1,
             propertiesData[key].addressLine2,
-            propertiesData[key].postcode,
             propertiesData[key].town,
+            propertiesData[key].postcode,
+            
             propertiesData[key].thumbnailUrl,
-            propertiesData[key].bedrooms,
-            propertiesData[key].size,
+            +propertiesData[key].bedrooms,
+            +propertiesData[key].size,
             propertiesData[key].epc,
             propertiesData[key].type,
             propertiesData[key].dealType,
             +propertiesData[key].askingPrice,
-            propertiesData[key].marketTimestamp ? propertiesData[key].marketTimestamp.toString() : '',
+            propertiesData[key].marketTimestamp ? +propertiesData[key].marketTimestamp : 0,
+            
             (!propertiesData[key].links ? [] : propertiesData[key].links),
             (!propertiesData[key].crunch ? {
               strg: STRATEGIES.BTL.key
             } : propertiesData[key].crunch),
+            (!propertiesData[key].comparables ? [] : propertiesData[key].comparables),
 
             (!propertiesData[key].notes ? [] : propertiesData[key].notes),
             (!propertiesData[key].offers ? [] : propertiesData[key].offers),
@@ -104,18 +110,95 @@ export class DataStorageService {
     });
   }
 
-  storeProperty(organisationId: string, propertyId: string): Promise<Property | void> {
+  storeProperty(propertyId: string): Promise<Property | void> {
     const property = this.propertyService.getProperty(propertyId);
 
     return this.http.put<any>(
-      `${API_URL}/properties/${organisationId}/${propertyId}.json`,
+      `${API_URL}/properties/${this.organisationId}/${propertyId}.json`,
       property
     ).toPromise();
   }
 
-  deleteProperty(organisationId: string, propertyId: string): Promise<Property | void> {
+  deleteProperty(propertyId: string): Promise<Property | void> {
     return this.http.delete<any>(
-      `${API_URL}/properties/${organisationId}/${propertyId}.json`,
+      `${API_URL}/properties/${this.organisationId}/${propertyId}.json`,
+    ).toPromise();
+  }
+
+  fetchComparables(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.get<Comparable[]>(`${API_URL}/comparables/${this.organisationId}.json`)
+      .toPromise()
+      .then(comparablesData => {
+        let comparables = [];
+
+        if (!!comparablesData) {
+          comparables = Object.keys(comparablesData).map(key => new Comparable(
+            key,
+            comparablesData[key].timestamp ? +comparablesData[key].timestamp : 0,
+            comparablesData[key].addressLine1,
+            comparablesData[key].addressLine2,
+            comparablesData[key].town,
+            comparablesData[key].postcode,
+            
+            comparablesData[key].thumbnailUrl,
+            +comparablesData[key].bedrooms,
+            +comparablesData[key].size,
+            comparablesData[key].epc,
+            comparablesData[key].type,
+            +comparablesData[key].soldPrice,
+            comparablesData[key].soldTimestamp ? +comparablesData[key].soldTimestamp : 0,
+
+            (!comparablesData[key].properties ? [] : comparablesData[key].properties),
+            (!comparablesData[key].notes ? [] : comparablesData[key].notes),
+            (!comparablesData[key].links ? [] : comparablesData[key].links)
+          ));
+        }
+
+        this.comparableService.setComparables(comparables);
+        resolve(comparables);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  storeComparable(comparableId: string): Promise<Property | void> {
+    const comparable: Comparable = this.comparableService.getComparable(comparableId);
+
+    return this.http.put<any>(
+      `${API_URL}/comparables/${this.organisationId}/${comparableId}.json`,
+      comparable
+    ).toPromise();
+  }
+
+  deleteComparable(comparableId: string): Promise<Property | void> {
+    return this.http.delete<any>(
+      `${API_URL}/comparables/${this.organisationId}/${comparableId}.json`,
+    ).toPromise();
+  }
+
+  storeUpdatedPropertyComparables(propertyIds: string[]): Promise<Property[] | void> {
+    const patchPropertyComparables = this.patchPropertyComparables.bind(this);
+    // Sequence of promises
+    const updateProperty = function(propertyIds) {
+      let promise = Promise.resolve();
+      propertyIds.forEach(propertyId => {
+        promise = promise.then(() => patchPropertyComparables(propertyId));
+      });
+      return promise;
+    };
+    return updateProperty(propertyIds);
+  }
+
+  patchPropertyComparables(propertyId: string): Promise<Property[] | void> {
+    const property: Property = this.propertyService.getProperty(propertyId);
+    console.log('[DataStorageService] - patchPropertyComparables() - ', propertyId, property.comparables);
+    return this.http.patch<any>(
+      `${API_URL}/properties/${this.organisationId}/${propertyId}.json`,
+      {
+        comparables: property.comparables
+      }
     ).toPromise();
   }
 }

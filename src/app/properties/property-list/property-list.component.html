@@ -1,12 +1,25 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="float-container">
-        <h1 class="float-left">Properties ({{ sortedProperties.length }})</h1>
-        <a [routerLink]="'new'" class="btn btn-primary btn-sm float-right mt-2 mt-md-3">Add new property</a>
+      <div class="float-container float-container--br-md">
+        <h1 class="float-left text-salmon">Property cards ({{ sortedProperties.length }})</h1>
+        <div class="float-right">
+          <div class="btn-nav btn-nav--free">
+            <a
+            [routerLink]="'new'" 
+              class="btn btn-primary">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-plus.svg" alt="Plus icon" aria-hidden="true"></span>
+              <span class="btn__label">Create new property card</span>
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div class="mt-5 card-grid">
+      <div class="mt-3" *ngIf="!sortedProperties.length">
+        <p>You don't have any properties yet.</p>
+      </div>
+
+      <div class="mt-5 card-grid" *ngIf="!!sortedProperties.length">
         <div class="row">
           <div
             class="card-wrapper"

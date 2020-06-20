@@ -6,9 +6,9 @@ import { format as formatDate } from 'date-fns';
   name: 'toDateTime'
 })
 export class ToDateTimePipe implements PipeTransform {
-  transform(timestamp: string, withTime: boolean = false): string {
-    if (!timestamp.length) {
-      return timestamp;
+  transform(timestamp: number, withTime: boolean = false): string {
+    if (!timestamp) {
+      return timestamp + '';
     }
     
     const format = withTime ? 'dd/MM/yyyy HH:mm' : 'dd/MM/yyyy';

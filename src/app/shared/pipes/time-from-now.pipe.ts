@@ -6,13 +6,13 @@ import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
   name: 'timeFromNow'
 })
 export class TimeFromNowPipe implements PipeTransform {
-  transform(timestamp: string): string {
-    if (!timestamp || !timestamp.length) {
-      return timestamp;
+  transform(timestamp: number): string {
+    if (!timestamp) {
+      return timestamp + '';
     } else {
-      const testDate = new Date(+timestamp);
+      const testDate = new Date(timestamp);
       if (isNaN(testDate.getTime())) {
-        return timestamp;
+        return timestamp + '';
       }
     }
 

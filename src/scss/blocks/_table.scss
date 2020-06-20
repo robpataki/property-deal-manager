@@ -1,5 +1,16 @@
-table {
+.table {
   cursor: default;
+
+  &-sm {
+    th, td {
+      padding: 0.4rem;
+    }
+
+    .table-thumbnail {
+      width: 92px;
+      height: 69px;
+    }
+  }
   
   &.align-middle {
     th, td {
@@ -18,6 +29,10 @@ table {
       border: none;
       border-bottom: 2px solid $c-black;
     }
+
+    a {
+      color: $c-black;
+    }
   }
 
   caption {
@@ -33,5 +48,31 @@ table {
       border: 1px solid $c-black;
       color: $c-black;
     }
+  }
+}
+
+.table-thumbnail {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  width: 148px;
+  height: 111px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 4px;
+
+  img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    object-fit: cover;
+  }
+
+  @include media-breakpoint-down(md) {
+    width: 92px;
+    height: 69px;
   }
 }

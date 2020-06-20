@@ -44,11 +44,9 @@ export class PropertyCrunchComponent implements OnInit, OnDestroy {
     );
 
     this.propertiesChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {
-      this.property = this.propertyService.getProperty(this.id);
-      const organisationId: string = this.accountService.getAccount().organisationId;
-      
+      this.property = this.propertyService.getProperty(this.id);      
       if(this.isLoading) {
-        this.dataStorageService.storeProperty(organisationId, this.id).then(() => {
+        this.dataStorageService.storeProperty(this.id).then(() => {
           this.isLoading = false;  
         }, error => {
           console.error('There was an error when trying to update the property - error message: ', error);

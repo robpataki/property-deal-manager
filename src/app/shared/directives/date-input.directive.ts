@@ -14,9 +14,9 @@ export class DateInputDirective {
   cachedValue: string = '';
 
   // Allow numerical values and reject anything else
-  onKeyPress(event) {
-    const keyCode = event.charCode;
-    if (keyCode >= 47 && keyCode <= 57) {
+  onKeyPress($event) {
+    const charCode = $event.charCode;
+    if (charCode >= 47 && charCode <= 57) {
       return true;
     }
 

@@ -1,0 +1,40 @@
+<article class="card">
+  <a [routerLink]="['/comparables', comparable.uid]">
+    <div class="card-img-container">
+      <img src="{{ comparable.thumbnailUrl }}" alt="Photo of the comparable at {{ comparable.addressLine1 }}, {{ comparable.town }}, {{ comparable.postcode }}">
+      <app-comparable-badge></app-comparable-badge>
+    </div>
+  </a>
+  <div class="card-body">
+    <h1 class="card-title">
+      <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:false:true"></span>
+    </h1>
+    
+    <dl class="dl dl--small dl--justified">
+      <hr>
+      <ng-template [ngIf]="!comparable.properties || !comparable.properties.length">
+        <div class="dl-row"><b class="text-danger">No properties!</b></div>
+      </ng-template>
+      <div class="dl-row" *ngIf="!!comparable.properties && !!comparable.properties.length">
+        <dt>Properties: </dt>
+        <dd>{{ !!comparable.properties && !!comparable.properties.length ? comparable.properties.length : 0 }}</dd>
+      </div>      
+      <div class="dl-row">
+        <dt>Type:</dt>
+        <dd>{{ comparable.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ propertyTypes[comparable.type].value }}</span></dd>
+      </div>
+      <div class="dl-row">
+        <dt>Sold price: </dt>
+        <dd>{{ comparable.soldPrice | appCurrency }}</dd>
+      </div>
+      <div class="dl-row">
+        <dt>Sold date:</dt>
+        <dd>{{ comparable.soldTimestamp | timeFromNow }}</dd>
+      </div>
+      <hr>
+    </dl>
+    <div class="text-right">
+      <a [routerLink]="['/comparables', comparable.uid]" class="btn btn-primary btn-sm">View comparable card</a>
+    </div>
+  </div>
+</article>
