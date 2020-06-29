@@ -34,6 +34,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ---
 
+## Firebase config
+
+The Firebase settings should set in both the `src/environments/environment.ts` and `src/environments/environment.prod.ts` files - alongside with other project specific configuration. For security reasons these files aren't under version control, but there are 2 sample files for both prod and dev environments showing what the files shouls look like with real data.
+
 ## Realtime database notes
 
 ### Property Number Crunch
