@@ -8,6 +8,7 @@ import { firebaseConfig } from '../../environments/environment';
 import { AccountService } from '../account/account.service';
 import { AuthSession } from './auth-session.model';
 import { PropertyService } from '../properties/property.service';
+import { ComparableService } from '../comparables/comparable.service';
 
 const AUTH_API_SIGNIN_URL: string = firebaseConfig.authSignInUrl;
 const AUTH_API_REFRESH_TOKEN_URL: string = firebaseConfig.authRefreshTokenUrl;
@@ -49,7 +50,8 @@ export class AuthService {
   constructor(private http: HttpClient,
               private router: Router,
               private accountService: AccountService,
-              private propertyService: PropertyService) {}
+              private propertyService: PropertyService,
+              private comparableService: ComparableService) {}
 
   get uid(): string {
     return this._uid;
@@ -94,12 +96,13 @@ export class AuthService {
     // Remove the session data from local storage
     this.destroyAuthSession();
 
-    this.authSession.next(null);
-    this.router.navigate(['/auth']);
-
     // Clear the session data from memory
     this.accountService.reset();
     this.propertyService.reset();
+    this.comparableService.reset();
+
+    this.authSession.next(null);
+    this.router.navigate(['/auth']);
   }
 
   resetPassword(email: string): Observable<any> {
