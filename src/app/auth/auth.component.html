@@ -10,12 +10,11 @@
           
           <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-          <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading" autocomplete="off">
             <div class="form-group">
               <label for="email">Email</label>
               <input
                 type="text"
-                autocomplete="off"
                 id="email"
                 class="form-control"
                 name="email"
@@ -27,7 +26,6 @@
               <label for="password">Password</label>
               <input
                 type="password"
-                autocomplete="off"
                 id="password"
                 class="form-control"
                 name="password"

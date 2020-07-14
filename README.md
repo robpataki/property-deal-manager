@@ -1,4 +1,4 @@
-# MyPropertyDb
+# Property Deal Manager
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.4.
 
@@ -82,6 +82,7 @@ These are the keysused in the crunch data structure to identify the relevant val
 |voids|Void period (number of months)|
 |---|---|
 |calc|Calculations|
+|cf|Cashflow|
 |soi|Selected offer index|
 |mop|Maximum offer (price)|
 |roi|Return on investment|

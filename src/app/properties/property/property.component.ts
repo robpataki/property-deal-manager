@@ -5,7 +5,7 @@ import { format as formatDate } from 'date-fns';
 
 import { Property } from 'src/app/shared/models/property.model';
 import { PropertyService } from '../property.service';
-import { PROPERTY_TYPES, DEAL_TYPES, NOTE_TYPES, EPC_RATINGS, STRATEGIES } from '../../shared/services/app-constants.service';
+import { PROPERTY_TYPES, TENURE_TYPES, DEAL_TYPES, NOTE_TYPES, STRATEGIES } from '../../shared/services/app-constants.service';
 import { AccountService } from 'src/app/account/account.service';
 
 import { Note } from 'src/app/shared/models/note.model';
@@ -49,7 +49,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
   offers: Offer[];
   sortedOffers: Offer[];
   sortedComparables: Comparable[];
-  comparableToRemove: Comparable;
+  comparableUidToRemove: string;
   viewings: Viewing[];
   sortedViewings: Viewing[];
   hasUpcomingViewing: boolean;
@@ -64,6 +64,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
   isLoading: boolean;
 
   propertyTypes: any = PROPERTY_TYPES;
+  tenureTypes: any = TENURE_TYPES;
   dealTypes: any = DEAL_TYPES;
   noteTypes: any = NOTE_TYPES;
   strategies: any = STRATEGIES;
@@ -108,10 +109,10 @@ export class PropertyComponent implements OnInit, OnDestroy {
         }
 
         if (this.removeComparableMode) {
-          this.dataStorageService.storeComparable(this.comparableToRemove.uid).then(() => {
+          this.dataStorageService.storeComparable(this.comparableUidToRemove).then(() => {
               this.isLoading = false;
               this.removeComparableMode = false;
-              this.comparableToRemove = null;
+              this.comparableUidToRemove = null;
             }, error => {
               console.error('There was an error when trying to remove the complarable from the property - error message: ', error);
             });
@@ -303,16 +304,8 @@ export class PropertyComponent implements OnInit, OnDestroy {
     }, error => {});
   }
 
-  onRemoveComparable(index: number): void {
-    this.comparableToRemove = this.comparables[index];
-    const message: string = 'remove this comparable from this property';
-    const additionalMessage: string = 'Please note this won\'t delete the comparable, nor will it remove it from other properties'
-    this.showConfirmationModal(message, additionalMessage).then(() => {
-     this.removeComparable(this.comparableToRemove.uid);
-    }, error => {});
-  }
-
-  removeComparable(comparableId: string) {
+  onRemoveComparable(comparableId: string) {
+    this.comparableUidToRemove = comparableId;
     this.isLoading = true;
     this.removeComparableMode = true;
     this.comparableService.removePropertyFromComparable(comparableId, this.id, true);

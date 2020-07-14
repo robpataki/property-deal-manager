@@ -162,6 +162,7 @@ export class PropertyService {
       propertyDetails.size,
       propertyDetails.epc,
       propertyDetails.type,
+      propertyDetails.tenureType,
       propertyDetails.dealType,
       propertyDetails.askingPrice,
       propertyDetails.marketTimestamp,

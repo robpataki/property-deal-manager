@@ -3,6 +3,17 @@ import { Injectable } from '@angular/core'
 @Injectable()
 export class AppConstantsService {}
 
+export const TENURE_TYPES: any = {
+  LH: {
+    key: 'LH',
+    value: 'Leasehold'
+  },
+  FH: {
+    key: 'FH',
+    value: 'Freehold'
+  }
+};
+
 export const PROPERTY_TYPES: any = {
   MDT: {
     key: 'MDT',

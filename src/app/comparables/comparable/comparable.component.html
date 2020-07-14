@@ -51,7 +51,7 @@
               <dl class="dl dl--fitted dl--spaced">
                 <div class="dl-row">
                   <dt>Address:</dt>
-                  <dd>
+                  <dd class="mw-50pc">
                     <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:true:true"></span>
                   </dd> 
                 </div>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="dl-row">
                   <dt>Property type:</dt>
-                  <dd>{{ propertyTypes[comparable.type].value }}</dd>
+                  <dd>{{ !!comparable.type ? propertyTypes[comparable.type].value : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Property size:</dt>
@@ -126,7 +126,7 @@
             <div class="col-12">
               <div class="float-container float-container--br-sm mb-3 mb-md-0">
                 <div class="float-left float-left--strict">
-                  <h2 class="section-heading">Notes{{ !!filteredNotes && filteredNotes.length > 3 ? ' ('+filteredNotes.length+')' : '' }}</h2>
+                  <h2 class="section-heading">Notes{{ !!filteredNotes && filteredNotes.length ? ' ('+filteredNotes.length+')' : '' }}</h2>
                 </div>
                 <div class="float-left float-left--strict" *ngIf="!!filteredNotes && filteredNotes.length>maxNotesToShow">
                   <a
@@ -192,6 +192,7 @@
                       <th scope="col">Date</th>
                       <th scope="col" class="text-center">Type</th>
                       <th scope="col">Note</th>
+                      <th scope="col">Property</th>
                       <th scope="col" class="text-center">Partner</th>
                     </tr>
                   </thead>
@@ -217,6 +218,11 @@
                         </span>
                       </td>
                       <td><span [innerHTML]="note.text"></span></td>
+                      <td class="text-center">
+                        <a [routerLink]="['/properties', getProperty(note.propertyId).uid]" *ngIf="!!getProperty(note.propertyId)">
+                          <span [innerHTML]="getPropertyAddress(note.propertyId)"></span>
+                        </a>
+                      </td>
                       <td class="text-center">{{ note.userName }}</td>
                     </tr>
                   </tbody>
@@ -270,7 +276,7 @@
                     </td>
                     <td scope="col">{{ property.size }}m<sup>2</sup></td>
                     <td scope="col">{{ property.createTimestamp | toDateTime }}<br>({{ property.createTimestamp | timeFromNow }})</td>
-                    <td scope="col">{{ strategies[property.crunch.strg].value }}</td>
+                    <td scope="col">{{ !!property.crunch.strg ? strategies[property.crunch.strg].value : 'N/A' }}</td>
                   </tr>
                 </tbody>
               </table>

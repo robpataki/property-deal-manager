@@ -15,6 +15,7 @@ import { PropertyService } from 'src/app/properties/property.service';
 import { Subscription } from 'rxjs';
 import { DataStorageService } from 'src/app/shared/services/data-storage.service';
 import { AddNoteModalComponent } from 'src/app/modals/add-note-modal/add-note-modal.component';
+import { FormatFullAddressPipe } from 'src/app/shared/pipes/format-full-address.pipe';
 
 @Component({
   selector: 'app-comparable',
@@ -56,7 +57,8 @@ export class ComparableComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private router: Router,
               private toDateTimePipe: ToDateTimePipe,
-              private timeFromNowPipe: TimeFromNowPipe) {}
+              private timeFromNowPipe: TimeFromNowPipe,
+              private formatFullAddressPipe: FormatFullAddressPipe) {}
 
   ngOnInit(): void {
     this.setUpBackButton();
@@ -192,5 +194,18 @@ export class ComparableComponent implements OnInit, OnDestroy {
   onNotesFilterChange(): void {
     this.filterNotesToPropertyId = this.notesFilter.nativeElement.value === 'true' ? true : false;
     this.filteredNotes = this.getFilteredNotes(this.sortedNotes);
+  }
+
+  getProperty(propertyId: string): Property {
+    return this.propertyService.getProperty(propertyId);
+  }
+
+  getPropertyAddress(propertyId: string): string {
+    const property = this.getProperty(propertyId);
+    if (!property) {
+      return '';
+      
+    }
+    return this.formatFullAddressPipe.transform(property.addressLine1, property.addressLine2, property.town, property.postcode);
   }
 }

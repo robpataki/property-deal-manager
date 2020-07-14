@@ -15,7 +15,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="addNoteForm" *ngIf="!isLoading && !isComplete" class="mb-3">
+        <form [formGroup]="addNoteForm" *ngIf="!isLoading && !isComplete" class="mb-3" autocomplete="off">
           <div class="row justify-content-center">
             <div class="col-11">
               <div class="form-group">

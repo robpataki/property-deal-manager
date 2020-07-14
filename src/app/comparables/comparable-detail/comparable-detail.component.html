@@ -21,7 +21,7 @@
       </div>      
       <div class="dl-row">
         <dt>Type:</dt>
-        <dd>{{ comparable.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ propertyTypes[comparable.type].value }}</span></dd>
+        <dd>{{ comparable.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ !!comparable.type ? propertyTypes[comparable.type].value : 'N/A' }}</span></dd>
       </div>
       <div class="dl-row">
         <dt>Sold price: </dt>

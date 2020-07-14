@@ -17,7 +17,7 @@
   </div>
   <div class="row">
     <div class="col-12 col-md-4 mt-4">
-      <form [formGroup]="configForm" class="form form-inline">
+      <form [formGroup]="configForm" class="form form-inline" autocomplete="off">
         <div class="form-group">
           <label for="strg" class="form-label">Primary strategy:</label>
           <select
@@ -61,11 +61,8 @@
 </div>
 
 <div class="container mt-5">
-  <div class="row mt-5">
-    <div class="col-12 col-md-4 offset-md-8">
-      <ng-template [ngTemplateOutlet]="btnNav"></ng-template>
-    </div>
-  </div>
+  <hr class="mb-5">
+  <app-property-comparables-summary [propertyId]="property.uid"></app-property-comparables-summary>
 </div>
 
 <ng-template #btnNav>

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/my-property-db",
+    "public": "dist/property-deal-manager",
     "ignore": [
       "firebase.json",
       "**/.*",

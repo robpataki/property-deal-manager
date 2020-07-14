@@ -3,7 +3,7 @@ import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { ComparableService } from '../comparable.service';
 import { Comparable } from 'src/app/shared/models/comparable.model';
-import { PROPERTY_TYPES, EPC_RATINGS, NOTE_TYPES } from 'src/app/shared/services/app-constants.service';
+import { PROPERTY_TYPES, TENURE_TYPES, EPC_RATINGS, NOTE_TYPES } from 'src/app/shared/services/app-constants.service';
 import { kvObjectToArray, generateUID, ukDateToUSDate, getCurrentTimestamp } from 'src/app/shared/utils';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { ToDateTimePipe } from 'src/app/shared/pipes/to-date-time.pipe';
@@ -14,7 +14,6 @@ import { DataStorageService } from 'src/app/shared/services/data-storage.service
 import { PropertyService } from 'src/app/properties/property.service';
 import { PlaceholderDirective } from 'src/app/shared/directives/placeholder.directive';
 import { ConfirmActionModalComponent } from 'src/app/modals/confirm-action-modal/confirm-action-modal.component';
-import { Property } from 'src/app/shared/models/property.model';
 
 @Component({
   selector: 'app-comparable-edit',
@@ -44,6 +43,7 @@ export class ComparableEditComponent implements OnInit {
   backButtonUrl: string;
 
   propertyTypesArray: any[] = kvObjectToArray(PROPERTY_TYPES);
+  tenureTypesArray: any[] = kvObjectToArray(TENURE_TYPES);
   epcRatingsArray: any[] = kvObjectToArray(EPC_RATINGS);
 
   dpInputId: string = generateUID('dpi_');
@@ -159,8 +159,9 @@ export class ComparableEditComponent implements OnInit {
     let size: number;
     let epc: string;
     let type: string;
+    let tenureType: string;
     let soldPrice: number;
-    let thumbnailUrl: string;
+    let thumbnailUrl: string = 'https://firebasestorage.googleapis.com/v0/b/property-deal-manager.appspot.com/o/static%2Fdefault-property-thumbnail.png?alt=media&token=9bc95394-f2d2-4e86-b85d-e7497288665e';
     let soldDate: string;
 
     let addressLine1: string;
@@ -173,8 +174,9 @@ export class ComparableEditComponent implements OnInit {
     if(this.editMode) {
       bedrooms  = +this.comparable.bedrooms;
       size = +this.comparable.size;
-      epc = EPC_RATINGS[this.comparable.epc].key;
-      type = PROPERTY_TYPES[this.comparable.type].key;
+      epc = !!this.comparable.epc ? EPC_RATINGS[this.comparable.epc].key : null;
+      type = !!this.comparable.type ? PROPERTY_TYPES[this.comparable.type].key : null;
+      tenureType = !!this.comparable.tenureType ? TENURE_TYPES[this.comparable.tenureType].key : null;
       soldPrice = this.comparable.soldPrice;
       thumbnailUrl = this.comparable.thumbnailUrl;
       soldDate = this.toDateTimePipe.transform(this.comparable.soldTimestamp);
@@ -192,6 +194,7 @@ export class ComparableEditComponent implements OnInit {
     this.form = new FormGroup({
       bedrooms: new FormControl(bedrooms),
       type: new FormControl(type),
+      tenureType: new FormControl(tenureType),
       size: new FormControl(size),
       epc: new FormControl(epc),
       soldPrice: new FormControl(soldPrice, [Validators.required]),
@@ -250,6 +253,7 @@ export class ComparableEditComponent implements OnInit {
       +this.form.value.size,
       this.form.value.epc,
       this.form.value.type,
+      this.form.value.tenureType,
       +this.form.value.soldPrice,
       soldTimestamp,
       

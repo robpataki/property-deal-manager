@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "my-property-db": {
+    "property-deal-manager": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/my-property-db",
+            "outputPath": "dist/property-deal-manager",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "my-property-db:build"
+            "browserTarget": "property-deal-manager:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "my-property-db:build:production"
+              "browserTarget": "property-deal-manager:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "my-property-db:build"
+            "browserTarget": "property-deal-manager:build"
           }
         },
         "test": {
@@ -118,15 +118,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "my-property-db:serve"
+            "devServerTarget": "property-deal-manager:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "my-property-db:serve:production"
+              "devServerTarget": "property-deal-manager:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "my-property-db"
+  "defaultProject": "property-deal-manager"
 }

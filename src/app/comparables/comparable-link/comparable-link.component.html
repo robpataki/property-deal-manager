@@ -22,7 +22,7 @@
 
     <div class="row">
       <div class="col-12 col-lg-4">
-        <form [formGroup]="form" class="form">
+        <form [formGroup]="form" class="form" autocomplete="off">
           <div class="form-group">
             <label for="postcode" class="form-label">Postcode</label>
             <input
@@ -31,8 +31,7 @@
               id="postcode"
               aria-describedby="postcodeHint"
               formControlName="postcode"
-              (input)="onPostcodeInput()"
-              autocomplete="off">
+              (input)="onPostcodeInput()">
               <span id="postcodeHint" class="form-text text-muted">For example, M35 0JP</span>
           </div>
         </form>
@@ -75,7 +74,7 @@
                   <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:true"></span>
                 </a>
               </th>
-              <td scope="col">{{comparable.bedrooms}} bedroom<br><span class="text-lowercase">{{ propertyTypes[comparable.type].value }}</span></td>
+              <td scope="col">{{comparable.bedrooms}} bedroom<br><span class="text-lowercase">{{ !!comparable.type ? propertyTypes[comparable.type].value : '' }}</span></td>
               <td scope="col">{{ comparable.size }}m<sup>2</sup></td>
               <td scope="col">{{ comparable.soldPrice | appCurrency }}</td>
               <td scope="col">{{ comparable.soldTimestamp | toDateTime }}<br>({{ comparable.soldTimestamp | timeFromNow }})</td>

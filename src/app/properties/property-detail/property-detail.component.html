@@ -14,7 +14,7 @@
       <ng-template [ngIf]="!!property.crunch && !!property.crunch.strg">
         <div class="dl-row">
           <dt>Strategy: </dt>
-          <dd>{{ strategies[property.crunch.strg].value }}</dd>
+          <dd>{{ !!property.crunch.strg ? strategies[property.crunch.strg].value : 'N/A' }}</dd>
         </div>
       </ng-template>
       
@@ -55,7 +55,7 @@
 
       <div class="dl-row">
         <dt>Type:</dt>
-        <dd>{{ property.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ propertyTypes[property.type].value }}</span></dd>
+        <dd>{{ property.bedrooms }} bedroom <span style="text-transform: lowercase;" *ngIf="!!property.type">{{ propertyTypes[property.type].value }}</span></dd>
       </div>
       <div class="dl-row">
         <dt>Asking price: </dt>
@@ -63,7 +63,7 @@
       </div>
       <div class="dl-row">
         <dt>Deal type: </dt>
-        <dd>{{ dealTypes[property.dealType].value }}</dd>
+        <dd>{{ !!property.dealType ? dealTypes[property.dealType].value : 'N/A' }}</dd>
       </div>
       <div class="dl-row">
         <dt>{{ property.dealType === dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</dt>

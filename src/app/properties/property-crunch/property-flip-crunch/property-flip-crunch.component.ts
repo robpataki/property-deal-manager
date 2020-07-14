@@ -32,16 +32,16 @@ export class PropertyFlipCrunchComponent implements OnInit {
   initForm(): void {
     // Back end
     let prof: number = 20000;
-    let duv: number = 150000;
+    let duv: number = 0;
 
     // Cost of deal
-    let cob: number = 5000;
-    let ref: number = 25000;
+    let cob: number = 0;
+    let ref: number = 0;
     let srv: number = CRUNCH_DEFAULTS.FLP.SURVEY;
     let sol: number = CRUNCH_DEFAULTS.FLP.SOLICITOR;
     let bro: number = CRUNCH_DEFAULTS.FLP.BROKER;
     let src: number = 0;
-    let pm: number = 2000;
+    let pm: number = 0;
     let auc: number = 0;
     let ins: number = CRUNCH_DEFAULTS.BTL.INSURANCE;
 

@@ -86,6 +86,7 @@ export class DataStorageService {
             +propertiesData[key].size,
             propertiesData[key].epc,
             propertiesData[key].type,
+            propertiesData[key].tenureType,
             propertiesData[key].dealType,
             +propertiesData[key].askingPrice,
             propertiesData[key].marketTimestamp ? +propertiesData[key].marketTimestamp : 0,
@@ -146,6 +147,7 @@ export class DataStorageService {
             +comparablesData[key].size,
             comparablesData[key].epc,
             comparablesData[key].type,
+            comparablesData[key].tenureType,
             +comparablesData[key].soldPrice,
             comparablesData[key].soldTimestamp ? +comparablesData[key].soldTimestamp : 0,
 

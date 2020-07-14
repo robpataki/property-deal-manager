@@ -15,6 +15,7 @@ export class Comparable {
     public size: number,
     public epc: string,
     public type: string,
+    public tenureType: string,
     public soldPrice: number,
     public soldTimestamp: number,
     

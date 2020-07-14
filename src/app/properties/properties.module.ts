@@ -17,6 +17,7 @@ import { PropertyCrunchComponent } from './property-crunch/property-crunch.compo
 import { PropertyBTLCrunchComponent } from './property-crunch/property-btl-crunch/property-btl-crunch.component';
 import { PropertyFlipCrunchComponent } from './property-crunch/property-flip-crunch/property-flip-crunch.component';
 import { PropertyCrunchSummaryComponent } from './property/property-crunch-summary/property-crunch-summary.component';
+import { PropertyComparablesSummaryComponent } from './property/property-comparables-summary/property-comparables-summary.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { PropertyCrunchSummaryComponent } from './property/property-crunch-summa
     PropertyCrunchComponent,
     PropertyBTLCrunchComponent,
     PropertyFlipCrunchComponent,
-    PropertyCrunchSummaryComponent
+    PropertyCrunchSummaryComponent,
+    PropertyComparablesSummaryComponent
   ],
   imports: [
     SharedModule,

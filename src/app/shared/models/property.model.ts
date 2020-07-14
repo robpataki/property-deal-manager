@@ -17,13 +17,14 @@ export interface PropertyDetails {
   size: number;
   epc: string;
   type: string;
+  tenureType: string;
   dealType: string;
   askingPrice: number;
   marketTimestamp: number;
   
   links?: string[];
-  crunch?: any
-  comparables?: string[]
+  crunch?: any;
+  comparables?: string[];
 }
 
 export class Property implements PropertyDetails {
@@ -41,6 +42,7 @@ export class Property implements PropertyDetails {
     public size: number,
     public epc: string,
     public type: string,
+    public tenureType: string,
     public dealType: string,
     public askingPrice: number,
     public marketTimestamp: number,

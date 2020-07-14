@@ -63,7 +63,11 @@
                 </div>
                 <div class="dl-row">
                   <dt>Property type:</dt>
-                  <dd>{{ propertyTypes[property.type].value }}</dd>
+                  <dd>{{ !!property.type ? propertyTypes[property.type].value : 'N/A' }}</dd>
+                </div>
+                <div class="dl-row">
+                  <dt>Tenure type:</dt>
+                  <dd>{{ !!property.tenureType ? tenureTypes[property.tenureType].value : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Property size:</dt>
@@ -75,7 +79,7 @@
                 </div>
                 <div class="dl-row">
                   <dt>Deal type:</dt>
-                  <dd>{{ dealTypes[property.dealType].value }}</dd>
+                  <dd>{{ !!property.dealType ? dealTypes[property.dealType].value : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Asking price:</dt>
@@ -146,76 +150,6 @@
       <div class="row section">
         <div class="col-12">
           <app-property-crunch-summary [property]="property"></app-property-crunch-summary>
-        </div>
-      </div>
-    </div>
-  
-    <div class="section" id="s-comparables">
-      <hr>
-      <div class="row section">
-        <div class="col-12">
-          <div class="float-container float-container--br-sm mb-3 mb-lg-0">
-            <div class="float-left">
-              <h2 class="section-heading">Comparables</h2>
-            </div>
-            <div class="float-right">
-              <a [routerLink]="['/comparables', 'link']" [queryParams]="{propertyId: id}" class="btn btn-primary btn-sm btn-inline">Add a comparable</a>
-            </div>
-          </div>
-          <p
-            *ngIf="!sortedComparables || !sortedComparables.length"
-            class="text-danger">You haven't added a comparable yet.</p>
-          
-          <div *ngIf="!!sortedComparables && !!sortedComparables.length">
-            <div class="row">
-              <div class="col-12">
-                <table class="table table-bordered align-middle table-sm table-responsive-md">
-                  <caption>This property has {{ sortedComparables.length }} comparable{{ sortedComparables.length > 1 ? 's' : '' }}.</caption>
-                  <thead class="thead-dark">
-                    <tr>
-                      <th scope="col">Photo</th>
-                      <th scope="col">Address</th>
-                      <th scope="col">Size</th>
-                      <th scope="col">Sold Price</th>
-                      <th scope="col">Sold date</th>
-                      <th scope="col" class="text-center">Notes</th>
-                      <th scope="col" class="text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let comparable of sortedComparables; index as i;">
-                      <td scope="col" class="text-center">
-                        <a [routerLink]="['/comparables', comparable.uid]" [queryParams]="{propertyId: id}">
-                          <span class="table-thumbnail">
-                            <img src="{{ comparable.thumbnailUrl }}" alt="Photo of {{ comparable.addressLine1 }}">
-                            <app-comparable-badge [size]="'small'"></app-comparable-badge>
-                          </span>
-                        </a>
-                      </td>
-                      <th scope="row">
-                        <a [routerLink]="['/comparables', comparable.uid]" [queryParams]="{propertyId: id}">
-                          <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:true"></span>
-                        </a>
-                      </th>
-                      <td scope="col">{{ comparable.size }}m<sup>2</sup></td>
-                      <td scope="col">{{ comparable.soldPrice | appCurrency }}</td>
-                      <td scope="col">{{ comparable.soldTimestamp | toDateTime }}<br>({{ comparable.soldTimestamp | timeFromNow }})</td>
-                      <td scope="col" class="text-center">{{ comparable.notes.length }}</td>
-                      <td scope="col" class="text-center">
-                        <button
-                          type="button"
-                          class="icon-btn icon-btn--danger icon-btn--md"
-                          (click)="onRemoveComparable(comparable.index)">
-                          <svg class="icon-btn__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
-                          <span class="visually-hidden">Remove {{comparable.addressLine1}} as a comparable from this property</span>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -320,24 +254,7 @@
         </div>
       </div>
     </div>
-  
-    <div class="section" id="s-photos">
-      <hr>
-      <div class="row section">
-        <div class="col-12">
-          <div class="float-container float-container--br-sm mb-3 mb-md-0">
-            <div class="float-left">
-              <h2 class="section-heading">Photos</h2>
-            </div>
-            <div class="float-right">
-              <button type="button" class="btn btn-primary btn-sm btn-inline">Add some photos</button>
-            </div>
-          </div>
-          <p class="text-danger">You haven't added any photos yet.</p>
-        </div>
-      </div>
-    </div>
-  
+
     <div class="section" id="s-activity-log">
       <hr>
       <div class="row section">
@@ -424,6 +341,36 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section" id="s-photos">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="float-container float-container--br-sm mb-3 mb-md-0">
+            <div class="float-left">
+              <h2 class="section-heading">Photos</h2>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-primary btn-sm btn-inline">Add some photos</button>
+            </div>
+          </div>
+          <p class="text-danger">You haven't added any photos yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="s-comparables">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <app-property-comparables-summary 
+            (removeComparable)="onRemoveComparable($event)"
+            [propertyId]="property.uid"
+            [interactiveMode]="true"
+          ></app-property-comparables-summary>
         </div>
       </div>
     </div>

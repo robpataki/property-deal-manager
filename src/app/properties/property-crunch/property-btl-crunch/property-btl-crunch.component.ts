@@ -30,7 +30,7 @@ export class PropertyBTLCrunchComponent implements OnInit {
     const crunch: any = this.property.crunch;
 
     // Backend
-    let duv: number = 65000;
+    let duv: number = 0;
 
     // Cashflow
     let rent: number = 450;
@@ -42,13 +42,13 @@ export class PropertyBTLCrunchComponent implements OnInit {
     let ins: number = CRUNCH_DEFAULTS.BTL.INSURANCE;
     
     // Cost of deal
-    let cob: number = 3500;
-    let ref: number = 17000;
+    let cob: number = 0;
+    let ref: number = 0;
     let srv: number = CRUNCH_DEFAULTS.BTL.SURVEY;
     let sol: number = CRUNCH_DEFAULTS.BTL.SOLICITOR;
     let bro: number = CRUNCH_DEFAULTS.BTL.BROKER;
     let src: number = 0;
-    let pm: number = 2000;
+    let pm: number = 0;
     let auc: number = 0;
 
     // Holding cost
@@ -264,7 +264,8 @@ export class PropertyBTLCrunchComponent implements OnInit {
         calc: {
           soi: +this.selectedOfferIndex,
           duv: +this.getControl('duv').value,
-			    rent: +this.getControl('rent').value,
+          rent: +this.getControl('rent').value,
+          cf: this.cashflow,
           ref: +this.getControl('ref').value,
           mop: +this.selectedMaxOffer,
           roi: this.offers[this.selectedOfferIndex].roi,

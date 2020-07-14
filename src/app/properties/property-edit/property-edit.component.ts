@@ -5,7 +5,7 @@ import { generateUID, kvObjectToArray, ukDateToUSDate } from '../../shared/utils
 import { DataStorageService } from 'src/app/shared/services/data-storage.service';
 import { PropertyService } from '../property.service';
 import { Property, PropertyDetails } from 'src/app/shared/models/property.model';
-import { PROPERTY_TYPES, DEAL_TYPES, EPC_RATINGS } from '../../shared/services/app-constants.service';
+import { PROPERTY_TYPES, TENURE_TYPES, DEAL_TYPES, EPC_RATINGS } from '../../shared/services/app-constants.service';
 import { ToDateTimePipe } from '../../shared/pipes/to-date-time.pipe';
 import { FormArray, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -36,6 +36,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
   backButtonUrl: string;
   
   propertyTypesArray: any[] = kvObjectToArray(PROPERTY_TYPES);
+  tenureTypesArray: any[] = kvObjectToArray(TENURE_TYPES);
   dealTypesArray: any[] = kvObjectToArray(DEAL_TYPES);
   epcRatingsArray: any[] = kvObjectToArray(EPC_RATINGS);
 
@@ -49,7 +50,6 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toDateTimePipe: ToDateTimePipe,
     private router: Router,
-    private accountService: AccountService,
     private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit(): void {
@@ -95,8 +95,9 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     let dealType: string;
     let epc: string;
     let type: string;
+    let tenureType: string;
     let askingPrice: number;
-    let thumbnailUrl: string;
+    let thumbnailUrl: string = 'https://firebasestorage.googleapis.com/v0/b/property-deal-manager.appspot.com/o/static%2Fdefault-property-thumbnail.png?alt=media&token=9bc95394-f2d2-4e86-b85d-e7497288665e';
     let marketDate: string;
 
     let addressLine1: string;
@@ -112,6 +113,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
       dealType = DEAL_TYPES[this.property.dealType].key;
       epc = EPC_RATINGS[this.property.epc].key;
       type = PROPERTY_TYPES[this.property.type].key;
+      tenureType = !!this.property.tenureType ? TENURE_TYPES[this.property.tenureType].key : null;
       askingPrice = this.property.askingPrice;
       thumbnailUrl = this.property.thumbnailUrl;
       marketDate = this.toDateTimePipe.transform(this.property.marketTimestamp);
@@ -129,6 +131,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       bedrooms: new FormControl(bedrooms),
       type: new FormControl(type),
+      tenureType: new FormControl(tenureType),
       size: new FormControl(size),
       epc: new FormControl(epc),
       dealType: new FormControl(dealType),
