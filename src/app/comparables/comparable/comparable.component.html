@@ -57,19 +57,23 @@
                 </div>
                 <div class="dl-row">
                   <dt>Bedrooms:</dt>
-                  <dd>{{ comparable.bedrooms }}</dd>
+                  <dd>{{ !!comparable.bedrooms ? comparable.bedrooms : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Property type:</dt>
                   <dd>{{ !!comparable.type ? propertyTypes[comparable.type].value : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
+                  <dt>Tenure type:</dt>
+                  <dd>{{ !!comparable.tenureType ? tenureTypes[comparable.tenureType].value : 'N/A' }}</dd>
+                </div>
+                <div class="dl-row">
                   <dt>Property size:</dt>
-                  <dd>{{ comparable.size }}m<sup>2</sup></dd>
+                  <dd>{{ !!comparable.size ? comparable.size : 'N/A ' }} <span *ngIf="!!comparable.size">m<sup>2</sup></span></dd>
                 </div>
                 <div class="dl-row">
                   <dt>EPC rating:</dt>
-                  <dd>{{ comparable.epc }}</dd>
+                  <dd>{{ !!comparable.epc ? comparable.epc : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Sold price:</dt>
@@ -77,7 +81,10 @@
                 </div>
                 <div class="dl-row">
                   <dt>Sold date:</dt>
-                  <dd>{{ comparable.soldTimestamp | toDateTime }} ({{ comparable.soldTimestamp | timeFromNow }})</dd> 
+                  <dd>
+                    <span *ngIf="!!comparable.soldTimestamp">{{ comparable.soldTimestamp | toDateTime }} ({{ comparable.soldTimestamp | timeFromNow }})</span>
+                    <span *ngIf="!comparable.soldTimestamp">N/A</span>
+                  </dd> 
                 </div>
                 <div class="dl-row" *ngIf="!!comparable.links && !!comparable.links.length">
                   <dt>Links:</dt>
@@ -101,7 +108,7 @@
                   data-target="#addNoteModal"
                   (click)="onAddNote()">
                   <span class="btn__icon"><img src="assets/icons/icon--octa-comment.svg" alt="Speech bubble icon" aria-hidden="true"></span>
-                  <span class="btn__label">Add a new note</span>
+                  <span class="btn__label">Add a note</span>
                 </button>
                 <hr>
                 <a 

@@ -172,8 +172,8 @@ export class ComparableEditComponent implements OnInit {
     let links: FormArray = new FormArray([]);
 
     if(this.editMode) {
-      bedrooms  = +this.comparable.bedrooms;
-      size = +this.comparable.size;
+      bedrooms  = !isNaN(+this.comparable.bedrooms) ? this.comparable.bedrooms : null;
+      size = !isNaN(+this.comparable.size) ? this.comparable.size : null;
       epc = !!this.comparable.epc ? EPC_RATINGS[this.comparable.epc].key : null;
       type = !!this.comparable.type ? PROPERTY_TYPES[this.comparable.type].key : null;
       tenureType = !!this.comparable.tenureType ? TENURE_TYPES[this.comparable.tenureType].key : null;
@@ -249,12 +249,12 @@ export class ComparableEditComponent implements OnInit {
       this.form.value.postcode,
       
       this.form.value.thumbnailUrl,
-      +this.form.value.bedrooms,
-      +this.form.value.size,
+      this.form.value.bedrooms,
+      this.form.value.size,
       this.form.value.epc,
       this.form.value.type,
       this.form.value.tenureType,
-      +this.form.value.soldPrice,
+      this.form.value.soldPrice,
       soldTimestamp,
       
       [],

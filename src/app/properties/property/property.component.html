@@ -58,8 +58,14 @@
               <h2 class="mb-3">Property details</h2>
               <dl class="dl dl--fitted dl--spaced">
                 <div class="dl-row">
+                  <dt>Address:</dt>
+                  <dd class="mw-50pc">
+                    <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode:true:true"></span>
+                  </dd> 
+                </div>
+                <div class="dl-row">
                   <dt>Bedrooms:</dt>
-                  <dd>{{ property.bedrooms }}</dd>
+                  <dd>{{ !!property.bedrooms ? property.bedrooms : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Property type:</dt>
@@ -71,11 +77,11 @@
                 </div>
                 <div class="dl-row">
                   <dt>Property size:</dt>
-                  <dd>{{ property.size }}m<sup>2</sup></dd>
+                  <dd>{{ !!property.size ? property.size : 'N/A ' }} <span *ngIf="!!property.size">m<sup>2</sup></span></dd>
                 </div>
                 <div class="dl-row">
                   <dt>EPC rating:</dt>
-                  <dd>{{ property.epc }}</dd>
+                  <dd>{{ !!property.epc ? property.epc : 'N/A' }}</dd>
                 </div>
                 <div class="dl-row">
                   <dt>Deal type:</dt>
@@ -87,7 +93,12 @@
                 </div>
                 <div class="dl-row">
                   <dt>{{ property.dealType == dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</dt>
-                  <dd>{{ marketDate }} ({{ marketedFor }})</dd> 
+                  <dd>
+                    <span *ngIf="marketDate !== '0'">
+                      {{ marketDate }} ({{ marketedFor }})
+                    </span>
+                    <span *ngIf="marketDate === '0'">N/A</span>
+                  </dd>
                 </div>
                 <div class="dl-row" *ngIf="!!property.links && !!property.links.length">
                   <dt>Market links:</dt>

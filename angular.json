@@ -127,6 +127,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "property-deal-manager"
+    }
+  },
+  "defaultProject": "property-deal-manager",
+  "cli": {
+    "analytics": false
+  }
 }

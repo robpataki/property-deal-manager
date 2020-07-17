@@ -7,7 +7,7 @@ import { Note } from 'src/app/shared/models/note.model';
 import { getCurrentTimestamp, sortArrayByKey } from 'src/app/shared/utils';
 import { ComparableService } from '../comparable.service';
 import { AccountService } from 'src/app/account/account.service';
-import { NOTE_TYPES, PROPERTY_TYPES, STRATEGIES } from 'src/app/shared/services/app-constants.service';
+import { NOTE_TYPES, PROPERTY_TYPES, TENURE_TYPES, STRATEGIES } from 'src/app/shared/services/app-constants.service';
 import { ToDateTimePipe } from 'src/app/shared/pipes/to-date-time.pipe';
 import { TimeFromNowPipe } from 'src/app/shared/pipes/time-from-now.pipe';
 import { Property } from 'src/app/shared/models/property.model';
@@ -45,6 +45,7 @@ export class ComparableComponent implements OnInit, OnDestroy {
   
   addNoteMode: boolean;
   propertyTypes: any = PROPERTY_TYPES;
+  tenureTypes: any = TENURE_TYPES;
   noteTypes: any = NOTE_TYPES;
   strategies: any = STRATEGIES;
 

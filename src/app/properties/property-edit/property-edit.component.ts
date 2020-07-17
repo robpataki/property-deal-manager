@@ -108,11 +108,11 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     let links: FormArray = new FormArray([]);
 
     if(this.editMode) {
-      bedrooms  = +this.property.bedrooms;
-      size = +this.property.size;
-      dealType = DEAL_TYPES[this.property.dealType].key;
-      epc = EPC_RATINGS[this.property.epc].key;
-      type = PROPERTY_TYPES[this.property.type].key;
+      bedrooms  = !isNaN(+this.property.bedrooms) ? this.property.bedrooms : null;
+      size = !isNaN(+this.property.size) ? this.property.size : null;
+      dealType = !!this.property.dealType ? DEAL_TYPES[this.property.dealType].key : null;
+      epc = !!this.property.epc ? EPC_RATINGS[this.property.epc].key : null;
+      type = !!this.property.type ? PROPERTY_TYPES[this.property.type].key : null;
       tenureType = !!this.property.tenureType ? TENURE_TYPES[this.property.tenureType].key : null;
       askingPrice = this.property.askingPrice;
       thumbnailUrl = this.property.thumbnailUrl;
