@@ -80,17 +80,17 @@ export class DataStorageService {
             propertiesData[key].addressLine2,
             propertiesData[key].town,
             propertiesData[key].postcode,
-            
+
             propertiesData[key].thumbnailUrl,
-            +propertiesData[key].bedrooms,
-            +propertiesData[key].size,
+            !isNaN(+propertiesData[key].bedrooms) ? +propertiesData[key].bedrooms : 0,
+            !isNaN(+propertiesData[key].size) ? +propertiesData[key].size : 0,
             propertiesData[key].epc,
             propertiesData[key].type,
             propertiesData[key].tenureType,
             propertiesData[key].dealType,
             +propertiesData[key].askingPrice,
             propertiesData[key].marketTimestamp ? +propertiesData[key].marketTimestamp : 0,
-            
+
             (!propertiesData[key].links ? [] : propertiesData[key].links),
             (!propertiesData[key].crunch ? {
               strg: STRATEGIES.BTL.key
@@ -141,10 +141,10 @@ export class DataStorageService {
             comparablesData[key].addressLine2,
             comparablesData[key].town,
             comparablesData[key].postcode,
-            
+
             comparablesData[key].thumbnailUrl,
-            +comparablesData[key].bedrooms,
-            +comparablesData[key].size,
+            !isNaN(+comparablesData[key].bedrooms) ? +comparablesData[key].bedrooms : 0,
+            !isNaN(+comparablesData[key].size) ? +comparablesData[key].size : 0,
             comparablesData[key].epc,
             comparablesData[key].type,
             comparablesData[key].tenureType,

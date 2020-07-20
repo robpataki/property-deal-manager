@@ -54,7 +54,7 @@ export class ComparableService {
   addNoteToComparable(comparableId: string, note: Note, keepSilent?: boolean): void {
     const comparable: Comparable = this.getComparable(comparableId);
     comparable.notes.push(note);
-    
+
     if (!keepSilent) {
       this.emitChanges();
     }
@@ -62,7 +62,7 @@ export class ComparableService {
 
   addPropertyToComparable(comparableId: string, propertyId: string, keepSilent?: boolean) {
     const comparable: Comparable = this.getComparable(comparableId);
-    
+
     if (!comparable.properties.includes(propertyId)) {
       comparable.properties.push(propertyId);
     }
@@ -81,7 +81,7 @@ export class ComparableService {
 
     if (index >= 0) {
       comparable.properties.splice(index, 1);
-      
+
       if (!keepSilent) {
         this.emitChanges();
       }

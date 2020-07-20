@@ -18,7 +18,7 @@ export class PropertyService {
   constructor(private accountService: AccountService) {};
 
   getProperties(): Property[] {
-    return this.properties.slice(); 
+    return this.properties.slice();
   }
 
   setProperties(properties: Property[]): void {
@@ -34,7 +34,7 @@ export class PropertyService {
 
   addComparableToProperty(propertyId: string, comparableId: string, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
-    
+
     if (!property.comparables.includes(comparableId)) {
       property.comparables.push(comparableId);
     }
@@ -83,7 +83,7 @@ export class PropertyService {
   addNoteToProperty(propertyId: string, note: Note, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.notes.push(note);
-    
+
     if (!keepSilent) {
       this.emitChanges();
     }
@@ -92,7 +92,7 @@ export class PropertyService {
   makeOfferOnProperty(propertyId: string, offer: Offer, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.offers.push(offer);
-    
+
     if (!keepSilent) {
       this.emitChanges();
     }
@@ -117,7 +117,7 @@ export class PropertyService {
     const formattedViewingDate: string = formatDate(new Date(viewingTimestamp), 'dd/MM/yyyy HH:mm');
 
     const cancellationNote: Note = new Note(`Cancelled the viewing on ${formattedViewingDate}`, currentTimestamp, NOTE_TYPES.VIE.key, userName);
-    
+
     // We'll let the addNoteToProperty method to call emit once the note was pushed
     // That emit will notify the subscribers about the viewing cancellation as well
     this.addNoteToProperty(propertyId, cancellationNote);
@@ -151,12 +151,12 @@ export class PropertyService {
     const property = new Property(
       propertyDetails.uid,
       createTimestamp,
-      
+
       propertyDetails.addressLine1,
       propertyDetails.addressLine2,
       propertyDetails.town,
       propertyDetails.postcode,
-      
+
       propertyDetails.thumbnailUrl,
       propertyDetails.bedrooms,
       propertyDetails.size,
@@ -166,7 +166,9 @@ export class PropertyService {
       propertyDetails.dealType,
       propertyDetails.askingPrice,
       propertyDetails.marketTimestamp,
-      
+
+      propertyDetails.estateAgentId,
+      propertyDetails.vendor,
       propertyDetails.links,
       { strg: STRATEGIES.BTL.key },
       [],
@@ -183,7 +185,7 @@ export class PropertyService {
     let index: number = this.properties.findIndex((property) => {
       return property.uid == propertyId;
     });
-    
+
     if (index >= 0) {
       this.properties.splice(index, 1);
       this.emitChanges();
@@ -196,6 +198,18 @@ export class PropertyService {
         return property;
       }
     })
+  }
+
+  setEstateAgentOfProperty(propertyId: string, estateAgentId: string, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+
+    if (!!property) {
+      property.estateAgentId = estateAgentId;
+
+      if (!keepSilent) {
+        this.emitChanges();
+      }
+    }
   }
 
   reset(): void {

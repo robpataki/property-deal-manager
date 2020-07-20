@@ -5,6 +5,7 @@ import { Comparable } from '../models/comparable.model';
 import { generateUID, getCurrentTimestamp } from '../utils';
 import { Note } from '../models/note.model';
 import { DEAL_TYPES } from '../services/app-constants.service';
+import { EstateAgent } from '../models/estate-agent.model';
 
 export class MockUtils {
   static getMockAccountService() {
@@ -16,7 +17,7 @@ export class MockUtils {
       new Property(
         generateUID('p_'),
         +getCurrentTimestamp(),
-        
+
         '3rd floor Basil Chambers',
         '65 High Street',
         'Manchester',
@@ -31,6 +32,9 @@ export class MockUtils {
         'AUC',
         100000,
         +getCurrentTimestamp(),
+
+        '',
+        null,
         [],
         {  strg: 'BTL' },
         [],
@@ -41,7 +45,7 @@ export class MockUtils {
       new Property(
         generateUID('p_'),
         +getCurrentTimestamp(),
-        
+
         '56 Shoreditch High Street',
         '',
         'London',
@@ -56,6 +60,9 @@ export class MockUtils {
         'ESA',
         999999,
         +getCurrentTimestamp(),
+
+        '',
+        null,
         [],
         {  strg: 'BTL' },
         [],
@@ -66,7 +73,7 @@ export class MockUtils {
       new Property(
         generateUID('p_'),
         +getCurrentTimestamp(),
-        
+
         '37 Heneage Street',
         '',
         'London',
@@ -81,6 +88,9 @@ export class MockUtils {
         'D2V',
         333333,
         +getCurrentTimestamp(),
+
+        '',
+        null,
         [],
         {  strg: 'FLP'},
         [],
@@ -96,12 +106,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         'Address line 1',
         'Address line 2',
         'Funky town',
         'AB1 C34',
-  
+
         '',
         3,
         42,
@@ -110,7 +120,7 @@ export class MockUtils {
         'FH',
         99995,
         getCurrentTimestamp(),
-        
+
         [],
         [],
         []
@@ -118,12 +128,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         'Address line 1',
         'Address line 2',
         'Honky town',
         'ZX9 W87',
-  
+
         '',
         5,
         99,
@@ -132,7 +142,7 @@ export class MockUtils {
         'LH',
         435000,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         []
@@ -140,12 +150,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         'Address line 1',
         'Address line 2',
         'Dodgy town',
         'LM5 0BZ',
-        
+
         '',
         2,
         72,
@@ -154,7 +164,7 @@ export class MockUtils {
         'FH',
         45000,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         []
@@ -162,12 +172,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         '400 Wilbraham Road',
         'Chorlton',
         'Manchester',
         'M21 0UB',
-        
+
         '',
         9,
         400,
@@ -176,7 +186,7 @@ export class MockUtils {
         'FH',
         1200000,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         ['https://www.rightmove.co.uk/property-for-sale/property-72087862.html']
@@ -184,12 +194,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         '10 Dudley Road',
         'Whalley Range',
         'Manchester',
         'M16 8DX',
-        
+
         '',
         5,
         400,
@@ -198,7 +208,7 @@ export class MockUtils {
         'LH',
         525000,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         ['https://www.rightmove.co.uk/property-for-sale/property-90832451.html']
@@ -206,12 +216,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         '22 Jenny Street',
         '',
         'Oldham',
         'OL8 4QN',
-        
+
         '',
         2,
         88,
@@ -220,7 +230,7 @@ export class MockUtils {
         'FH',
         199950,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         ['https://www.rightmove.co.uk/property-for-sale/property-61431925.html']
@@ -228,12 +238,12 @@ export class MockUtils {
       new Comparable(
         generateUID('c_'),
         +getCurrentTimestamp(),
-  
+
         '31, Birchfield Drive',
         'Marland',
         'Rochdale',
         'OL11 4NY',
-        
+
         '',
         2,
         88,
@@ -242,12 +252,94 @@ export class MockUtils {
         'LH',
         309950,
         +getCurrentTimestamp(),
-        
+
         [],
         [],
         ['https://www.rightmove.co.uk/property-for-sale/property-80684437.html']
       )
     ];
+  }
+
+  static getMockEstateAgents(): EstateAgent[] {
+    return [
+      new EstateAgent(
+        generateUID('ea_'),
+        +getCurrentTimestamp(),
+
+        'Ryder & Dutton',
+        'Chadderton',
+        '',
+        '0161 681 3754',
+        'https://www.ryder-dutton.co.uk/liquid_assets/images/rd-logo.png',
+
+        '635 Broadway',
+        'Chadderton',
+        'Oldham',
+        'OL9 8DN',
+
+        [],
+        [],
+        ['https://www.ryder-dutton.co.uk/']
+      ),
+      new EstateAgent(
+        generateUID('ea_'),
+        +getCurrentTimestamp(),
+
+        'Cousins',
+        'Failsworth',
+        'failsworth@cousins.co.uk',
+        '0161 681 2371',
+        'https://www.cousins.uk/images/logo.png',
+
+        '754 Oldham Road',
+        'Failsworth',
+        'Manchester',
+        'M35 9FE',
+
+        [],
+        [],
+        ['https://www.cousins.uk/']
+      ),
+      new EstateAgent(
+        generateUID('ea_'),
+        +getCurrentTimestamp(),
+
+        'Hunters',
+        'Oldham',
+        'oldham@hunters.com',
+        '0161 669 4833',
+        'https://www.hunters.com/application/themes/rawnet/app/images/content/hunters-logo.svg',
+
+        '832 Hollins Rd',
+        'Hollinwood',
+        'Oldham',
+        'OL8 4SR',
+
+        [],
+        [],
+        ['https://www.hunters.com']
+      ),
+      new EstateAgent(
+        generateUID('ea_'),
+        +getCurrentTimestamp(),
+
+        'NPE',
+        'Failsworth',
+        'sales@npestates.co.uk',
+        '0161 682 1001',
+        'http://www.npestates.co.uk/wp-content/uploads/2013/11/NPE-logo.jpg',
+
+        '61 Ashton Rd E',
+        'Failsworth',
+        'Manchester',
+        'M35 9PW',
+
+        [],
+        [],
+        ['http://www.npestates.co.uk/']
+      )
+
+    ]
   }
 }
 

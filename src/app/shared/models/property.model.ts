@@ -1,17 +1,18 @@
 import { Note } from './note.model';
 import { Offer } from './offer.model';
 import { Viewing } from './viewing.model';
+import { Person } from './person.model';
 
 // PropertyDetails doesn't include the arrays other than the links
 export interface PropertyDetails {
   uid: string;
   createTimestamp: number,
-  
+
   addressLine1: string;
   addressLine2: string;
   town: string;
   postcode: string;
-  
+
   thumbnailUrl: string;
   bedrooms: number;
   size: number;
@@ -21,7 +22,9 @@ export interface PropertyDetails {
   dealType: string;
   askingPrice: number;
   marketTimestamp: number;
-  
+
+  estateAgentId?: string;
+  vendor?: Person;
   links?: string[];
   crunch?: any;
   comparables?: string[];
@@ -31,12 +34,12 @@ export class Property implements PropertyDetails {
   constructor(
     public uid: string,
     public createTimestamp: number,
-    
+
     public addressLine1: string,
     public addressLine2: string,
     public town: string,
     public postcode: string,
-    
+
     public thumbnailUrl: string,
     public bedrooms: number,
     public size: number,
@@ -46,13 +49,15 @@ export class Property implements PropertyDetails {
     public dealType: string,
     public askingPrice: number,
     public marketTimestamp: number,
-    
+
+    public estateAgentId?: string,
+    public vendor?: Person,
     public links?: string[],
     public crunch?: any,
     public comparables?: string[],
-    
+
     public notes?: Note[],
     public offers?: Offer[],
     public viewings?: Viewing[]
-  ) {}  
+  ) {}
 }

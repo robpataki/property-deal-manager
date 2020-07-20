@@ -8,6 +8,7 @@ import { getCurrentTimestamp } from '../shared/utils';
 import { NOTE_TYPES } from '../shared/services/app-constants.service';
 import { Offer } from '../shared/models/offer.model';
 import { Viewing } from '../shared/models/viewing.model';
+import { EstateAgent } from '../shared/models/estate-agent.model';
 
 describe('PropertyService', () => {
   const currentTimestamp: number = new Date(2020, 7, 15, 12, 30).getTime(); // The big day!
@@ -16,14 +17,19 @@ describe('PropertyService', () => {
 
   let propertiesChangedSubSpy: jasmine.Spy;
   let propertyService: PropertyService;
-  
+
   let property1: Property;
   let property2: Property;
   let property3: Property;
-  
+
   let comparable1: Comparable;
   let comparable2: Comparable;
   let comparable3: Comparable;
+
+  let estateAgent1: EstateAgent;
+  let estateAgent2: EstateAgent;
+  let estateAgent3: EstateAgent;
+  let estateAgent4: EstateAgent;
 
   beforeEach(() => {
     // Use the same return value for every getCurrentTimestamp() call
@@ -46,6 +52,12 @@ describe('PropertyService', () => {
     comparable1 = mockComparables[0];
     comparable2 = mockComparables[1];
     comparable3 = mockComparables[2];
+
+    const mockEstateAgents = MockUtils.getMockEstateAgents();
+    estateAgent1 = mockEstateAgents[0];
+    estateAgent2 = mockEstateAgents[1];
+    estateAgent3 = mockEstateAgents[2];
+    estateAgent4 = mockEstateAgents[3];
   })
 
   it('should exist', () => {
@@ -61,14 +73,14 @@ describe('PropertyService', () => {
     const properties: Property[] = [property1, property2];
     propertyService.setProperties(properties);
     expect(propertiesChangedSubSpy).toHaveBeenCalledWith(properties);
-    
+
     expect(propertyService.properties).toEqual(properties);
   })
 
   it('#getProperties should return an array of properties (and not emit change event)', () => {
     const properties: Property[] = [property1, property2];
     propertyService.setProperties(properties);
-    
+
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
     expect(propertyService.getProperties()).toEqual(properties);
   })
@@ -76,7 +88,7 @@ describe('PropertyService', () => {
   it('#reset should set the properties to an empty array (and not emit change event)', () => {
     const properties: Property[] = [property1, property2];
     propertyService.setProperties(properties);
-    
+
     propertyService.reset();
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
 
@@ -88,7 +100,7 @@ describe('PropertyService', () => {
     propertyService.addProperty(property1);
     expect(propertiesChangedSubSpy).toHaveBeenCalledWith([property1]);
     expect(propertyService.getProperties()).toEqual([property1]);
-    
+
     propertyService.addProperty(property2);
     expect(propertiesChangedSubSpy).toHaveBeenCalledWith([property1, property2]);
     expect(propertyService.getProperties()).toEqual([property1, property2]);
@@ -112,7 +124,7 @@ describe('PropertyService', () => {
 
     propertyService.deleteProperty(property2.uid);
     expect(propertiesChangedSubSpy).toHaveBeenCalledWith([property1, property3]);
-    
+
     expect(propertyService.getProperties().length).toEqual(2);
     expect(propertyService.getProperties()).toEqual([property1, property3]);
   })
@@ -136,7 +148,7 @@ describe('PropertyService', () => {
     propertyService.setProperties([property1, property2]);
     expect(propertyService.getProperty(property1.uid).notes.length).toEqual(1);
     expect(propertyService.getProperty(property1.uid).notes[0].text).toEqual('Property card created');
-    
+
     // Add one loudly
     const firstNote: Note = new Note('This is my first note', getCurrentTimestamp(), NOTE_TYPES.NOT.key, userName);
     propertyService.addNoteToProperty(property1.uid, firstNote);
@@ -156,12 +168,12 @@ describe('PropertyService', () => {
   it('#addComparableToProperty should add a comparable once to the given property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1]);
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([]);
-    
+
     // Add one loudly
     propertyService.addComparableToProperty(property1.uid, comparable1.uid);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([comparable1.uid]);
-    
+
     // Add one in silence
     propertyService.addComparableToProperty(property1.uid, comparable2.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
@@ -170,7 +182,7 @@ describe('PropertyService', () => {
     // Don't do dupes
     propertyService.addComparableToProperty(property1.uid, comparable1.uid);
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([comparable1.uid, comparable2.uid]);
-  });
+  })
 
   it('#removeComparableFromProperty should remove the given comparable from the property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1]);
@@ -189,7 +201,7 @@ describe('PropertyService', () => {
     propertyService.removeComparableFromProperty(property1.uid, comparable3.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(5);
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([comparable1.uid]);
-  });
+  })
 
   it('#getPropertiesOfComparable should return a list of properties the comparable is linked to', () => {
     propertyService.setProperties([property1, property2, property3]);
@@ -200,7 +212,7 @@ describe('PropertyService', () => {
 
     expect(propertyService.getPropertiesOfComparable(comparable1.uid)).toEqual([property1, property3]);
     expect(propertyService.getPropertiesOfComparable(comparable2.uid)).toEqual([property2, property3]);
-  });
+  })
 
   it('#deleteComparable should remove the given comparable from every property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1, property2, property3]);
@@ -229,54 +241,54 @@ describe('PropertyService', () => {
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([comparable1.uid]);
     expect(propertyService.getProperty(property2.uid).comparables).toEqual([]);
     expect(propertyService.getProperty(property3.uid).comparables).toEqual([comparable1.uid]);
-  });
+  })
 
   it('#deleteComparable should only emit the change event if anything was deleted, and not called silently', () => {
     propertyService.deleteComparable(comparable1.uid);
     propertyService.deleteComparable(comparable2.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(0);
-  });
+  })
 
   it('#getPropertiesByPostcode should return a list of properties with matching postcode', () => {
     propertyService.setProperties([property1, property2, property3])
     expect(propertyService.getPropertiesByPostcode('M')).toEqual([property1]);
     expect(propertyService.getPropertiesByPostcode('E1')).toEqual([property2, property3]);
     expect(propertyService.getPropertiesByPostcode('E1 5LJ')).toEqual([property3]);
-  });
+  })
 
   it('#makeOfferOnProperty should add an offer to the property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1]);
     expect(propertyService.getProperty(property1.uid).offers).toEqual([]);
-    
+
     // Add one loudly
     const offer1: Offer = new Offer(10000, +getCurrentTimestamp(), userName);
     propertyService.makeOfferOnProperty(property1.uid, offer1);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).offers).toEqual([offer1]);
-    
+
     // Add one in silence
     const offer2: Offer = new Offer(10500, +getCurrentTimestamp(), userName);
     propertyService.makeOfferOnProperty(property1.uid, offer2, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).offers).toEqual([offer1, offer2]);
-  });
+  })
 
   it('#bookViewingOfProperty should add a viewing to the property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1]);
     expect(propertyService.getProperty(property1.uid).viewings).toEqual([]);
-    
+
     // Add one loudly
     const viewing1: Viewing = new Viewing(98765);
     propertyService.bookViewingOfProperty(property1.uid, viewing1);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).viewings).toEqual([viewing1]);
-    
+
     // Add one in silence
     const viewing2: Viewing = new Viewing(12345);
     propertyService.bookViewingOfProperty(property1.uid, viewing2, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).viewings).toEqual([viewing1, viewing2]);
-  });
+  })
 
   it('#cancelViewingOfProperty should cancel a viewing of the property (and emit change event)', () => {
     propertyService.setProperties([property1]);
@@ -288,7 +300,7 @@ describe('PropertyService', () => {
     propertyService.cancelViewingOfProperty(property1.uid, 0);
     expect(propertyService.getProperty(property1.uid).viewings[0].cancelled).toBeTrue();
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
-  });
+  })
 
   it('#updateCrunch should update the property crunch (and emit change event)', () => {
     propertyService.setProperties([property1]);
@@ -297,14 +309,29 @@ describe('PropertyService', () => {
 
     propertyService.updatePropertyCrunch(property1.uid, { strg: 'FLP' });
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
-  });
+  })
+
+  it('#setEstateAgentOfProperty should set the estate agent\'s uid on the given property (and emit change event if not called silently)', () => {
+    propertyService.setProperties([property1]);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual('');
+
+    // Set it loudly
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent1.uid);
+
+    // Set it in silence
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent2.uid, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent2.uid);
+  })
 
   it('#emitChanges should emit `comparablesChanged`', () => {
     propertyService.emitChanges();
     expect(propertiesChangedSubSpy).toHaveBeenCalledWith([]);
-  });
+  })
 
   it('#getUserName should return logged in user\'s displayName', () => {
     expect(propertyService.getUserName()).toEqual(userName);
-  });
-});
+  })
+})
