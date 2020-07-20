@@ -9,7 +9,7 @@
     <h1 class="card-title">
       <span [innerHTML]="comparable.addressLine1 | formatFullAddress:comparable.addressLine2:comparable.town:comparable.postcode:false:true"></span>
     </h1>
-    
+
     <dl class="dl dl--small dl--justified">
       <hr>
       <ng-template [ngIf]="!comparable.properties || !comparable.properties.length">
@@ -18,10 +18,14 @@
       <div class="dl-row" *ngIf="!!comparable.properties && !!comparable.properties.length">
         <dt>Properties: </dt>
         <dd>{{ !!comparable.properties && !!comparable.properties.length ? comparable.properties.length : 0 }}</dd>
-      </div>      
+      </div>
       <div class="dl-row">
         <dt>Type:</dt>
-        <dd>{{ comparable.bedrooms }} bedroom <span style="text-transform: lowercase;">{{ !!comparable.type ? propertyTypes[comparable.type].value : 'N/A' }}</span></dd>
+        <dd>
+          <span>{{ comparable.bedrooms }} bedroom </span>
+          <span *ngIf="!!comparable.type" style="text-transform: lowercase;">{{ propertyTypes[comparable.type].value }}</span>
+          <span *ngIf="!comparable.type">N/A</span>
+        </dd>
       </div>
       <div class="dl-row">
         <dt>Sold price: </dt>
@@ -29,7 +33,12 @@
       </div>
       <div class="dl-row">
         <dt>Sold date:</dt>
-        <dd>{{ comparable.soldTimestamp | timeFromNow }}</dd>
+        <dd>
+          <span *ngIf="comparable.soldTimestamp === 0">N/A</span>
+          <span *ngIf="comparable.soldTimestamp !== 0">
+            {{ comparable.soldTimestamp | timeFromNow }}
+          </span>
+        </dd>
       </div>
       <hr>
     </dl>
