@@ -5,10 +5,20 @@ import { AddNoteModalComponent } from './add-note-modal.component';
 import { SharedModule } from '../../shared/modules/shared.module';
 
 @NgModule({
-  imports: [ReactiveFormsModule, SharedModule],
-  declarations: [AddNoteModalComponent],
-  exports: [AddNoteModalComponent, SharedModule],
+  imports: [
+    ReactiveFormsModule,
+    SharedModule
+  ],
+  declarations: [
+    AddNoteModalComponent
+  ],
+  exports: [
+    AddNoteModalComponent,
+    SharedModule
+  ],
   providers: [],
-  bootstrap: [AddNoteModalComponent]
+  bootstrap: [
+    AddNoteModalComponent
+  ]
 })
 export class AddNoteModalModule {}

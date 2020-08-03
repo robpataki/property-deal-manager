@@ -17,7 +17,7 @@ export class PropertyDetailComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.lastActivityTimestamp = +this.property.notes[this.property.notes.length-1].timestamp;
+    this.lastActivityTimestamp = !!this.property.notes && !!this.property.notes.length ? +this.property.notes[this.property.notes.length-1].timestamp : 0;
   }
 
 }

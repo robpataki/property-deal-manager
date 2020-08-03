@@ -5,6 +5,7 @@ export class Note {
     public type: string,
     public userName: string,
 
-    public propertyId?: string
+    public propertyId?: string,
+    public estateAgentId?: string
   ) {}
 }

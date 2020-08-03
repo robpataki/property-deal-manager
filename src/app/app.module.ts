@@ -24,9 +24,11 @@ import { PropertyService } from './properties/property.service';
 import { ComparableService } from './comparables/comparable.service';
 import { PropertiesResolverService } from './properties/properties-resolver.service';
 import { AuthResolverService } from './auth/auth-resolver.service';
-import { AccountAndPropertiesAndComparablesResolverService } from './shared/services/account-and-properties-and-comparables-resolver.service';
+import { BootstrapDataResolverService } from './shared/services/bootstrap-data-resolver.service';
 import { AppConstantsService } from './shared/services/app-constants.service';
 import { ComparablesResolverService } from './comparables/comparables-resolver.service';
+import { EstateAgentService } from './estate-agents/estate-agent.service';
+import { EstateAgentsResolverService } from './estate-agents/estate-agents-resolver.service';
 
 
 @NgModule({
@@ -58,8 +60,10 @@ import { ComparablesResolverService } from './comparables/comparables-resolver.s
     PropertiesResolverService,
     ComparableService,
     ComparablesResolverService,
-    AccountAndPropertiesAndComparablesResolverService,
-    { 
+    EstateAgentService,
+    EstateAgentsResolverService,
+    BootstrapDataResolverService,
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true

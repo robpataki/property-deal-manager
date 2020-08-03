@@ -14,6 +14,8 @@ import { AuthService } from '../../auth/auth.service';
 import { STRATEGIES } from './app-constants.service';
 import { Comparable } from '../models/comparable.model';
 import { ComparableService } from 'src/app/comparables/comparable.service';
+import { EstateAgent } from '../models/estate-agent.model';
+import { EstateAgentService } from 'src/app/estate-agents/estate-agent.service';
 
 const API_URL: string = firebaseConfig.databaseUrl;
 
@@ -25,6 +27,7 @@ export class DataStorageService {
               private accountService: AccountService,
               private propertyService: PropertyService,
               private comparableService: ComparableService,
+              private estateAgentService: EstateAgentService,
               private authService: AuthService) {}
 
   fetchAccount(): Promise<any> {
@@ -201,6 +204,53 @@ export class DataStorageService {
       {
         comparables: property.comparables
       }
+    ).toPromise();
+  }
+
+  fetchEstateAgents(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.get<EstateAgent[]>(`${API_URL}/estate_agents/${this.organisationId}.json`)
+      .toPromise()
+      .then(estateAgentsData => {
+        let estateAgents = [];
+
+        if (!!estateAgentsData) {
+          estateAgents = Object.keys(estateAgentsData).map(key => new EstateAgent(
+            key,
+            estateAgentsData[key].timestamp ? +estateAgentsData[key].timestamp : 0,
+
+            estateAgentsData[key].name,
+            estateAgentsData[key].branchName,
+            estateAgentsData[key].email,
+            estateAgentsData[key].phone,
+            estateAgentsData[key].thumbnailUrl,
+
+            estateAgentsData[key].addressLine1,
+            estateAgentsData[key].addressLine2,
+            estateAgentsData[key].town,
+            estateAgentsData[key].postcode,
+
+            (!estateAgentsData[key].properties ? [] : estateAgentsData[key].properties),
+            (!estateAgentsData[key].negotiators ? [] : estateAgentsData[key].negotiators),
+            (!estateAgentsData[key].notes ? [] : estateAgentsData[key].notes),
+            (!estateAgentsData[key].links ? [] : estateAgentsData[key].links)
+          ));
+        }
+
+        this.estateAgentService.setEstateAgents(estateAgents);
+        resolve(estateAgents);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  storeEstateAgent(estateAgentId: string): Promise<Property | void> {
+    const estateAgent: EstateAgent = this.estateAgentService.getEstateAgent(estateAgentId);
+
+    return this.http.put<any>(
+      `${API_URL}/estate_agents/${this.organisationId}/${estateAgentId}.json`,
+      estateAgent
     ).toPromise();
   }
 }

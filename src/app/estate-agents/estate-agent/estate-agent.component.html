@@ -1,0 +1,251 @@
+<ng-template appPlaceholder>Confirmation Modal placeholder</ng-template>
+
+<app-add-note-modal
+  *ngIf="!!addNoteMode"
+  (noteAdded)="onNoteAdded($event)"
+  (modalClosed)="onAddNoteModalClosed()">
+</app-add-note-modal>
+
+<app-back-button [label]="backButtonLabel" [url]="backButtonUrl"></app-back-button>
+
+<div *ngIf="!!estateAgent">
+  <div class="container mt-5">
+    <div class="section">
+      <div class="row section mb-2">
+        <div class="col-12">
+          <h1>
+            <span class="text-salmon">EA card</span>
+            <br>
+            <span>{{ estateAgent.name }} - {{ estateAgent.branchName }}</span>
+          </h1>
+        </div>
+      </div>
+
+      <div class="row mt-md-5" *ngIf="!!sortedProperties && sortedProperties.length > 1">
+        <div class="col-12">
+          <div
+          class="alert alert-warning"
+          role="alert">This EA also has {{ sortedProperties.length - 1 }} other propert{{ sortedProperties.length > 2 ? 'ies' : 'y' }}. <a [routerLink]="" fragment="s-properties" class="alert-link">Click for details</a>.</div>
+        </div>
+      </div>
+
+      <div class="row section mt-0 mt-md-5">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-xs-12 col-lg-4">
+              <div class="picture-frame">
+                <img [src]="estateAgent.thumbnailUrl" alt="Logo of {{ estateAgent.name }} - {{ estateAgent.branchName }}">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
+              <h2 class="mb-3">EA details</h2>
+              <dl class="dl dl--fitted dl--spaced">
+                <div class="dl-row">
+                  <dt>Address:</dt>
+                  <dd class="mw-50pc">
+                    <span [innerHTML]="estateAgent.addressLine1 | formatFullAddress:estateAgent.addressLine2:estateAgent.town:estateAgent.postcode:true:true"></span>
+                  </dd>
+                </div>
+                <div class="dl-row" *ngIf="!!estateAgent.links && !!estateAgent.links.length">
+                  <dt>Links:</dt>
+                  <dd>
+                    <a
+                      *ngFor="let link of estateAgent.links; index as i;"
+                      [href]="link"
+                      target="_blank"
+                      class="btn btn-sm btn-outline-primary btn--stacked">{{ link | trimLink | trim:24:true }}</a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
+              <div class="btn-nav btn-nav--floating">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#addNoteModal"
+                  (click)="onAddNote()">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-comment.svg" alt="Speech bubble icon" aria-hidden="true"></span>
+                  <span class="btn__label">Add a new note</span>
+                </button>
+                <hr>
+                <a
+                  [routerLink]="'edit'"
+                  [queryParams]="!!propertyId ? {propertyId: propertyId} : {}"
+                  class="btn btn-primary">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-pencil.svg" alt="Pencil icon" aria-hidden="true"></span>
+                  <span class="btn__label">Edit EA</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="s-notes">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <div class="float-container float-container--br-sm mb-3 mb-md-0">
+                <div class="float-left float-left--strict">
+                  <h2 class="section-heading">Notes{{ !!sortedNotes && sortedNotes.length ? ' ('+sortedNotes.length+')' : '' }}</h2>
+                </div>
+                <div class="float-left float-left--strict" *ngIf="!!sortedNotes && sortedNotes.length>maxNotesToShow">
+                  <a
+                    class="icon-btn mt-0 mt-sm-1 mt-md-2 ml-0 ml-2 ml-sm-3 ml-md-4"
+                    data-toggle="collapse"
+                    href="#activityLog"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="activityLog">
+                    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--expanded">
+                      <path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 10 16" width="10" height="16" class="icon-btn__icon icon-btn__icon--collapsed">
+                      <path fill-rule="evenodd" d="M10 10l-1.5 1.5L5 7.75 1.5 11.5 0 10l5-5 5 5z"></path>
+                    </svg>
+                  </a>
+                </div>
+                <div class="float-right">
+                  <a
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#addNoteModal"
+                    (click)="onAddNote()"
+                    class="btn btn-primary btn-sm btn-inline">Add a new note</a>
+                </div>
+              </div>
+              <div class="float-container float-container--br-sm">
+                <div class="float-left">
+                  <p id="activityLogCaption">
+                    <span>Notes are shown on a timeline.</span>
+                  </p>
+                </div>
+                <div class="float-left" *ngIf="!!propertyId">
+                  <div class="form-group form-inline pull-up-3px ml-0 ml-md-2">
+                    <select
+                      class="form-control form-control-sm"
+                      name="notesFilter"
+                      id="notesFilter"
+                      #notesFilter>
+                      <option value="true">{{ property.addressLine1 }}</option>
+                      <option value="false">any property in the area</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="!!sortedNotes && !!sortedNotes.length">
+            <div class="col-12">
+              <div
+                [class]="sortedNotes.length > maxNotesToShow ? 'collapse' : ''"
+                id="activityLog"
+                >
+                <table
+                  class="table table-bordered table-striped table-hover align-middle"
+                  aria-describedby="activityLogCaption notesFilter">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="text-center">#</th>
+                      <th scope="col">Date</th>
+                      <th scope="col" class="text-center">Type</th>
+                      <th scope="col">Note</th>
+                      <th scope="col">Property</th>
+                      <th scope="col" class="text-center">Partner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let note of sortedNotes; index as i;">
+                      <th scope="row" class="text-center">{{ sortedNotes.length-i }}</th>
+                      <td><span [innerHTML]="note.date | breakUp"></span></td>
+                      <td class="text-center">
+                        <span *ngIf="note.rawType === noteTypes.NOT.key">
+                          <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true"
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.NOT.value }}</span>
+                        </span>
+                        <span *ngIf="note.rawType === noteTypes.OFF.key">
+                          <img src="assets/icons/icon--offer.svg" alt="Offer icon" aria-hidden="true"
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.OFF.value }}</span>
+                        </span>
+                        <span *ngIf="note.rawType === noteTypes.VIE.key">
+                          <img src="assets/icons/icon--viewing.svg" alt="Viewing icon" aria-hidden="true"
+                          class="note-icon">
+                          <span class="visually-hidden">{{ noteTypes.VIE.value }}</span>
+                        </span>
+                      </td>
+                      <td><span [innerHTML]="note.text"></span></td>
+                      <td class="text-center">
+                        <a [routerLink]="['/properties', getProperty(note.propertyId).uid]" *ngIf="!!getProperty(note.propertyId)">
+                          <span [innerHTML]="getPropertyAddress(note.propertyId)"></span>
+                        </a>
+                      </td>
+                      <td class="text-center">{{ note.userName }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="s-properties">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="section-heading">Properties</h2>
+              <p
+                *ngIf="!sortedProperties || !sortedProperties.length"
+                id="propertiesCaption">
+                <span>This EA has no properties yet.</span>
+              </p>
+              <p
+                *ngIf="!!sortedProperties && !!sortedProperties.length"
+                id="propertiesCaption">
+                <span>This EA has the following properties:</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="!!sortedProperties && !!sortedProperties.length">
+            <div class="col-12">
+              <table
+                class="table table-bordered table-striped table-hover align-middle"
+                aria-describedby="propertiesCaption">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Address</th>
+                    <th scope="col">Size</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let property of sortedProperties; index as i;" [class]="propertyId === property.uid ? 'tr-selected' : ''">
+                    <td>
+                      <a [routerLink]="['/properties', property.uid]">
+                        <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode"></span>
+                      </a>
+                    </td>
+                    <td scope="col">{{ property.size }}m<sup>2</sup></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

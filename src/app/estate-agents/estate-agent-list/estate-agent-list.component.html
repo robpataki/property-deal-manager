@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="float-container float-container--br-md">
+        <h1 class="float-left text-salmon">EA cards ({{ sortedEstateAgents.length }})</h1>
+        <div class="float-right">
+          <div class="btn-nav btn-nav--free">
+            <a
+              [routerLink]="'new'"
+              class="btn btn-primary">
+              <span class="btn__icon"><img src="assets/icons/icon--octa-plus.svg" alt="Plus icon" aria-hidden="true"></span>
+              <span class="btn__label">Create new EA card</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3" *ngIf="!sortedEstateAgents.length">
+        <p>You don't have any EAs yet.</p>
+      </div>
+
+      <div class="mt-5 card-grid" *ngIf="!!sortedEstateAgents.length">
+        <div class="row">
+          <div
+            class="card-wrapper"
+            *ngFor="let estateAgent of sortedEstateAgents; index as i;">
+            <app-estate-agent-detail [estateAgent]="estateAgent"></app-estate-agent-detail>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

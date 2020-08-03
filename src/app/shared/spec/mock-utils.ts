@@ -279,6 +279,7 @@ export class MockUtils {
 
         [],
         [],
+        [],
         ['https://www.ryder-dutton.co.uk/']
       ),
       new EstateAgent(
@@ -296,6 +297,7 @@ export class MockUtils {
         'Manchester',
         'M35 9FE',
 
+        [],
         [],
         [],
         ['https://www.cousins.uk/']
@@ -317,6 +319,7 @@ export class MockUtils {
 
         [],
         [],
+        [],
         ['https://www.hunters.com']
       ),
       new EstateAgent(
@@ -334,6 +337,7 @@ export class MockUtils {
         'Manchester',
         'M35 9PW',
 
+        [],
         [],
         [],
         ['http://www.npestates.co.uk/']

@@ -3,7 +3,7 @@
     <div class="col-6">
       <h1>Page not found</h1>
       <p class="lead" >{{ errorMessage }}</p>
-      
+
       <a
         *ngIf="!isUserAuthenticated"
         routerLink="/auth"
@@ -11,7 +11,7 @@
       <a
         *ngIf="isUserAuthenticated"
         routerLink="/properties"
-        class="btn btn-primary mt-2">Go to your properties</a>
+        class="btn btn-primary mt-2">Go to property cards</a>
     </div>
   </div>
 </div>

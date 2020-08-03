@@ -17,7 +17,8 @@ export class EstateAgent {
     public town: string,
     public postcode: string,
 
-    public properties: string[],
+    public properties: string[], // IDs only
+    public negotiators: Person[],
     public notes: Note[],
     public links: string[]
   ) {}

@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Property } from 'src/app/shared/models/property.model';
 import { PropertyService } from '../property.service';
-import { arrayToArrayTable, sortArrayByKey } from  '../../shared/utils';
+import { sortArrayByKey } from  '../../shared/utils';
 
 @Component({
   selector: 'app-property-list',

@@ -81,7 +81,8 @@
       <hr>
       <div class="dl-row">
         <dt>Last activity: </dt>
-        <dd>{{ lastActivityTimestamp | timeFromNow }}</dd>
+        <dd *ngIf="lastActivityTimestamp === 0">N/A</dd>
+        <dd *ngIf="lastActivityTimestamp > 0">{{ lastActivityTimestamp | timeFromNow }}</dd>
       </div>
       <div class="dl-row" *ngIf="!!property.offers && !!property.offers.length">
         <dt>Last offer: </dt>

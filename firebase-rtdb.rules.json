@@ -1,34 +1,46 @@
 {
-  "rules": { 
+  "rules": {
     // By default all reads and writes should be blocked!
     ".read": false,
     ".write": false,
-    
+
     "organisations": {
       "$organisation_id": {
         // Only organisation members can read organisation data
        	".read": "auth !== null && root.child('organisations').child($organisation_id).child('members').hasChild(auth.uid)"
       }
     },
-      
+
     "properties": {
       "$organisation_id": {
         // Only organisation members can read and write property data
         ".read": "auth !== null && root.child('organisation_members').child($organisation_id).hasChild(auth.uid)",
         ".write": "auth !== null && root.child('organisation_members').child($organisation_id).hasChild(auth.uid)",
-        
+
         "$property_id": {
           // The read / write rules cascade
         }
       }
     },
-    
+
+    "estate_agents": {
+			"$organisation_id": {
+        // Only organisation members can read and write property data
+        ".read": "auth !== null && root.child('organisations').child($organisation_id).child('members').hasChild(auth.uid)",
+        ".write": "auth !== null && root.child('organisations').child($organisation_id).child('members').hasChild(auth.uid)",
+
+        "$estate_agent_id": {
+          // The read / write rules cascade
+        }
+      }
+    },
+
     "users": {
       "$user_id": {
         // Only the user can write their own data, or read their private data
         ".write": "auth !== null && auth.uid === $user_id",
         ".read": "auth !== null && auth.uid === $user_id",
-        
+
         "public_profile": {
         	// Any logged in user can read the public profile
         	".read": "auth !== null"

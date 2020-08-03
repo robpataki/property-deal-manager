@@ -1,0 +1,27 @@
+<article class="card">
+  <a [routerLink]="['/estate-agents', estateAgent.uid]">
+    <div class="card-img-container">
+      <img src="{{ estateAgent.thumbnailUrl }}" alt="Logo of {{ estateAgent.name }} - {{ estateAgent.branchName }}">
+    </div>
+  </a>
+  <div class="card-body">
+    <h1 class="card-title">
+      <span [innerHTML]="estateAgent.addressLine1 | formatFullAddress:estateAgent.addressLine2:estateAgent.town:estateAgent.postcode:false:true"></span>
+    </h1>
+
+    <dl class="dl dl--small dl--justified">
+      <hr>
+      <ng-template [ngIf]="!estateAgent.properties || !estateAgent.properties.length">
+        <div class="dl-row"><b class="text-danger">No properties!</b></div>
+      </ng-template>
+      <div class="dl-row" *ngIf="!!estateAgent.properties && !!estateAgent.properties.length">
+        <dt>Properties: </dt>
+        <dd>{{ !!estateAgent.properties && !!estateAgent.properties.length ? estateAgent.properties.length : 0 }}</dd>
+      </div>
+      <hr>
+    </dl>
+    <div class="text-right">
+      <a [routerLink]="['/estate-agents', estateAgent.uid]" class="btn btn-primary btn-sm">View EA card</a>
+    </div>
+  </div>
+</article>

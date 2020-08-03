@@ -1,0 +1,180 @@
+<ng-template appPlaceholder>Confirmation Modal placeholder</ng-template>
+
+<app-loading-spinner *ngIf="isLoading" [fullScreenMode]="true"></app-loading-spinner>
+
+<app-back-button [label]="backButtonLabel" [url]="backButtonUrl"></app-back-button>
+
+<div *ngIf="(editMode && !!estateAgent) || !editMode">
+  <div class="container mt-5">
+    <div class="row section mb-2">
+      <div class="col-12">
+        <h1>
+          <span *ngIf="editMode" class="text-salmon">Edit EA card</span>
+          <span *ngIf="!editMode" class="text-salmon">Create new EA card</span>
+          <br>
+          <span [innerHTML]="form.controls.addressLine1.value | formatFullAddress:form.controls.addressLine2.value:form.controls.town.value:form.controls.postcode.value:true"></span>
+        </h1>
+      </div>
+    </div>
+
+    <div class="row section mt-0 mt-md-5">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-xs-12 col-lg-4">
+            <div class="picture-frame">
+              <img *ngIf="!!form.controls.thumbnailUrl.value" [src]="form.controls.thumbnailUrl.value" alt="Logo of {{form.controls.name}} - {{form.controls.branchName}}">
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
+            <form [formGroup]="form" class="form form-compact" autocomplete="nope">
+              <div class="form-section">
+                <h2 class="form-section__heading">Basic details</h2>
+                <div>
+                  <div class="form-group form-inline">
+                    <label for="name" class="form-label">Name:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="name"
+                      formControlName="name"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="branchName" class="form-label">Branch name:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="branchName"
+                      formControlName="branchName"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="email" class="form-label">Email:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="email"
+                      formControlName="email"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="phone"
+                      formControlName="phone"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="thumbnailUrl" class="form-label">Thumbnail URL:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="thumbnailUrl"
+                      formControlName="thumbnailUrl"
+                      autocomplete="nope">
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <fieldset>
+                  <legend><h2 class="form-section__heading">Address</h2></legend>
+                  <div class="form-group form-inline">
+                    <label for="addressLine1" class="form-label">1st line:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="addressLine1"
+                      formControlName="addressLine1"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="addressLine2" class="form-label">2nd line:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="addressLine2"
+                      formControlName="addressLine2"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="town" class="form-label">Town:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="town"
+                      formControlName="town"
+                      autocomplete="nope">
+                  </div>
+                  <div class="form-group form-inline">
+                    <label for="postcode" class="form-label">Postode:</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      id="postcode"
+                      formControlName="postcode"
+                      autocomplete="nope">
+                  </div>
+                </fieldset>
+              </div>
+              <div class="form-section">
+                <fieldset>
+                  <legend><h2 class="form-section__heading">Links</h2></legend>
+                  <button
+                    *ngIf="getLinkControls().length < MAX_LINKS"
+                    class="btn btn-primary btn-sm fieldset-head-btn"
+                    (click)="onAddNewLink()">Add new link</button>
+                  <div
+                    *ngFor="let linkControl of getLinkControls(); index as i;"
+                    class="form-group form-inline">
+                    <label for="link" class="form-label">Link #{{i+1}}</label>
+                    <input
+                      class="form-control flex-1"
+                      type="text"
+                      [formControl]="linkControl">
+                    <button
+                      type="button"
+                      class="icon-btn icon-btn--danger icon-btn--md"
+                      (click)="onRemoveLink(i)">
+                      <svg class="icon-btn__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
+                      <span class="visually-hidden">Remove link #{{i+1}}</span>
+                    </button>
+                  </div>
+                </fieldset>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
+            <div class="btn-nav btn-nav--floating">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSubmit()"
+                [disabled]="!form.valid">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-check.svg" alt="Tick icon" aria-hidden="true"></span>
+                  <span class="btn__label">Save changes</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onCancel()">
+                <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
+                <span class="btn__label">Drop changes</span>
+              </button>
+              <div *ngIf="editMode">
+                <hr>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="onDelete()">
+                  <span class="btn__icon"><img src="assets/icons/icon--octa-trashcan.svg" alt="Trashcan icon" aria-hidden="true"></span>
+                  <span class="btn__label">Delete EA</span>
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
