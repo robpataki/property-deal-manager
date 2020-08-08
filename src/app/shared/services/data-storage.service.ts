@@ -184,21 +184,21 @@ export class DataStorageService {
   }
 
   storeUpdatedPropertyComparables(propertyIds: string[]): Promise<Property[] | void> {
-    const patchPropertyComparables = this.patchPropertyComparables.bind(this);
+    const patchComparablesOfProperty = this.patchComparablesOfProperty.bind(this);
     // Sequence of promises
     const updateProperty = function(propertyIds) {
       let promise = Promise.resolve();
       propertyIds.forEach(propertyId => {
-        promise = promise.then(() => patchPropertyComparables(propertyId));
+        promise = promise.then(() => patchComparablesOfProperty(propertyId));
       });
       return promise;
     };
     return updateProperty(propertyIds);
   }
 
-  patchPropertyComparables(propertyId: string): Promise<Property[] | void> {
+  patchComparablesOfProperty(propertyId: string): Promise<Property[] | void> {
     const property: Property = this.propertyService.getProperty(propertyId);
-    console.log('[DataStorageService] - patchPropertyComparables() - ', propertyId, property.comparables);
+    console.log('[DataStorageService] - patchComparablesOfProperty() - ', propertyId, property.comparables);
     return this.http.patch<any>(
       `${API_URL}/properties/${this.organisationId}/${propertyId}.json`,
       {

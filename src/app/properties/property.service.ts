@@ -72,14 +72,6 @@ export class PropertyService {
     }
   }
 
-  getPropertiesOfComparable(comparableId: string): Property[] {
-    return this.properties.filter((property) => {
-      if (property.comparables.includes(comparableId)) {
-        return property;
-      }
-    });
-  }
-
   addNoteToProperty(propertyId: string, note: Note, keepSilent?: boolean): void {
     const property: Property = this.getProperty(propertyId);
     property.notes.push(note);
@@ -209,6 +201,20 @@ export class PropertyService {
       if (!keepSilent) {
         this.emitChanges();
       }
+    }
+  }
+
+  deleteEstateAgent(estateAgentId: string, keepSilent?: boolean): void {
+    let deletionPerformed: boolean = false;
+    this.properties.map(property => {
+      if (property.estateAgentId === estateAgentId) {
+        deletionPerformed = true;
+        property.estateAgentId = null;
+      }
+    });
+
+    if (deletionPerformed && !keepSilent) {
+      this.emitChanges();
     }
   }
 

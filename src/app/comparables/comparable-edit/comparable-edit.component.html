@@ -94,7 +94,7 @@
                       <option disabled value="null">Select EPC rating</option>
                       <option *ngFor="let epc of epcRatingsArray" value="{{ epc.key }}">{{ epc.value }}</option>
                     </select>
-                  </div>          
+                  </div>
                   <div class="form-group form-inline">
                     <label for="soldPrice" class="form-label">Sold price:</label>
                     <div class="unit-input unit-input  unit-input--wide flex-1">
@@ -116,7 +116,7 @@
                       <app-datepicker (update)="onDateInputChange($event)" [id]="dpInputId" [date]="form.controls['soldDate'].value"></app-datepicker>
                     </div>
                   </div>
-            
+
                   <div class="form-group form-inline">
                     <label for="thumbnailUrl" class="form-label">Thumbnail URL:</label>
                     <input
@@ -158,7 +158,7 @@
                       autocomplete="nope">
                   </div>
                   <div class="form-group form-inline">
-                    <label for="postcode" class="form-label">Postode:</label>
+                    <label for="postcode" class="form-label">Postcode:</label>
                     <input
                       class="form-control flex-1"
                       type="text"
@@ -175,7 +175,7 @@
                     *ngIf="getLinkControls().length < MAX_LINKS"
                     class="btn btn-primary btn-sm fieldset-head-btn"
                     (click)="onAddNewLink()">Add new link</button>
-                  <div 
+                  <div
                     *ngFor="let linkControl of getLinkControls(); index as i;"
                     class="form-group form-inline">
                     <label for="link" class="form-label">Link #{{i+1}}</label>
@@ -229,4 +229,3 @@
       </div>
     </div>
   </div>
-            

@@ -38,7 +38,7 @@ export class ComparableEditComponent implements OnInit {
   isLoading: boolean;
   editMode: boolean;
   deleteMode: boolean;
-  
+
   backButtonLabel: string;
   backButtonUrl: string;
 
@@ -81,7 +81,7 @@ export class ComparableEditComponent implements OnInit {
       this.setUpBackButton();
     });
 
-    this.comparablesChangedSub = this.comparableService.comparablesChanged.subscribe(comparables => {      
+    this.comparablesChangedSub = this.comparableService.comparablesChanged.subscribe(comparables => {
       if (!this.deleteMode) {
         this.dataStorageService.storeComparable(this.id).then(() => {
           let navigateToUrl: string = `/comparables/${this.id}`;
@@ -89,11 +89,11 @@ export class ComparableEditComponent implements OnInit {
             this.propertyService.addComparableToProperty(this.propertyId, this.id);
             return;
           }
-  
+
           if (!!this.propertyId) {
             navigateToUrl += `?propertyId=${this.propertyId}`;
           }
-  
+
           this.router.navigateByUrl(navigateToUrl);
         }, error => {
           console.error('There was an error when trying to save the comparable - error message: ', error);
@@ -112,14 +112,14 @@ export class ComparableEditComponent implements OnInit {
     });
 
     // Then add the comparable to the property itself
-    this.propertyComparablesChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {      
+    this.propertyComparablesChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {
       if (!this.deleteMode) {
         console.log('[ComparableEditComponent] - propertiesChangedSub() - Change detected.');
         this.dataStorageService.storeProperty(this.propertyId).then(() => {
           // this.router.navigate(['/comparables', this.id], { queryParams: { propertyId: this.propertyId } });
           this.router.navigate(['/properties', this.propertyId], { fragment: 's-comparables' });
         }, (error) => {
-          console.error('There was an error when trying to add the comparable to the property - error message: ', error);  
+          console.error('There was an error when trying to add the comparable to the property - error message: ', error);
         });
       } else {
         console.log('[ComparableEditComponent] - propertiesChangedSub(deleteMode) - Change detected.');
@@ -205,7 +205,7 @@ export class ComparableEditComponent implements OnInit {
       addressLine2: new FormControl(addressLine2),
       town: new FormControl(town),
       postcode: new FormControl(postcode, [Validators.required]),
-      
+
       links: links
     });
   }
@@ -242,12 +242,12 @@ export class ComparableEditComponent implements OnInit {
     const comparable: Comparable = new Comparable(
       this.id,
       getCurrentTimestamp(),
-      
+
       this.form.value.addressLine1,
       this.form.value.addressLine2,
       this.form.value.town,
       this.form.value.postcode,
-      
+
       this.form.value.thumbnailUrl,
       this.form.value.bedrooms,
       this.form.value.size,
@@ -256,7 +256,7 @@ export class ComparableEditComponent implements OnInit {
       this.form.value.tenureType,
       this.form.value.soldPrice,
       soldTimestamp,
-      
+
       [],
       [new Note(
         'Comparable card created',
@@ -270,7 +270,7 @@ export class ComparableEditComponent implements OnInit {
     if (!!this.propertyId) {
       comparable.properties = [this.propertyId];
     } else {
-      
+
     }
 
     if (this.editMode) {
@@ -333,7 +333,7 @@ export class ComparableEditComponent implements OnInit {
     this.propertyComparablesChangedSub.unsubscribe();
 
     if (this.actionConfirmModalComponentRef) {
-      this.actionConfirmModalComponentRef.destroy(); 
+      this.actionConfirmModalComponentRef.destroy();
       this.confirmationModalConfirmSub.unsubscribe();
       this.confirmationModalCancelSub.unsubscribe();
     }

@@ -203,17 +203,6 @@ describe('PropertyService', () => {
     expect(propertyService.getProperty(property1.uid).comparables).toEqual([comparable1.uid]);
   })
 
-  it('#getPropertiesOfComparable should return a list of properties the comparable is linked to', () => {
-    propertyService.setProperties([property1, property2, property3]);
-    propertyService.addComparableToProperty(property1.uid, comparable1.uid);
-    propertyService.addComparableToProperty(property2.uid, comparable2.uid);
-    propertyService.addComparableToProperty(property3.uid, comparable1.uid);
-    propertyService.addComparableToProperty(property3.uid, comparable2.uid);
-
-    expect(propertyService.getPropertiesOfComparable(comparable1.uid)).toEqual([property1, property3]);
-    expect(propertyService.getPropertiesOfComparable(comparable2.uid)).toEqual([property2, property3]);
-  })
-
   it('#deleteComparable should remove the given comparable from every property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1, property2, property3]);
     propertyService.addComparableToProperty(property1.uid, comparable1.uid, true);
@@ -324,6 +313,26 @@ describe('PropertyService', () => {
     propertyService.setEstateAgentOfProperty(property1.uid, estateAgent2.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent2.uid);
+  })
+
+  it('#deleteEstateAgent should set remove estate agent UID from every property it was linked to (and emit change event if not called silently)', () => {
+    propertyService.setProperties([property1, property2, property3]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent2.uid, true);
+    propertyService.setEstateAgentOfProperty(property2.uid, estateAgent2.uid, true);
+    propertyService.setEstateAgentOfProperty(property3.uid, estateAgent1.uid, true);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent2.uid);
+    expect(propertyService.getProperty(property2.uid).estateAgentId).toEqual(estateAgent2.uid);
+    expect(propertyService.getProperty(property3.uid).estateAgentId).toEqual(estateAgent1.uid);
+
+    // Delete it loudly
+    propertyService.deleteEstateAgent(estateAgent2.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(null);
+
+    // Delete it in silence
+    propertyService.deleteEstateAgent(estateAgent1.uid, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property2.uid).estateAgentId).toEqual(null);
   })
 
   it('#emitChanges should emit `comparablesChanged`', () => {

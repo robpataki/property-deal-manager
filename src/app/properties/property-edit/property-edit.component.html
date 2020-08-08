@@ -105,7 +105,7 @@
                       <option *ngFor="let dealType of dealTypesArray" value="{{ dealType.key }}">{{ dealType.value }}</option>
                     </select>
                   </div>
-            
+
                   <div class="form-group form-inline">
                     <label for="askingPrice" class="form-label">Asking price:</label>
                     <div class="unit-input unit-input unit-input--wide flex-1">
@@ -121,14 +121,14 @@
                       <span class="unit-input__unit">£</span>
                     </div>
                   </div>
-            
+
                   <div class="form-group form-inline">
                     <label class="form-label" [for]="dpInputId">{{ dealType === dealTypes.AUC.key ? 'Auction' : 'Market' }} date:</label>
                     <div class="flex-1">
                       <app-datepicker (update)="onDateInputChange($event)" [id]="dpInputId" [date]="form.controls['marketDate'].value"></app-datepicker>
                     </div>
                   </div>
-            
+
                   <div class="form-group form-inline">
                     <label for="thumbnailUrl" class="form-label">Thumbnail URL:</label>
                     <input
@@ -170,7 +170,7 @@
                       autocomplete="nope">
                   </div>
                   <div class="form-group form-inline">
-                    <label for="postcode" class="form-label">Postode:</label>
+                    <label for="postcode" class="form-label">Postcode:</label>
                     <input
                       class="form-control flex-1"
                       type="text"
@@ -187,7 +187,7 @@
                     *ngIf="getLinkControls().length < MAX_LINKS"
                     class="btn btn-primary btn-sm fieldset-head-btn"
                     (click)="onAddNewLink()">Add new link</button>
-                  <div 
+                  <div
                     *ngFor="let linkControl of getLinkControls(); index as i;"
                     class="form-group form-inline">
                     <label for="link" class="form-label">Link #{{i+1}}</label>
@@ -219,7 +219,7 @@
                   <span class="btn__icon"><img src="assets/icons/icon--octa-check.svg" alt="Tick icon" aria-hidden="true"></span>
                   <span class="btn__label">Save changes</span>
               </button>
-              <a 
+              <a
                 [routerLink]="['../']"
                 class="btn btn-primary">
                 <span class="btn__icon"><img src="assets/icons/icon--octa-x.svg" alt="Cross icon" aria-hidden="true"></span>
@@ -241,4 +241,3 @@
       </div>
     </div>
   </div>
-            

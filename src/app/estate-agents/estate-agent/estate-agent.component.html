@@ -47,6 +47,20 @@
                     <span [innerHTML]="estateAgent.addressLine1 | formatFullAddress:estateAgent.addressLine2:estateAgent.town:estateAgent.postcode:true:true"></span>
                   </dd>
                 </div>
+                <div class="dl-row">
+                  <dt>Phone:</dt>
+                  <dd class="mw-50pc">
+                    <span *ngIf="!!estateAgent.phone"><a href="tel:{{estateAgent.phone}}">{{estateAgent.phone}}</a></span>
+                    <span *ngIf="!estateAgent.phone">N/A</span>
+                  </dd>
+                </div>
+                <div class="dl-row">
+                  <dt>Email:</dt>
+                  <dd class="mw-50pc">
+                    <span *ngIf="!!estateAgent.email"><a href="mailto:{{estateAgent.email}}">{{estateAgent.email}}</a></span>
+                    <span *ngIf="!estateAgent.email">N/A</span>
+                  </dd>
+                </div>
                 <div class="dl-row" *ngIf="!!estateAgent.links && !!estateAgent.links.length">
                   <dt>Links:</dt>
                   <dd>
@@ -80,6 +94,19 @@
                   <span class="btn__label">Edit EA</span>
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="s-negotiators">
+      <hr>
+      <div class="row section">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="section-heading">Negotiators</h2>
             </div>
           </div>
         </div>
