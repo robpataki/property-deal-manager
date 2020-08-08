@@ -64,8 +64,8 @@ export class EstateAgentService {
   addPropertyToEstateAgent(estateAgentId: string, propertyId: string, keepSilent?: boolean) {
     const estateAgent: EstateAgent = this.getEstateAgent(estateAgentId);
 
-    if (!estateAgent.properties.includes(propertyId)) {
-      estateAgent.properties.push(propertyId);
+    if (!estateAgent.propertyIds.includes(propertyId)) {
+      estateAgent.propertyIds.push(propertyId);
     }
 
     if (!keepSilent) {
@@ -76,12 +76,12 @@ export class EstateAgentService {
   removePropertyFromEstateAgent(estateAgentId: string, propertyId: string, keepSilent?: boolean) {
     const estateAgent: EstateAgent = this.getEstateAgent(estateAgentId);
 
-    let index: number = estateAgent.properties.findIndex((property) => {
+    let index: number = estateAgent.propertyIds.findIndex((property) => {
       return property === propertyId;
     });
 
     if (index >= 0) {
-      estateAgent.properties.splice(index, 1);
+      estateAgent.propertyIds.splice(index, 1);
 
       if (!keepSilent) {
         this.emitChanges();

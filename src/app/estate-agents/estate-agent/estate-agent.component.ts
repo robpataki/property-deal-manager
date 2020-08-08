@@ -108,11 +108,11 @@ export class EstateAgentComponent implements OnInit {
   }
 
   getProperties(): Property[] {
-    if (!this.estateAgent.properties || !this.estateAgent.properties.length) {
+    if (!this.estateAgent.propertyIds || !this.estateAgent.propertyIds.length) {
       return [];
     }
 
-    return this.estateAgent.properties.map((propertyId) => {
+    return this.estateAgent.propertyIds.map((propertyId) => {
       return this.propertyService.getProperty(propertyId);
     });
   }

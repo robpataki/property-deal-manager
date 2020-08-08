@@ -160,6 +160,7 @@ export class PropertyService {
       propertyDetails.marketTimestamp,
 
       propertyDetails.estateAgentId,
+      propertyDetails.negotiatorId,
       propertyDetails.vendor,
       propertyDetails.links,
       { strg: STRATEGIES.BTL.key },

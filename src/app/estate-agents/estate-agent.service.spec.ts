@@ -155,21 +155,21 @@ describe('EstateAgentService', () => {
 
   it('#addPropertyToEstateAgent should add a property once to the given estate agent (and emit change event if not called silently)', () => {
     estateAgentService.setEstateAgents([estateAgent1]);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([]);
 
     // Add one loudly
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property1.uid);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property1.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid]);
 
     // Add one in silence
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property2.uid, true);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property1.uid, property2.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property2.uid]);
 
     // Don't do dupes
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property1.uid);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property1.uid, property2.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property2.uid]);
   })
 
   it('#removePropertyFromEstateAgent should remove the given property from the estate agent (and emit change event if not called silently)', () => {
@@ -178,17 +178,17 @@ describe('EstateAgentService', () => {
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property1.uid, true);
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property2.uid, true);
     estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property3.uid, true);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property1.uid, property2.uid, property3.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property2.uid, property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(1);
 
     // Remove one loudly
     estateAgentService.removePropertyFromEstateAgent(estateAgent1.uid, property2.uid);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property1.uid, property3.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
 
     // Remove one in silence
     estateAgentService.removePropertyFromEstateAgent(estateAgent1.uid, property1.uid, true);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).properties).toEqual([property3.uid]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
   })
 

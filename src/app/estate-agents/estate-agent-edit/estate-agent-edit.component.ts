@@ -81,29 +81,29 @@ export class EstateAgentEditComponent implements OnInit {
         });
       } else {
         console.log('[EstateAgentEditComponent] - estateAgentsChanged(deleteMode)');
-        /* this.dataStorageService.deleteEstateAgent(this.id).then(() => {
+        this.dataStorageService.deleteEstateAgent(this.id).then(() => {
           console.log('[EstateAgentEditComponent] - estateAgentsChanged(deleteMode) - Estate agent deleted from DB');
-          if (this.estateAgent.properties.length) {
+          if (this.estateAgent.propertyIds.length) {
             this.propertyService.deleteEstateAgent(this.id);
           } else {
             this.router.navigate(['/estate-agents']);
           }
-        }); */
+        });
       }
     });
 
-    // Then add the comparable to the property itself
-    /* this.propertyEstateAgentChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {
+    // Then link the estate agent to the property
+    this.propertyEstateAgentChangedSub = this.propertyService.propertiesChangedSub.subscribe(properties => {
       if (!this.deleteMode) {
         console.log('[EstateAgentEditComponent] - propertiesChangedSub() - Change detected.');
-        this.dataStorageService.storeProperty(this.propertyId).then(() => {
+        this.dataStorageService.patchEstateAgentOfProperty(this.propertyId).then(() => {
           this.router.navigate(['/properties', this.propertyId], { fragment: 's-estate-agent' });
         }, (error) => {
-          console.error('There was an error when trying to add the comparable to the property - error message: ', error);
+          console.error('There was an error when trying to link the estate agent to the property - error message: ', error);
         });
       } else {
         console.log('[EstateAgentEditComponent] - propertiesChangedSub(deleteMode) - Change detected.');
-        this.dataStorageService.storeUpdatedPropertyComparables(this.estateAgent.properties).then(comparables => {
+        this.dataStorageService.storeUpdatedPropertyComparables(this.estateAgent.propertyIds).then(comparables => {
           console.log('[EstateAgentEditComponent] - DONE! - estate-agents: ', comparables);
           if (this.propertyId) {
             this.router.navigate(['/properties', this.propertyId], { fragment: 's-estate-agent' });
@@ -112,7 +112,7 @@ export class EstateAgentEditComponent implements OnInit {
           }
         });
       }
-    }); */
+    });
   }
 
   setUpBackButton(): void {
@@ -242,21 +242,21 @@ export class EstateAgentEditComponent implements OnInit {
   }
 
   onDelete(): void {
-    /* this.deleteMode = true;
+    this.deleteMode = true;
 
     const message: string = 'delete this comparable';
     let additionalMessage: string = '';
 
-    if (this.estateAgent.properties.length > 1) {
-      additionalMessage = `This comparable is used by ${this.estateAgent.properties.length} properties. Deleting the comparable will automatically remove it from all ${this.estateAgent.properties.length} properties`;
+    if (this.estateAgent.propertyIds.length > 1) {
+      additionalMessage = `This comparable is used by ${this.estateAgent.propertyIds.length} properties. Deleting the comparable will automatically remove it from all ${this.estateAgent.propertyIds.length} properties`;
     }
 
-    console.log('[EstateAgentEditComponent] - onDelete(BEFORE) - ', this.id, this.estateAgentService.getComparables(), this.estateAgent.properties);
+    console.log('[EstateAgentEditComponent] - onDelete(BEFORE) - ', this.id, this.estateAgentService.getEstateAgents(), this.estateAgent.propertyIds);
     this.showConfirmationModal(message, additionalMessage).then(() => {
       this.isLoading = true;
-      this.estateAgentService.deleteComparable(this.id);
-      console.log('[EstateAgentEditComponent] - onDelete(AFTER) - ', this.id, this.estateAgentService.getComparables(), this.estateAgent.properties);
-    }, error => {}); */
+      this.estateAgentService.deleteEstateAgent(this.id);
+      console.log('[EstateAgentEditComponent] - onDelete(AFTER) - ', this.id, this.estateAgentService.getEstateAgents(), this.estateAgent.propertyIds);
+    }, error => {});
   }
 
   showConfirmationModal(message: string, additionalMessage?: string): Promise<void> {

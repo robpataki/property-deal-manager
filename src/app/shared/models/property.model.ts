@@ -24,7 +24,9 @@ export interface PropertyDetails {
   marketTimestamp: number;
 
   estateAgentId?: string;
+  negotiatorId?: number;
   vendor?: Person;
+
   links?: string[];
   crunch?: any;
   comparables?: string[];
@@ -51,7 +53,9 @@ export class Property implements PropertyDetails {
     public marketTimestamp: number,
 
     public estateAgentId?: string,
+    public negotiatorId?: number,
     public vendor?: Person,
+
     public links?: string[],
     public crunch?: any,
     public comparables?: string[],

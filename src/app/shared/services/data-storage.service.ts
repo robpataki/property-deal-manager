@@ -207,6 +207,30 @@ export class DataStorageService {
     ).toPromise();
   }
 
+  storeUpdatedPropertyEstateAgent(propertyIds: string[]): Promise<Property[] | void> {
+    const patchEstateAgentOfProperty = this.patchEstateAgentOfProperty.bind(this);
+    // Sequence of promises
+    const updateProperty = function(propertyIds) {
+      let promise = Promise.resolve();
+      propertyIds.forEach(propertyId => {
+        promise = promise.then(() => patchEstateAgentOfProperty(propertyId));
+      });
+      return promise;
+    };
+    return updateProperty(propertyIds);
+  }
+
+  patchEstateAgentOfProperty(propertyId: string): Promise<Property[] | void> {
+    const property: Property = this.propertyService.getProperty(propertyId);
+    console.log('[DataStorageService] - patchEstateAgentOfProperty() - ', propertyId, property.estateAgentId);
+    return this.http.patch<any>(
+      `${API_URL}/properties/${this.organisationId}/${propertyId}.json`,
+      {
+        estateAgentId: property.estateAgentId
+      }
+    ).toPromise();
+  }
+
   fetchEstateAgents(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.get<EstateAgent[]>(`${API_URL}/estate_agents/${this.organisationId}.json`)
@@ -230,7 +254,7 @@ export class DataStorageService {
             estateAgentsData[key].town,
             estateAgentsData[key].postcode,
 
-            (!estateAgentsData[key].properties ? [] : estateAgentsData[key].properties),
+            (!estateAgentsData[key].propertyIds ? [] : estateAgentsData[key].propertyIds),
             (!estateAgentsData[key].negotiators ? [] : estateAgentsData[key].negotiators),
             (!estateAgentsData[key].notes ? [] : estateAgentsData[key].notes),
             (!estateAgentsData[key].links ? [] : estateAgentsData[key].links)
@@ -251,6 +275,23 @@ export class DataStorageService {
     return this.http.put<any>(
       `${API_URL}/estate_agents/${this.organisationId}/${estateAgentId}.json`,
       estateAgent
+    ).toPromise();
+  }
+
+  deleteEstateAgent(estateAgentId: string): Promise<Property | void> {
+    return this.http.delete<any>(
+      `${API_URL}/estate_agents/${this.organisationId}/${estateAgentId}.json`,
+    ).toPromise();
+  }
+
+  patchEstateAgentProperties(estateAgentId: string): Promise<Property[] | void> {
+    const estateAgent: EstateAgent = this.estateAgentService.getEstateAgent(estateAgentId);
+    console.log('[DataStorageService] - patchEstateAgentProperties() - ', estateAgentId, estateAgent.propertyIds);
+    return this.http.patch<any>(
+      `${API_URL}/estate_agents/${this.organisationId}/${estateAgentId}.json`,
+      {
+        propertyIds: estateAgent.propertyIds
+      }
     ).toPromise();
   }
 }

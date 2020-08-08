@@ -11,12 +11,12 @@
 
     <dl class="dl dl--small dl--justified">
       <hr>
-      <ng-template [ngIf]="!estateAgent.properties || !estateAgent.properties.length">
+      <ng-template [ngIf]="!estateAgent.propertyIds || !estateAgent.propertyIds.length">
         <div class="dl-row"><b class="text-danger">No properties!</b></div>
       </ng-template>
-      <div class="dl-row" *ngIf="!!estateAgent.properties && !!estateAgent.properties.length">
+      <div class="dl-row" *ngIf="!!estateAgent.propertyIds && !!estateAgent.propertyIds.length">
         <dt>Properties: </dt>
-        <dd>{{ !!estateAgent.properties && !!estateAgent.properties.length ? estateAgent.properties.length : 0 }}</dd>
+        <dd>{{ !!estateAgent.propertyIds && !!estateAgent.propertyIds.length ? estateAgent.propertyIds.length : 0 }}</dd>
       </div>
       <hr>
     </dl>

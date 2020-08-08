@@ -34,7 +34,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
 
   backButtonLabel: string;
   backButtonUrl: string;
-  
+
   propertyTypesArray: any[] = kvObjectToArray(PROPERTY_TYPES);
   tenureTypesArray: any[] = kvObjectToArray(TENURE_TYPES);
   dealTypesArray: any[] = kvObjectToArray(DEAL_TYPES);
@@ -62,7 +62,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
         this.editMode = params['id'] != null;
         this.property = this.propertyService.getProperty(this.id);
         this.setUpBackButton();
-        
+
         if (!this.property && this.editMode) {
           this.router.navigate(['/not-found']);
           return;
@@ -143,7 +143,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
       addressLine2: new FormControl(addressLine2),
       town: new FormControl(town),
       postcode: new FormControl(postcode, [Validators.required]),
-      
+
       links: links
     });
   }
@@ -172,13 +172,13 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     const usMarketDate: string = ukDateToUSDate(this.form.value.marketDate);
     const marketTimestamp: number = new Date(usMarketDate).getTime();
     const propertyDetailsData: any = Object.assign({
-      uid: this.id, 
+      uid: this.id,
       marketTimestamp
     }, this.form.value);
     delete propertyDetailsData.marketDate;
-    
+
     const propertyDetails: PropertyDetails = Object.assign({}, propertyDetailsData);
-    
+
     if (this.editMode) {
       this.propertyService.updatePropertyDetails(propertyDetails);
     } else {
@@ -229,7 +229,7 @@ export class PropertyEditComponent implements OnInit, OnDestroy {
     this.propertiesChangedSub.unsubscribe();
 
     if (this.actionConfirmModalComponentRef) {
-      this.actionConfirmModalComponentRef.destroy(); 
+      this.actionConfirmModalComponentRef.destroy();
       this.confirmationModalConfirmSub.unsubscribe();
       this.confirmationModalCancelSub.unsubscribe();
     }
