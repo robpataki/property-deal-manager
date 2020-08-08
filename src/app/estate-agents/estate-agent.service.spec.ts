@@ -25,6 +25,9 @@ describe('EstateAgentService', () => {
   let property2: Property;
   let property3: Property;
 
+  let negotiator1: Person;
+  let negotiator2: Person;
+
   beforeEach(() => {
     // Use the same return value for every getCurrentTimestamp() call
     // This also works in the mocks coming from the MockUtils class :)
@@ -47,6 +50,10 @@ describe('EstateAgentService', () => {
     property1 = mockProperties[0];
     property2 = mockProperties[1];
     property3 = mockProperties[2];
+
+    const mockNegotiators = MockUtils.getMockNegotiators();
+    negotiator1 = mockNegotiators[0];
+    negotiator2 = mockNegotiators[1];
   })
 
   it('should exist', () => {
@@ -190,6 +197,44 @@ describe('EstateAgentService', () => {
     estateAgentService.removePropertyFromEstateAgent(estateAgent1.uid, property1.uid, true);
     expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
+  })
+
+  it('#addNegotiatorToEstateAgent should add a negotiator to the given estate agent (and emit change event if not called silently)', () => {
+    estateAgentService.setEstateAgents([estateAgent1]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([]);
+
+    // Add one loudly
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator1);
+    expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([negotiator1]);
+
+    // Add one in silence
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator2, true);
+    expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([negotiator1, negotiator2]);
+  })
+
+  it('#deactivateNegotiatorOfEstateAgent should deactivate the estate agent\'s given negotiator (and emit change event if not called silently)', () => {
+    estateAgentService.setEstateAgents([estateAgent1]);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([]);
+
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator1, true);
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator2, true);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0]).toEqual(negotiator1);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0].deleted).toBeFalsy();
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1]).toEqual(negotiator2);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1].deleted).toBeFalsy();
+    expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(1);
+
+    // Deactivate one loudly
+    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent1.uid, 0);
+    expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0].deleted).toBeTruthy();
+
+    // Deactivate one insilence
+    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent1.uid, 1, true);
+    expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
+    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1].deleted).toBeTruthy();
   })
 
   it('#getEstateAgentsByPostcode should return a list of estate agents, with matching postcode - ordered ascending by postcode', () => {

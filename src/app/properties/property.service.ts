@@ -9,13 +9,16 @@ import { Viewing } from '../shared/models/viewing.model';
 import { getCurrentTimestamp } from '../shared/utils';
 import { NOTE_TYPES, STRATEGIES } from '../shared/services/app-constants.service';
 import { AccountService } from '../account/account.service';
+import { EstateAgent } from '../shared/models/estate-agent.model';
+import { EstateAgentService } from '../estate-agents/estate-agent.service';
 
 @Injectable()
 export class PropertyService {
   properties: Property[] = [];
   propertiesChangedSub: Subject<Property[]> = new Subject<Property[]>();
 
-  constructor(private accountService: AccountService) {};
+  constructor(private accountService: AccountService,
+              private estateAgentService: EstateAgentService) {};
 
   getProperties(): Property[] {
     return this.properties.slice();
@@ -205,12 +208,70 @@ export class PropertyService {
     }
   }
 
+  deleteEstateAgentFromProperty(propertyId: string, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+
+    if (!!property) {
+      property.estateAgentId = null;
+      property.negotiatorId = null;
+
+      if (!keepSilent) {
+        this.emitChanges();
+      }
+    }
+  }
+
   deleteEstateAgent(estateAgentId: string, keepSilent?: boolean): void {
     let deletionPerformed: boolean = false;
     this.properties.map(property => {
       if (property.estateAgentId === estateAgentId) {
         deletionPerformed = true;
         property.estateAgentId = null;
+      }
+    });
+
+    if (deletionPerformed && !keepSilent) {
+      this.emitChanges();
+    }
+  }
+
+  setNegotiatorOfProperty(propertyId: string, negotiatorId: number, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+    const estateAgent: EstateAgent = this.estateAgentService.getEstateAgent(property.estateAgentId);
+
+    if (!!property && !!estateAgent && !!estateAgent.negotiators[negotiatorId]) {
+      property.negotiatorId = negotiatorId;
+
+      if (!keepSilent) {
+        this.emitChanges();
+      }
+    } else {
+      this.emitChanges();
+    }
+  }
+
+  deleteNegotiatorFromProperty(propertyId: string, keepSilent?: boolean): void {
+    const property: Property = this.getProperty(propertyId);
+    let deletionPerformed = false;
+    if (!!property) {
+      property.negotiatorId = null;
+      deletionPerformed = true;
+    }
+
+    if (deletionPerformed && !keepSilent) {
+      this.emitChanges();
+    }
+  }
+
+  /*
+   * Delete negotiator of EA by ID - from every property that uses that EA and negotiator
+  */
+  deleteNegotiator(estateAgentId: string, negotiatorId: number, keepSilent?: boolean): void {
+    let deletionPerformed: boolean = false;
+    this.properties.map(property => {
+      if (property.estateAgentId === estateAgentId && property.negotiatorId === negotiatorId) {
+        deletionPerformed = true;
+        property.negotiatorId = null;
       }
     });
 

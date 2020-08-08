@@ -6,10 +6,18 @@ import { generateUID, getCurrentTimestamp } from '../utils';
 import { Note } from '../models/note.model';
 import { DEAL_TYPES } from '../services/app-constants.service';
 import { EstateAgent } from '../models/estate-agent.model';
+import { Person } from '../models/person.model';
+import { EstateAgentService } from 'src/app/estate-agents/estate-agent.service';
+
+let mockEstateAgentsCache: EstateAgent[] = null;
 
 export class MockUtils {
   static getMockAccountService() {
     return new MockAccountService();
+  }
+
+  static getMockEstateAgentService() {
+    return new MockEstateAgentService();
   }
 
   static getMockProperties(): Property[] {
@@ -33,8 +41,8 @@ export class MockUtils {
         100000,
         +getCurrentTimestamp(),
 
-        '',
-        -1,
+        null,
+        null,
         null,
         [],
         {  strg: 'BTL' },
@@ -62,8 +70,8 @@ export class MockUtils {
         999999,
         +getCurrentTimestamp(),
 
-        '',
-        -1,
+        null,
+        null,
         null,
         [],
         {  strg: 'BTL' },
@@ -91,8 +99,8 @@ export class MockUtils {
         333333,
         +getCurrentTimestamp(),
 
-        '',
-        -1,
+        null,
+        null,
         null,
         [],
         {  strg: 'FLP'},
@@ -263,8 +271,16 @@ export class MockUtils {
     ];
   }
 
-  static getMockEstateAgents(): EstateAgent[] {
+  static getMockNegotiators(): Person[] {
     return [
+      new Person('John', 'Doe', '0161 123 4567', 'john@doe.com'),
+      new Person('Jane', 'Doe', '0161 987 6543', 'jane@doe.com')
+    ]
+  }
+
+  static getMockEstateAgents(): EstateAgent[] {
+    const negotiators: Person[] = this.getMockNegotiators();
+    const estateAgents = [
       new EstateAgent(
         generateUID('ea_'),
         +getCurrentTimestamp(),
@@ -281,7 +297,7 @@ export class MockUtils {
         'OL9 8DN',
 
         [],
-        [],
+        [negotiators[0], negotiators[1]],
         [],
         ['https://www.ryder-dutton.co.uk/']
       ),
@@ -345,8 +361,12 @@ export class MockUtils {
         [],
         ['http://www.npestates.co.uk/']
       )
+    ];
 
-    ]
+    if (!mockEstateAgentsCache) {
+      mockEstateAgentsCache = estateAgents;
+    }
+    return mockEstateAgentsCache;
   }
 }
 
@@ -373,6 +393,15 @@ class MockAccountService extends AccountService {
           email: 'john@doe.me'
         }
       }]
+    });
+  }
+}
+
+class MockEstateAgentService extends EstateAgentService {
+  getEstateAgent(estateAgentUid: string): EstateAgent {
+    const mockEstateAgents = MockUtils.getMockEstateAgents();
+    return mockEstateAgents.find((estateAgent) => {
+      return estateAgent.uid === estateAgentUid;
     });
   }
 }

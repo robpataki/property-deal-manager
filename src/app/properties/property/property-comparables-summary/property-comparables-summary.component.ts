@@ -17,12 +17,12 @@ export class PropertyComparablesSummaryComponent implements OnInit, OnDestroy {
   @Input() propertyId: string;
   @Input() interactiveMode: boolean = false;
   @Output() removeComparable: EventEmitter<string> = new EventEmitter<string>();
-  
+
   @ViewChild(PlaceholderDirective, {static: false}) confirmModalHost: PlaceholderDirective;
   confirmationModalCancelSub: Subscription;
   confirmationModalConfirmSub: Subscription;
   actionConfirmModalComponentRef: ComponentRef<any>;
-  
+
   propertyTypes: any = PROPERTY_TYPES;
   comparables: Comparable[];
   sortedComparables: Comparable[];
@@ -49,7 +49,7 @@ export class PropertyComparablesSummaryComponent implements OnInit, OnDestroy {
   onRemoveComparable(index: number): void {
     const comparableId = this.comparables[index].uid;
     const message: string = 'remove this comparable from this property';
-    const additionalMessage: string = 'Please note this won\'t delete the comparable, nor will it remove it from other properties'
+    const additionalMessage: string = 'Please note this won\'t delete the comparable, nor will it remove it from other properties';
     this.showConfirmationModal(message, additionalMessage).then(() => {
       this.removeComparable.emit(comparableId);
     }, error => {});
@@ -83,7 +83,7 @@ export class PropertyComparablesSummaryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.actionConfirmModalComponentRef) {
-      this.actionConfirmModalComponentRef.destroy(); 
+      this.actionConfirmModalComponentRef.destroy();
       this.confirmationModalConfirmSub.unsubscribe();
       this.confirmationModalCancelSub.unsubscribe();
     }

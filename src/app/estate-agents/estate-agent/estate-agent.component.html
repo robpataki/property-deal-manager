@@ -6,6 +6,12 @@
   (modalClosed)="onAddNoteModalClosed()">
 </app-add-note-modal>
 
+<app-add-negotiator-modal
+  *ngIf="!!addNegotiatorMode"
+  (negotiatorAdded)="onNegotiatorAdded($event)"
+  (modalClosed)="onAddNegotiatorModalClosed()">
+</app-add-negotiator-modal>
+
 <app-back-button [label]="backButtonLabel" [url]="backButtonUrl"></app-back-button>
 
 <div *ngIf="!!estateAgent">
@@ -106,7 +112,74 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12">
-              <h2 class="section-heading">Negotiators</h2>
+              <div class="float-container float-container--br-sm mb-3 mb-md-0">
+                <div class="float-left float-left--strict">
+                  <h2 class="section-heading">Negotiators</h2>
+                  <p
+                    *ngIf="!sorteddNegotiators || !sorteddNegotiators.length"
+                    id="negotiatorsCaption">
+                    <span>This EA has no negotiators yet.</span>
+                  </p>
+                  <p
+                    *ngIf="!!sorteddNegotiators && !!sorteddNegotiators.length"
+                    id="negotiatorsCaption">
+                    <span>This EA has the following negotiators:</span>
+                  </p>
+                </div>
+                <div class="float-right">
+                  <a
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#addNegotiatorModal"
+                    (click)="onAddNegotiator()"
+                    class="btn btn-primary btn-sm btn-inline">Add new negotiator</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="!!sorteddNegotiators && !!sorteddNegotiators.length">
+            <div class="col-12">
+              <table
+                class="table table-bordered table-striped table-sm align-middle"
+                aria-describedby="propertiesCaption">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let negotiator of sorteddNegotiators; index as i;" [class]="negotiator.deleted ? 'tr-inactive' : ''">
+                    <td>{{ negotiator.firstName }}</td>
+                    <td>{{ negotiator.lastName }}</td>
+                    <td>
+                      <a href="tel:{{ negotiator.phone }}" *ngIf="!negotiator.deleted">{{ negotiator.phone }}</a>
+                      <span *ngIf="!!negotiator.deleted">{{ negotiator.phone }}</span>
+                    </td>
+                    <td>
+                      <a href="mailto:{{ negotiator.email }}" *ngIf="!negotiator.deleted">{{ negotiator.email }}</a>
+                      <span *ngIf="!!negotiator.deleted">{{ negotiator.email }}</span>
+                    </td>
+                    <td class="text-center">
+                      <button
+                        *ngIf="!negotiator.deleted"
+                        type="button"
+                        class="icon-btn icon-btn--danger icon-btn--md"
+                        (click)="onDeactivateNegotiator(negotiator.index)">
+                        <svg class="icon-btn__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
+                        <span class="visually-hidden">Deactivate {{negotiator.firstName}} {{negotiator.lastName}}</span>
+                      </button>
+                      <span *ngIf="!!negotiator.deleted">
+                        <span aria-hidden="true">-</span>
+                        <span class="visually-hidden">Not actionable</span>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -177,7 +250,7 @@
                 id="activityLog"
                 >
                 <table
-                  class="table table-bordered table-striped table-hover align-middle"
+                  class="table table-bordered table-striped table-sm align-middle"
                   aria-describedby="activityLogCaption notesFilter">
                   <thead class="thead-dark">
                     <tr>
@@ -185,7 +258,6 @@
                       <th scope="col">Date</th>
                       <th scope="col" class="text-center">Type</th>
                       <th scope="col">Note</th>
-                      <th scope="col">Property</th>
                       <th scope="col" class="text-center">Partner</th>
                     </tr>
                   </thead>
@@ -211,11 +283,6 @@
                         </span>
                       </td>
                       <td><span [innerHTML]="note.text"></span></td>
-                      <td class="text-center">
-                        <a [routerLink]="['/properties', getProperty(note.propertyId).uid]" *ngIf="!!getProperty(note.propertyId)">
-                          <span [innerHTML]="getPropertyAddress(note.propertyId)"></span>
-                        </a>
-                      </td>
                       <td class="text-center">{{ note.userName }}</td>
                     </tr>
                   </tbody>

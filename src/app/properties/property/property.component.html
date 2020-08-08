@@ -34,17 +34,17 @@
           </h1>
         </div>
       </div>
-  
+
       <div
         *ngIf="hasUpcomingViewing"
         class="row mt-md-5">
         <div class="col-12">
-          <div 
-          class="alert alert-info" 
+          <div
+          class="alert alert-info"
           role="alert">You have an upcoming viewing. <a [routerLink]="" fragment="s-viewings-and-offers" class="alert-link">Click for details</a>.</div>
         </div>
       </div>
-    
+
       <div class="row section mt-0 mt-md-5">
         <div class="col-12">
           <div class="row">
@@ -53,7 +53,7 @@
                 <img [src]="property.thumbnailUrl" alt="Photo of the {{ !!property.addressLine1 ? property.addressLine1 : 'property' }}">
               </div>
             </div>
-            
+
             <div class="col-xs-12 col-md-8 col-lg-5 mt-5 mt-lg-0">
               <h2 class="mb-3">Property details</h2>
               <dl class="dl dl--fitted dl--spaced">
@@ -61,7 +61,7 @@
                   <dt>Address:</dt>
                   <dd class="mw-50pc">
                     <span [innerHTML]="property.addressLine1 | formatFullAddress:property.addressLine2:property.town:property.postcode:true:true"></span>
-                  </dd> 
+                  </dd>
                 </div>
                 <div class="dl-row">
                   <dt>Bedrooms:</dt>
@@ -104,7 +104,7 @@
                   <dt>Market links:</dt>
                   <dd>
                     <a
-                      *ngFor="let link of property.links; index as i;"  
+                      *ngFor="let link of property.links; index as i;"
                       [href]="link"
                       target="_blank"
                       class="btn btn-sm btn-outline-primary btn--stacked">{{ link | trimLink | trim:24:true }}</a>
@@ -112,7 +112,7 @@
                 </div>
               </dl>
             </div>
-            
+
             <div class="col-xs-13 col-md-4 col-lg-3 mt-5 mt-lg-0">
               <div class="btn-nav btn-nav--floating">
                 <button
@@ -143,7 +143,7 @@
                   <span class="btn__label">Book a viewing</span>
                 </button>
                 <hr>
-                <a 
+                <a
                   [routerLink]="'edit'"
                   class="btn btn-primary">
                   <span class="btn__icon"><img src="assets/icons/icon--octa-pencil.svg" alt="Pencil icon" aria-hidden="true"></span>
@@ -155,7 +155,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="section" id="s-crunch">
       <hr>
       <div class="row section">
@@ -164,7 +164,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="section" id="s-viewings-and-offers">
       <hr>
       <div class="row section">
@@ -183,11 +183,11 @@
                 (click)="onBookViewing()">Book a viewing</button>
             </div>
           </div>
-  
+
           <p *ngIf="!hasUpcomingViewing && !doneViewing" class="text-danger">You haven't seen this property yet.</p>
-  
+
           <table
-            *ngIf="!!sortedViewings && !!sortedViewings.length"  
+            *ngIf="!!sortedViewings && !!sortedViewings.length"
             class="table table-bordered table-striped table-hover align-middle">
             <caption *ngIf="doneViewing">You have viewed this property. 👍</caption>
             <caption *ngIf="hasUpcomingViewing">You have an upcoming viewing.</caption>
@@ -210,16 +210,16 @@
                     type="button"
                     class="btn btn-danger btn-sm"
                     (click)="onCancelViewing(viewing.index)">Cancel</button>
-                    <span *ngIf="!isUpcomingTime(viewing.timestamp) || viewing.cancelled">
-                      <span aria-hidden="true">-</span>
-                      <span class="visually-hidden">Not actionable</span>
-                    </span>
+                  <span *ngIf="!isUpcomingTime(viewing.timestamp) || viewing.cancelled">
+                    <span aria-hidden="true">-</span>
+                    <span class="visually-hidden">Not actionable</span>
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-  
+
         <div class="col-lg-5 offset-lg-1 mt-5 mt-lg-0">
           <div class="float-container float-container--br-sm mb-3 mb-lg-0">
             <div class="float-left">
@@ -234,9 +234,9 @@
                 (click)="onMakeOffer()">Make an offer</button>
             </div>
           </div>
-          
+
           <p *ngIf="!sortedOffers || !sortedOffers.length" class="text-danger">You haven't made an offer yet.</p>
-  
+
           <div *ngIf="!!sortedOffers && !!sortedOffers.length">
             <div class="row">
               <div class="col-12">
@@ -304,7 +304,7 @@
               <p id="activityLogCaption">Activity log shows a timeline of all the <b>notes</b>, booked <b>viewings</b>, and  <b>offers</b> you've made on this property.</p>
             </div>
           </div>
-  
+
           <div class="row" *ngIf="!!sortedNotes && !!sortedNotes.length">
             <div class="col-12">
               <div
@@ -329,7 +329,7 @@
                       <td><span [innerHTML]="note.date | breakUp"></span></td>
                       <td class="text-center">
                         <span *ngIf="note.rawType === noteTypes.NOT.key">
-                          <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true" 
+                          <img src="assets/icons/icon--note.svg" alt="Note icon" aria-hidden="true"
                           class="note-icon">
                           <span class="visually-hidden">{{ noteTypes.NOT.value }}</span>
                         </span>
@@ -355,7 +355,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="section" id="s-photos">
       <hr>
       <div class="row section">
@@ -377,7 +377,7 @@
       <hr>
       <div class="row section">
         <div class="col-12">
-          <app-property-comparables-summary 
+          <app-property-comparables-summary
             (removeComparable)="onRemoveComparable($event)"
             [propertyId]="property.uid"
             [interactiveMode]="true"

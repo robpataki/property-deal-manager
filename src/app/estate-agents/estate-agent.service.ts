@@ -89,6 +89,29 @@ export class EstateAgentService {
     }
   }
 
+  addNegotiatorToEstateAgent(estateAgentId: string, negotiator: Person, keepSilent?: boolean) {
+    const estateAgent: EstateAgent = this.getEstateAgent(estateAgentId);
+
+    estateAgent.negotiators.push(negotiator);
+
+    if (!keepSilent) {
+      this.emitChanges();
+    }
+  }
+
+  deactivateNegotiatorOfEstateAgent(estateAgentId: string, negotiatorId: number, keepSilent?: boolean) {
+    const estateAgent: EstateAgent = this.getEstateAgent(estateAgentId);
+    const negotiator: Person = estateAgent.negotiators[negotiatorId];
+
+    if (!!negotiator) {
+      negotiator.deleted = true;
+
+      if (!keepSilent) {
+        this.emitChanges();
+      }
+    }
+  }
+
   getEstateAgentsByPostcode(postcode: string): EstateAgent[] {
     return this.estateAgents.filter(estateAgent => {
       if (estateAgent.postcode.toUpperCase().substr(0, postcode.length) === postcode.toUpperCase()) {

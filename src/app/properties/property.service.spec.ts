@@ -37,7 +37,8 @@ describe('PropertyService', () => {
     spyOn(Date, 'now').and.returnValue(currentTimestamp);
 
     const mockAccountService = MockUtils.getMockAccountService();
-    propertyService = new PropertyService(mockAccountService);
+    const mockEstsateAgentService = MockUtils.getMockEstateAgentService();
+    propertyService = new PropertyService(mockAccountService, mockEstsateAgentService);
     propertiesChangedSubSpy = spyOn(propertyService.propertiesChangedSub, 'next');
 
     userAccount = mockAccountService.getAccount();
@@ -302,7 +303,7 @@ describe('PropertyService', () => {
 
   it('#setEstateAgentOfProperty should set the estate agent\'s uid on the given property (and emit change event if not called silently)', () => {
     propertyService.setProperties([property1]);
-    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual('');
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toBeNull();
 
     // Set it loudly
     propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid);
@@ -313,6 +314,36 @@ describe('PropertyService', () => {
     propertyService.setEstateAgentOfProperty(property1.uid, estateAgent2.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent2.uid);
+  })
+
+  it('#deleteEstateAgentOfProperty should remove the estate agent\'s uid and the negotiatorID from the given property and emit change event', () => {
+    propertyService.setProperties([property1]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid, true);
+    propertyService.setNegotiatorOfProperty(property1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent1.uid);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toEqual(1);
+
+    // Delete loudly
+    propertyService.deleteEstateAgentFromProperty(property1.uid);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toBeNull();
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+  })
+
+  it('#deleteEstateAgentOfProperty should remove the estate agent\'s uid and the negotiatorID from the given property and not emit change event', () => {
+    propertyService.setProperties([property1]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid, true);
+    propertyService.setNegotiatorOfProperty(property1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toEqual(estateAgent1.uid);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toEqual(1);
+
+    // Delete in silence
+    propertyService.deleteEstateAgentFromProperty(property1.uid, true);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toBeNull();
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
   })
 
   it('#deleteEstateAgent should set remove estate agent UID from every property it was linked to (and emit change event if not called silently)', () => {
@@ -333,6 +364,101 @@ describe('PropertyService', () => {
     propertyService.deleteEstateAgent(estateAgent1.uid, true);
     expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
     expect(propertyService.getProperty(property2.uid).estateAgentId).toEqual(null);
+  })
+
+  it('#setNegotiatorOfProperty should set the negotiator\'s id on the given property (and emit change event if not called silently)', () => {
+    propertyService.setProperties([property1, property2]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+
+    // Set it loudly
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+    propertyService.setNegotiatorOfProperty(property1.uid, 0);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toEqual(0);
+
+    // Set it in silence
+    propertyService.setNegotiatorOfProperty(property1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toEqual(1);
+  })
+
+  it('#setNegotiatorOfProperty should not set the negotiator\'s id on the given property if the property\'s estateAgent doesn\'t have such index (but it should always emit the change event)', () => {
+    propertyService.setProperties([property1]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(estateAgent1.negotiators.length).toEqual(2);
+
+    propertyService.setNegotiatorOfProperty(property1.uid, 2);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+  })
+
+  it('#setNegotiatorOfProperty should not set the negotiator\'s id on the given property if the property\'s estateAgentId is not set (but it should always emit the change event)', () => {
+    propertyService.setProperties([property1]);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
+
+    propertyService.setNegotiatorOfProperty(property1.uid, 0);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).estateAgentId).toBeNull();
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+  })
+
+  it('#deleteNegotiatorFromProperty should remove the negotiatorID from the given property (and emit change event if not called silently)', () => {
+    propertyService.setProperties([property1]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid, true);
+    propertyService.setNegotiatorOfProperty(property1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
+
+    // Delete it loudly
+    propertyService.deleteNegotiatorFromProperty(property1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+
+    // Delete it in silence
+    propertyService.setNegotiatorOfProperty(property1.uid, 0, true);
+    propertyService.deleteNegotiatorFromProperty(property1.uid, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+  })
+
+  it('#deleteNegotiatorFromProperty should always emit the change event even if nothing was deleted, (but not called silently)', () => {
+    propertyService.setProperties([property1]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid, true);
+    propertyService.setNegotiatorOfProperty(property1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(1);
+    propertyService.deleteNegotiatorFromProperty(property1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    propertyService.deleteNegotiatorFromProperty(property1.uid);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
+    propertyService.deleteNegotiatorFromProperty(property1.uid, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(3);
+  })
+
+  it('#deleteNegotiator should remove the negotiatorID from every property it was linked to (and emit change event if not called silently)', () => {
+    propertyService.setProperties([property1, property2, property3]);
+    propertyService.setEstateAgentOfProperty(property1.uid, estateAgent1.uid, true);
+    propertyService.setEstateAgentOfProperty(property2.uid, estateAgent1.uid, true);
+    propertyService.setEstateAgentOfProperty(property3.uid, estateAgent1.uid, true);
+
+    propertyService.setNegotiatorOfProperty(property1.uid, 0, true);
+    propertyService.setNegotiatorOfProperty(property2.uid, 0, true);
+    propertyService.setNegotiatorOfProperty(property3.uid, 1, true);
+
+    // Delete loudly
+    propertyService.deleteNegotiator(estateAgent1.uid, 0);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property1.uid).negotiatorId).toBeNull();
+    expect(propertyService.getProperty(property2.uid).negotiatorId).toBeNull();
+
+    // Delete in silence
+    propertyService.deleteNegotiator(estateAgent1.uid, 1, true);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
+    expect(propertyService.getProperty(property3.uid).negotiatorId).toBeNull();
+
+    // Delete negotiator that isn't used in any property should still emit event
+    propertyService.deleteNegotiator(estateAgent1.uid, 0);
+    expect(propertiesChangedSubSpy).toHaveBeenCalledTimes(2);
   })
 
   it('#emitChanges should emit `comparablesChanged`', () => {

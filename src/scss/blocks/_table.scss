@@ -11,7 +11,7 @@
       height: 69px;
     }
   }
-  
+
   &.align-middle {
     th, td {
       vertical-align: middle;
@@ -22,7 +22,7 @@
     table-layout: fixed;
   }
 
-  .tr-selected {    
+  .tr-selected {
     td, th {
       background: $c-yellow;
       font-weight: 700;
@@ -32,6 +32,13 @@
 
     a {
       color: $c-black;
+    }
+  }
+
+  .tr-inactive {
+    td, th {
+      color: lighten($c-black, 40%);
+      pointer-events: none;
     }
   }
 
