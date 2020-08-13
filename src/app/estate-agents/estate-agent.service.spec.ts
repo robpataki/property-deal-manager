@@ -180,61 +180,61 @@ describe('EstateAgentService', () => {
   })
 
   it('#removePropertyFromEstateAgent should remove the given property from the estate agent (and emit change event if not called silently)', () => {
-    estateAgentService.setEstateAgents([estateAgent1]);
+    estateAgentService.setEstateAgents([estateAgent2]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(1);
-    estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property1.uid, true);
-    estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property2.uid, true);
-    estateAgentService.addPropertyToEstateAgent(estateAgent1.uid, property3.uid, true);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property2.uid, property3.uid]);
+    estateAgentService.addPropertyToEstateAgent(estateAgent2.uid, property1.uid, true);
+    estateAgentService.addPropertyToEstateAgent(estateAgent2.uid, property2.uid, true);
+    estateAgentService.addPropertyToEstateAgent(estateAgent2.uid, property3.uid, true);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).propertyIds).toEqual([property1.uid, property2.uid, property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(1);
 
     // Remove one loudly
-    estateAgentService.removePropertyFromEstateAgent(estateAgent1.uid, property2.uid);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property1.uid, property3.uid]);
+    estateAgentService.removePropertyFromEstateAgent(estateAgent2.uid, property2.uid);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).propertyIds).toEqual([property1.uid, property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
 
     // Remove one in silence
-    estateAgentService.removePropertyFromEstateAgent(estateAgent1.uid, property1.uid, true);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).propertyIds).toEqual([property3.uid]);
+    estateAgentService.removePropertyFromEstateAgent(estateAgent2.uid, property1.uid, true);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).propertyIds).toEqual([property3.uid]);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
   })
 
   it('#addNegotiatorToEstateAgent should add a negotiator to the given estate agent (and emit change event if not called silently)', () => {
-    estateAgentService.setEstateAgents([estateAgent1]);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([]);
+    estateAgentService.setEstateAgents([estateAgent2]);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators).toEqual([]);
 
     // Add one loudly
-    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator1);
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent2.uid, negotiator1);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([negotiator1]);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators).toEqual([negotiator1]);
 
     // Add one in silence
-    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator2, true);
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent2.uid, negotiator2, true);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([negotiator1, negotiator2]);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators).toEqual([negotiator1, negotiator2]);
   })
 
   it('#deactivateNegotiatorOfEstateAgent should deactivate the estate agent\'s given negotiator (and emit change event if not called silently)', () => {
-    estateAgentService.setEstateAgents([estateAgent1]);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators).toEqual([]);
+    estateAgentService.setEstateAgents([estateAgent2]);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators).toEqual([]);
 
-    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator1, true);
-    estateAgentService.addNegotiatorToEstateAgent(estateAgent1.uid, negotiator2, true);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0]).toEqual(negotiator1);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0].deleted).toBeFalsy();
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1]).toEqual(negotiator2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1].deleted).toBeFalsy();
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent2.uid, negotiator1, true);
+    estateAgentService.addNegotiatorToEstateAgent(estateAgent2.uid, negotiator2, true);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[0]).toEqual(negotiator1);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[0].deleted).toBeFalsy();
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[1]).toEqual(negotiator2);
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[1].deleted).toBeFalsy();
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(1);
 
     // Deactivate one loudly
-    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent1.uid, 0);
+    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent2.uid, 0);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[0].deleted).toBeTruthy();
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[0].deleted).toBeTruthy();
 
     // Deactivate one insilence
-    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent1.uid, 1, true);
+    estateAgentService.deactivateNegotiatorOfEstateAgent(estateAgent2.uid, 1, true);
     expect(estateAgentsChangedSpy).toHaveBeenCalledTimes(2);
-    expect(estateAgentService.getEstateAgent(estateAgent1.uid).negotiators[1].deleted).toBeTruthy();
+    expect(estateAgentService.getEstateAgent(estateAgent2.uid).negotiators[1].deleted).toBeTruthy();
   })
 
   it('#getEstateAgentsByPostcode should return a list of estate agents, with matching postcode - ordered ascending by postcode', () => {
